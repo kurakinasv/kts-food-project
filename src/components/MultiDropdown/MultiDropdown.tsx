@@ -20,6 +20,8 @@ export type MultiDropdownProps = {
   disabled?: boolean;
   /** Преобразовывает выбранные значения в строку. Отображается в дропдауне в качестве выбранного значения */
   pluralizeOptions: (value: Option[]) => string;
+  className?: string;
+  placeholder?: string;
 };
 
 const MultiDropdown: React.FC<MultiDropdownProps> = ({
@@ -28,6 +30,8 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   onChange,
   disabled,
   pluralizeOptions,
+  className = '',
+  placeholder = '',
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -77,12 +81,13 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   ));
 
   return (
-    <DropdownWrapper>
+    <DropdownWrapper className={className}>
       <DropdownButton
         type="button"
         disabled={disabled}
-        value={pluralizeOptions(value)}
+        value={pluralizeOptions(value) || placeholder}
         onClick={openMenu}
+        isEmpty={!pluralizeOptions(value)}
       />
       {open && !disabled && <DropdownMenu visible={open && !disabled}>{optionNodes}</DropdownMenu>}
     </DropdownWrapper>

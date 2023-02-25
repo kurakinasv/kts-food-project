@@ -1,10 +1,21 @@
 import styled from 'styled-components';
 
 import Loader from '@components/Loader';
-import { colors } from '@styles/variables';
+import { getButtonSizes } from '@styles/mixins';
+import { colors, rgbColors } from '@styles/variables';
 
-export const ButtonWrapper = styled.button`
-  padding: 8px 14px;
+import { StyledProps } from './Button';
+
+export const ButtonWrapper = styled.button<StyledProps>`
+  min-width: ${({ minWidth }) => (minWidth ? minWidth : '36px')};
+  padding: ${({ padding }) => (padding ? padding : '8px 14px')};
+
+  ${({ width, height, shape }) => getButtonSizes(width, height, shape)}
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   font-weight: 500;
   font-size: 18px;
@@ -12,11 +23,12 @@ export const ButtonWrapper = styled.button`
   text-align: center;
   color: white;
 
-  background-color: ${colors.red};
+  background-color: ${({ bgColor }) =>
+    bgColor === 'transparent' ? `rgba(${rgbColors.red}, 0.1)` : colors.red};
   border: none;
-  border-radius: 7px;
+  border-radius: ${({ shape }) => (shape === 'circle' ? '50%' : '7px')};
 
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease-in-out;
 
   &:hover {
     opacity: ${({ disabled }) => (disabled ? 1 : 0.5)};
@@ -32,9 +44,6 @@ export const ButtonWrapper = styled.button`
 `;
 
 export const StyledLoader = styled(Loader)`
-  margin-right: 10px;
-  vertical-align: sub;
-
   border: 3px solid white;
   border-right: 3px solid transparent;
 `;

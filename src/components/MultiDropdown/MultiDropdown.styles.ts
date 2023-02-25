@@ -21,13 +21,12 @@ const commonButtonOptionStyles = css`
   cursor: pointer;
 `;
 
-export const DropdownButton = styled.input`
+export const DropdownButton = styled.input<{ isEmpty: boolean }>`
   ${commonButtonOptionStyles}
 
   display: block;
-  margin-bottom: 3px;
 
-  color: ${colors.black};
+  color: ${({ isEmpty }) => (isEmpty ? `rgba(${rgbColors.textGrey}, 0.5)` : colors.black)};
 
   border: none;
   background: ${gradients.lightRed};
@@ -40,14 +39,11 @@ export const DropdownButton = styled.input`
     pointer-events: none;
     cursor: default;
   }
-
-  &::placeholder {
-    color: rgba(${rgbColors.textGrey}, 0.5);
-  }
 `;
 
 export const DropdownMenu = styled.div<{ visible: boolean }>`
   display: ${({ visible }) => (visible ? 'block' : 'none')};
+  margin-top: 3px;
   position: absolute;
   width: 100%;
 

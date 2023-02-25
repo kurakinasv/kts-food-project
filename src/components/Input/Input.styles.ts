@@ -17,6 +17,8 @@ export const InputWrapper = styled.input`
   background: ${gradients.lightRed};
   border-radius: 7px;
   border: none;
+  // to remove background transparency
+  backdrop-filter: opacity(1);
 
   &::placeholder {
     font-family: inherit;
