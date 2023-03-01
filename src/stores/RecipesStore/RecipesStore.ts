@@ -1,55 +1,104 @@
-import axios from 'axios';
 import { makeAutoObservable, runInAction } from 'mobx';
 
+import { Option } from '@components/MultiDropdown';
 import { mock } from '@pages/RecipesPage/mock';
+import ApiRequest from '@stores/ApiRequest';
 import { DishWithNutritionType } from '@stores/DishStore';
+import QueryStore from '@stores/QueryStore';
+import RootStore from '@stores/RootStore';
+import { AllRecipesPaths } from '@typings/api';
 import { getAllRecipesUrl } from '@utils/getUrl';
 
 import { IRecipesStore, normalizeRecipes, RecipesType } from './model';
 
 class RecipesStore implements IRecipesStore {
+  private readonly _rootStore: RootStore;
+  private readonly _queryStore: QueryStore;
+  private readonly _apiRequest = new ApiRequest();
+
+  // todo call first 30 items
+  private readonly requestItemsNumber = 20;
+
   public recipes: DishWithNutritionType[] | null = null;
 
-  private readonly requestItemsNumber = 20;
   private currentOffset = 0;
+  public totalResults = 0;
 
-  constructor() {
-    makeAutoObservable(this);
+  constructor(rootStore: RootStore) {
+    makeAutoObservable<RecipesStore, '_rootStore'>(this);
+    this._rootStore = rootStore;
+    this._queryStore = this._rootStore.queryStore;
+  }
+
+  private get mealTypes() {
+    return this._queryStore.type?.split(',') || [];
   }
 
   setRecipes = (recipes: DishWithNutritionType[]) => {
     this.recipes = recipes;
   };
 
-  getAllRecipes = async () => {
-    const url = getAllRecipesUrl(undefined, [
-      ['number', String(this.requestItemsNumber)],
-      ['offset', String(this.currentOffset)],
-    ]);
+  getAllRecipes = async (qStr?: string, typesOpts?: Option[]) => {
+    this._onParamsUpdate({ qStr, typesOpts });
+
+    const url = getAllRecipesUrl(AllRecipesPaths.complex, this._queryStore.getParams());
 
     try {
-      const response: { data: RecipesType } = await axios.get(url);
+      const data = await this._apiRequest.request<RecipesType>(url);
 
-      if (!response.data) {
-        // todo get error message
-        throw new Error('Error while handling request');
+      // todo delete mock
+      // const mockData: RecipesType = { results: [], totalResults: 0 };
+      // const eightyItems = Array(40)
+      //   .fill([...mock])
+      //   .flat();
+      // mockData.results = [...eightyItems];
+      // mockData.totalResults = mockData.results.length;
+
+      // const data = await new Promise<RecipesType>((res) => {
+      //   setTimeout(() => res(mockData), 2000);
+      // });
+
+      if (data) {
+        this.setRecipes([...(this.recipes ?? []), ...normalizeRecipes(data)]);
+
+        runInAction(() => {
+          this.totalResults = data.totalResults;
+          this.currentOffset += this.requestItemsNumber;
+          this._queryStore.setParams({ offset: String(this.currentOffset) });
+        });
       }
-
-      console.log('getAllRecipes', response.data);
-
-      this.setRecipes([...(this.recipes ?? []), ...normalizeRecipes(response.data)]);
-
-      // const mockData: RecipesType = { results: [] };
-      // const tenItems = [...mock, ...mock, ...mock, ...mock, ...mock, ...mock];
-      // mockData.results = [...tenItems, ...tenItems];
-
-      // this.setRecipes([...(this.recipes ?? []), ...normalizeRecipes(mockData)]);
-
-      runInAction(() => {
-        this.currentOffset += this.requestItemsNumber;
-      });
     } catch (error: any) {
       throw new Error('getAllRecipes', error.message);
+    }
+  };
+
+  private _onParamsUpdate = ({ qStr, typesOpts }: { qStr?: string; typesOpts?: Option[] }) => {
+    const q = qStr?.toLocaleLowerCase();
+    const types = typesOpts?.map((type) => type.key);
+
+    const didQueryUpdate = q !== undefined && q !== this._queryStore.query;
+
+    const didTypesUpdate =
+      types !== undefined &&
+      (types.length !== this.mealTypes.length ||
+        types.every((type) => this.mealTypes.includes(type)));
+
+    const didSearchUpdate = didQueryUpdate || didTypesUpdate;
+
+    this._queryStore.setParams({ number: String(this.requestItemsNumber) });
+
+    if (didQueryUpdate) {
+      this._queryStore.setParams({ query: q });
+    }
+
+    if (didTypesUpdate) {
+      this._queryStore.setParams({ type: types.join(',') });
+    }
+
+    if (didSearchUpdate) {
+      this.setRecipes([]);
+      this.currentOffset = 0;
+      this._queryStore.setParams({ offset: String(0) });
     }
   };
 }

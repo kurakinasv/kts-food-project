@@ -1,3 +1,4 @@
+import { Option } from '@components/MultiDropdown';
 import { DishWithNutritionType, DishWithNutritionApiType } from '@stores/DishStore';
 import { normalizeNutrients } from '@typings/nutrients';
 
@@ -8,13 +9,13 @@ export type RecipesApiType = {
   totalResults: number;
 };
 
-export type RecipesType = Pick<RecipesApiType, 'results'>;
+export type RecipesType = Pick<RecipesApiType, 'results' | 'totalResults'>;
 
 export interface IRecipesStore {
   recipes: DishWithNutritionType[] | null;
 
   setRecipes(recipes: DishWithNutritionType[]): void;
-  getAllRecipes(): Promise<void>;
+  getAllRecipes(query?: string, types?: Option[]): Promise<void>;
 }
 
 export const normalizeRecipes = (apiRecipes: RecipesType) => {

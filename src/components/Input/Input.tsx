@@ -5,11 +5,13 @@ import { InputWrapper } from './Input.styles';
 export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & {
   value: string;
   onChange: (value: string) => void;
+  keyDownHandler: () => Promise<void>;
 };
 
 const Input: React.FC<InputProps> = ({
   value,
   onChange,
+  keyDownHandler,
   disabled,
   placeholder = '',
   className = '',
@@ -19,6 +21,12 @@ const Input: React.FC<InputProps> = ({
     onChange(e.currentTarget.value);
   };
 
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      await keyDownHandler();
+    }
+  };
+
   return (
     <InputWrapper
       type="text"
@@ -26,6 +34,7 @@ const Input: React.FC<InputProps> = ({
       className={className}
       value={value}
       onChange={handleInput}
+      onKeyDown={handleKeyDown}
       disabled={disabled}
       {...attrs}
     />

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import Loader from '@components/Loader';
 import { getButtonSizes } from '@styles/mixins';
@@ -21,10 +21,18 @@ export const ButtonWrapper = styled.button<StyledProps>`
   font-size: 18px;
   line-height: 25px;
   text-align: center;
-  color: white;
 
-  background-color: ${({ bgColor }) =>
-    bgColor === 'transparent' ? `rgba(${rgbColors.red}, 0.1)` : colors.red};
+  ${({ bgColor }) =>
+    bgColor === 'transparent'
+      ? css`
+          background-color: rgba(${rgbColors.red}, 0.1);
+          color: ${colors.red};
+        `
+      : css`
+          background-color: ${colors.red};
+          color: white;
+        `}
+
   border: none;
   border-radius: ${({ shape }) => (shape === 'circle' ? '50%' : '7px')};
 

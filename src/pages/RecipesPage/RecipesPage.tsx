@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { observer } from 'mobx-react-lite';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -11,9 +11,10 @@ import Loader from '@components/Loader';
 import { Option } from '@components/MultiDropdown';
 import OnTopButton from '@components/OnTopButton';
 import { SearchIcon } from '@static/icons';
-import { useRecipes } from '@stores/RecipesStore';
+import { useQueryStore, useRecipes } from '@stores/RootStore';
+import { mealTypesOptions } from '@typings/api';
 
-import { mockOptions } from './mock';
+import EmptySearch from './EmptySearch';
 import RecipeCard from './RecipeCard';
 import {
   BackgroundImage,
@@ -24,24 +25,44 @@ import {
   SearchForm,
   StyledDropdown,
 } from './RecipesPage.styles';
+import useQueryParams from './useQueryParams';
+import { hasCommonOptions } from './utils';
 
 const RecipesPage: FC = () => {
   const navigate = useNavigate();
 
-  const { getAllRecipes, recipes } = useRecipes();
+  const { getParam, decoratedRequest } = useQueryParams();
+
+  const { getAllRecipes, recipes, totalResults } = useRecipes();
+  const { type, query } = useQueryStore();
+
+  const initialSelectedOptions = useMemo(
+    () => mealTypesOptions.filter(hasCommonOptions(getParam('type'))),
+    [type]
+  );
+
+  const [searchValue, setSearchValue] = useState(getParam('query'));
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>(initialSelectedOptions);
+
+  const getRecipes = useMemo(() => decoratedRequest(getAllRecipes), []);
 
   useEffect(() => {
     if (!recipes) {
-      getAllRecipes();
+      getRecipes(searchValue, selectedOptions);
     }
   }, []);
 
-  const [searchValue, setSearchValue] = useState('');
+  const clearFilters = useCallback(async () => {
+    setSearchValue('');
+    setSelectedOptions([]);
 
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>([]);
+    await getRecipes('', []);
+  }, []);
 
-  const handleSelect = (newOptions: Option[]) => {
-    setSelectedOptions(newOptions);
+  const handleSelect = async (options: Option[]) => {
+    setSelectedOptions(options);
+
+    await getRecipes(undefined, options);
   };
 
   const redirect = useCallback(
@@ -52,9 +73,22 @@ const RecipesPage: FC = () => {
     []
   );
 
-  const next = () => {
-    getAllRecipes();
+  const next = async () => {
+    await getRecipes();
   };
+
+  const searchRecipes = async () => {
+    if (!searchValue || query === searchValue.toLocaleLowerCase()) {
+      return;
+    }
+
+    await getRecipes(searchValue);
+  };
+
+  const hasMore = useMemo(
+    () => !!recipes && recipes.length < 100 && recipes.length !== totalResults,
+    [recipes, totalResults]
+  );
 
   return (
     <>
@@ -63,7 +97,7 @@ const RecipesPage: FC = () => {
       <PageWrapper>
         <SearchBar>
           <StyledDropdown
-            options={mockOptions}
+            options={mealTypesOptions}
             value={selectedOptions}
             placeholder="Pick categories"
             onChange={handleSelect}
@@ -71,22 +105,28 @@ const RecipesPage: FC = () => {
           />
 
           <SearchForm>
-            <Input placeholder="Search" value={searchValue} onChange={setSearchValue} />
-            <Button icon={<SearchIcon />} loading={false} padding="0px" />
+            <Input
+              placeholder="Search"
+              value={searchValue}
+              onChange={setSearchValue}
+              keyDownHandler={searchRecipes}
+            />
+            <Button icon={<SearchIcon />} loading={false} padding="0px" onClick={searchRecipes} />
           </SearchForm>
         </SearchBar>
 
-        {recipes && (
+        {recipes && !!recipes.length && (
           <InfiniteScroll
             dataLength={recipes.length}
             next={next}
-            hasMore={recipes.length < 100}
+            hasMore={hasMore}
             loader={
               <LoaderWrapper>
                 <Loader />
               </LoaderWrapper>
             }
             scrollThreshold={0.9}
+            style={{ margin: '-10px' }}
           >
             <CardsWrapper>
               {recipes.map((dish, index) => (
@@ -102,6 +142,8 @@ const RecipesPage: FC = () => {
             </CardsWrapper>
           </InfiniteScroll>
         )}
+
+        {!totalResults && <EmptySearch func={clearFilters} />}
 
         <OnTopButton />
       </PageWrapper>

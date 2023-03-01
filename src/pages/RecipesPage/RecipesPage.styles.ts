@@ -64,6 +64,8 @@ export const StyledDropdown = styled(MultiDropdown)`
 export const CardsWrapper = styled.div`
   --columns-count: 5;
 
+  padding: 10px;
+
   display: grid;
   grid-template-columns: repeat(var(--columns-count), 1fr);
   justify-items: center;
