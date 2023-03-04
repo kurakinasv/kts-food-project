@@ -2,47 +2,29 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { observer } from 'mobx-react-lite';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useNavigate } from 'react-router';
 
-import { RouterPaths } from '@app/Router';
-import Button from '@components/Button';
-import Input from '@components/Input';
 import Loader from '@components/Loader';
 import { Option } from '@components/MultiDropdown';
 import OnTopButton from '@components/OnTopButton';
-import { SearchIcon } from '@static/icons';
-import { useQueryStore, useRecipes } from '@stores/RootStore';
-import { mealTypesOptions } from '@typings/api';
+import { useRecipes } from '@stores/RootStore';
 
 import EmptySearch from './EmptySearch';
-import RecipeCard from './RecipeCard';
-import {
-  BackgroundImage,
-  CardsWrapper,
-  LoaderWrapper,
-  PageWrapper,
-  SearchBar,
-  SearchForm,
-  StyledDropdown,
-} from './RecipesPage.styles';
+import RecipeCardsList from './RecipeCardsList';
+import { LoaderWrapper, PageWrapper } from './RecipesPage.styles';
+import SearchBar from './SearchBar';
 import useQueryParams from './useQueryParams';
-import { hasCommonOptions } from './utils';
+import { getInitialSelectedOptions } from './utils';
 
 const RecipesPage: FC = () => {
-  const navigate = useNavigate();
-
   const { getParam, decoratedRequest } = useQueryParams();
 
-  const { getAllRecipes, recipes, totalResults } = useRecipes();
-  const { type, query } = useQueryStore();
-
-  const initialSelectedOptions = useMemo(
-    () => mealTypesOptions.filter(hasCommonOptions(getParam('type'))),
-    [type]
-  );
+  const { getAllRecipes, recipes, totalResults, meta } = useRecipes();
 
   const [searchValue, setSearchValue] = useState(getParam('query'));
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>(initialSelectedOptions);
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>(
+    getInitialSelectedOptions(getParam('type'))
+  );
+  const [skeletonCardsAmount, setCardsAmount] = useState(5);
 
   const getRecipes = useMemo(() => decoratedRequest(getAllRecipes), []);
 
@@ -52,6 +34,26 @@ const RecipesPage: FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const resizeHandler = () => {
+      if (960 < window.innerWidth && window.innerWidth <= 1130) {
+        setCardsAmount(4);
+      } else if (500 < window.innerWidth && window.innerWidth <= 960) {
+        setCardsAmount(3);
+      } else if (window.innerWidth <= 500) {
+        setCardsAmount(2);
+      } else {
+        setCardsAmount(5);
+      }
+    };
+
+    resizeHandler();
+
+    window.addEventListener('resize', resizeHandler);
+
+    return () => window.removeEventListener('resize', resizeHandler);
+  }, []);
+
   const clearFilters = useCallback(async () => {
     setSearchValue('');
     setSelectedOptions([]);
@@ -59,30 +61,8 @@ const RecipesPage: FC = () => {
     await getRecipes('', []);
   }, []);
 
-  const handleSelect = async (options: Option[]) => {
-    setSelectedOptions(options);
-
-    await getRecipes(undefined, options);
-  };
-
-  const redirect = useCallback(
-    (id: number) => () => {
-      const path = RouterPaths.dish.split(':')[0];
-      navigate(`${path}${id}`);
-    },
-    []
-  );
-
   const next = async () => {
     await getRecipes();
-  };
-
-  const searchRecipes = async () => {
-    if (!searchValue || query === searchValue.toLocaleLowerCase()) {
-      return;
-    }
-
-    await getRecipes(searchValue);
   };
 
   const hasMore = useMemo(
@@ -91,63 +71,41 @@ const RecipesPage: FC = () => {
   );
 
   return (
-    <>
-      <BackgroundImage />
+    <PageWrapper>
+      <SearchBar
+        value={searchValue}
+        options={selectedOptions}
+        setSearchValue={setSearchValue}
+        setSelectedOptions={setSelectedOptions}
+      />
 
-      <PageWrapper>
-        <SearchBar>
-          <StyledDropdown
-            options={mealTypesOptions}
-            value={selectedOptions}
-            placeholder="Pick categories"
-            onChange={handleSelect}
-            pluralizeOptions={(values: Option[]) => values.map(({ value }) => value).join(', ')}
-          />
+      {!meta.loading && !totalResults && <EmptySearch resetButtonAction={clearFilters} />}
+      {meta.loading && !recipes?.length && (
+        <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount * 3} />
+      )}
 
-          <SearchForm>
-            <Input
-              placeholder="Search"
-              value={searchValue}
-              onChange={setSearchValue}
-              keyDownHandler={searchRecipes}
-            />
-            <Button icon={<SearchIcon />} loading={false} padding="0px" onClick={searchRecipes} />
-          </SearchForm>
-        </SearchBar>
-
-        {recipes && !!recipes.length && (
-          <InfiniteScroll
-            dataLength={recipes.length}
-            next={next}
-            hasMore={hasMore}
-            loader={
+      {recipes && !!recipes.length && (
+        <InfiniteScroll
+          dataLength={recipes.length}
+          next={next}
+          hasMore={hasMore}
+          loader={
+            <>
+              <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount} />
               <LoaderWrapper>
                 <Loader />
               </LoaderWrapper>
-            }
-            scrollThreshold={0.9}
-            style={{ margin: '-10px' }}
-          >
-            <CardsWrapper>
-              {recipes.map((dish, index) => (
-                <RecipeCard
-                  key={'' + dish.id + index}
-                  image={dish.image}
-                  title={dish.title}
-                  ingredients={dish.ingredients.join(' + ')}
-                  calories={Math.round(dish.calories)}
-                  onClick={redirect(dish.id)}
-                />
-              ))}
-            </CardsWrapper>
-          </InfiniteScroll>
-        )}
+            </>
+          }
+          scrollThreshold={0.9}
+          style={{ margin: '-10px' }}
+        >
+          <RecipeCardsList loading={false} recipes={recipes} />
+        </InfiniteScroll>
+      )}
 
-        {!totalResults && <EmptySearch func={clearFilters} />}
-
-        <OnTopButton />
-      </PageWrapper>
-    </>
+      <OnTopButton />
+    </PageWrapper>
   );
 };
 

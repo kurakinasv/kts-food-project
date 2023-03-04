@@ -1,12 +1,17 @@
-import { FC, useEffect } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
+import parse from 'html-react-parser';
 import { observer } from 'mobx-react-lite';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ArrowIcon, ClockIcon, HeartIcon } from '@static/icons';
+import { ArrowIcon, ClockIcon, DishIcon, HeartIcon } from '@static/icons';
 import { useDishStore } from '@stores/DishStore';
+import { formPlural } from '@utils/formPlural';
 import { uefCallback } from '@utils/handleUseEffectAsyncRequest';
+import { replaceImage } from '@utils/replaceImage';
 
+import DishPageSkeleton from './components/DishPageSkeleton';
+import RecipeInstructions from './components/RecipeInstructions';
 import {
   DishPhoto,
   PageWrapper,
@@ -24,20 +29,39 @@ import {
   NutrientPercent,
 } from './DishPage.styles';
 import ErrorPage from './ErrorPage';
-import { mock } from './mock';
 
 const DishPage: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  // const dishInfo = mock;
-  const { getDish, dishInfo, error } = useDishStore();
+  const { getDish, dishInfo, meta } = useDishStore();
 
   useEffect(uefCallback(getDish, Number(id)), []);
 
   const goBack = () => navigate(-1);
 
-  if (error?.isError) {
-    return <ErrorPage message={error.message} />;
+  const stats = useMemo(
+    () => [
+      {
+        name: 'minute',
+        icon: <ClockIcon />,
+        quantity: dishInfo?.readyInMinutes,
+      },
+      {
+        name: 'like',
+        icon: <HeartIcon />,
+        quantity: dishInfo?.aggregateLikes,
+      },
+      {
+        name: 'serving',
+        icon: <DishIcon />,
+        quantity: dishInfo?.servings,
+      },
+    ],
+    [dishInfo]
+  );
+
+  if (!meta.loading && (meta.error || !dishInfo)) {
+    return <ErrorPage message={meta.errorMessage} />;
   }
 
   return (
@@ -49,39 +73,46 @@ const DishPage: FC = () => {
         shape="square"
         bgColor="transparent"
       />
+      <DishPageSkeleton loading={meta.loading} />
 
-      <PhotoWrapper>
-        <DishPhoto src={dishInfo?.image} alt="dish" />
+      {!meta.loading && dishInfo && (
+        <>
+          <PhotoWrapper>
+            <DishPhoto src={dishInfo.image} alt="dish serving option" onError={replaceImage} />
 
-        <Nutrition title="Nutrition per serving">
-          {dishInfo?.nutrients.map(({ amount, name, unit }, i) => (
-            <Nutrient key={name + i}>
-              <NutrientPercent>
-                {Math.round(amount)}
-                {unit}
-              </NutrientPercent>
-              <NutrientName>{name}</NutrientName>
-            </Nutrient>
-          ))}
-        </Nutrition>
-      </PhotoWrapper>
+            <Nutrition title="Nutrition per serving">
+              {dishInfo.nutrients.map(({ amount, name, unit }, i) => (
+                <Nutrient key={name + i}>
+                  <NutrientPercent>
+                    {Math.round(amount)}
+                    {unit}
+                  </NutrientPercent>
+                  <NutrientName>{name}</NutrientName>
+                </Nutrient>
+              ))}
+            </Nutrition>
+          </PhotoWrapper>
 
-      <RecipeInfo>
-        <RecipeName>{dishInfo?.title}</RecipeName>
+          <RecipeInfo>
+            <RecipeName>{dishInfo.title}</RecipeName>
 
-        <RecipeStats>
-          <StatsItem>
-            <ClockIcon />
-            <StatsName>{dishInfo?.readyInMinutes} minutes</StatsName>
-          </StatsItem>
-          <StatsItem>
-            <HeartIcon />
-            <StatsName>{dishInfo?.aggregateLikes} likes</StatsName>
-          </StatsItem>
-        </RecipeStats>
+            <RecipeStats>
+              {stats.map(({ icon, quantity, name }, i) => (
+                <StatsItem key={i}>
+                  {icon}
+                  <StatsName>
+                    {quantity} {formPlural(name, quantity || 0)}
+                  </StatsName>
+                </StatsItem>
+              ))}
+            </RecipeStats>
 
-        <RecipeDescription>{dishInfo?.instructions}</RecipeDescription>
-      </RecipeInfo>
+            <RecipeDescription>{parse(dishInfo.summary)}</RecipeDescription>
+
+            {!!dishInfo.steps.length && <RecipeInstructions steps={dishInfo.steps} />}
+          </RecipeInfo>
+        </>
+      )}
     </PageWrapper>
   );
 };

@@ -4,6 +4,7 @@ import { Option } from '@components/MultiDropdown';
 import { mock } from '@pages/RecipesPage/mock';
 import ApiRequest from '@stores/ApiRequest';
 import { DishWithNutritionType } from '@stores/DishStore';
+import MetaStore from '@stores/MetaStore';
 import QueryStore from '@stores/QueryStore';
 import RootStore from '@stores/RootStore';
 import { AllRecipesPaths } from '@typings/api';
@@ -11,10 +12,14 @@ import { getAllRecipesUrl } from '@utils/getUrl';
 
 import { IRecipesStore, normalizeRecipes, RecipesType } from './model';
 
+type PrivateFields = '_queryStore' | '_meta' | 'currentOffset';
+
 class RecipesStore implements IRecipesStore {
   private readonly _rootStore: RootStore;
   private readonly _queryStore: QueryStore;
+
   private readonly _apiRequest = new ApiRequest();
+  private readonly _meta = new MetaStore();
 
   // todo call first 30 items
   private readonly requestItemsNumber = 20;
@@ -22,16 +27,21 @@ class RecipesStore implements IRecipesStore {
   public recipes: DishWithNutritionType[] | null = null;
 
   private currentOffset = 0;
-  public totalResults = 0;
+  public totalResults: null | number = null;
 
   constructor(rootStore: RootStore) {
-    makeAutoObservable<RecipesStore, '_rootStore'>(this);
+    makeAutoObservable<RecipesStore, PrivateFields>(this);
     this._rootStore = rootStore;
     this._queryStore = this._rootStore.queryStore;
   }
 
+  get meta() {
+    return this._meta;
+  }
+
   private get mealTypes() {
-    return this._queryStore.type?.split(',') || [];
+    const type = this._queryStore.type;
+    return !!type ? type.split(',') : [];
   }
 
   setRecipes = (recipes: DishWithNutritionType[]) => {
@@ -39,7 +49,9 @@ class RecipesStore implements IRecipesStore {
   };
 
   getAllRecipes = async (qStr?: string, typesOpts?: Option[]) => {
+    this._meta.setLoading();
     this._onParamsUpdate({ qStr, typesOpts });
+    this._queryStore.setParams({ offset: String(this.currentOffset) });
 
     const url = getAllRecipesUrl(AllRecipesPaths.complex, this._queryStore.getParams());
 
@@ -64,12 +76,13 @@ class RecipesStore implements IRecipesStore {
         runInAction(() => {
           this.totalResults = data.totalResults;
           this.currentOffset += this.requestItemsNumber;
-          this._queryStore.setParams({ offset: String(this.currentOffset) });
         });
       }
     } catch (error: any) {
+      this._meta.setError();
       throw new Error('getAllRecipes', error.message);
     }
+    this._meta.setInitial();
   };
 
   private _onParamsUpdate = ({ qStr, typesOpts }: { qStr?: string; typesOpts?: Option[] }) => {
@@ -85,8 +98,6 @@ class RecipesStore implements IRecipesStore {
 
     const didSearchUpdate = didQueryUpdate || didTypesUpdate;
 
-    this._queryStore.setParams({ number: String(this.requestItemsNumber) });
-
     if (didQueryUpdate) {
       this._queryStore.setParams({ query: q });
     }
@@ -94,6 +105,8 @@ class RecipesStore implements IRecipesStore {
     if (didTypesUpdate) {
       this._queryStore.setParams({ type: types.join(',') });
     }
+
+    this._queryStore.setParams({ number: String(this.requestItemsNumber) });
 
     if (didSearchUpdate) {
       this.setRecipes([]);

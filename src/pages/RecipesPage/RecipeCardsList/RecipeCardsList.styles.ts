@@ -1,14 +1,5 @@
 import styled from 'styled-components';
 
-export const PageWrapper = styled.div`
-  margin: 24px auto;
-  width: 68vw;
-
-  @media (max-width: 600px) {
-    width: calc(100vw - 24px);
-  }
-`;
-
 export const CardsWrapper = styled.div`
   --columns-count: 5;
 
@@ -31,12 +22,4 @@ export const CardsWrapper = styled.div`
   @media (max-width: 500px) {
     --columns-count: 2;
   }
-`;
-
-export const LoaderWrapper = styled.div`
-  padding: 20px 0 10px 0;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `;

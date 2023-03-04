@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 
 import Button from '@components/Button';
 import { PlusIcon } from '@static/icons';
+import { replaceImage } from '@utils/replaceImage';
 
 import {
   CardFooter,
@@ -26,7 +27,7 @@ const RecipeCard: React.FC<CardProps> = ({ image, title, ingredients, calories, 
   return (
     <CardWrapper onClick={onClick}>
       <div>
-        <CardImage src={image} alt="cooked dish" />
+        <CardImage src={image} alt="dish serving" onError={replaceImage} />
       </div>
       <CardInfo>
         <RecipeName>{title}</RecipeName>

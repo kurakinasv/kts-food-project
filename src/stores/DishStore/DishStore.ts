@@ -1,53 +1,59 @@
-import axios from 'axios';
 import { makeAutoObservable } from 'mobx';
 
+import { mock } from '@pages/DishPage/mock';
+import ApiRequest from '@stores/ApiRequest';
+import MetaStore from '@stores/MetaStore';
 import { getSingleRecipeUrl } from '@utils/getUrl';
 
 import { IDishStore, ExtendedDishApiType, ExtendedDishType, normalizeDish } from './model';
 
-type ErrorResponseType = {
-  message: string;
-  isError: boolean;
-};
+type PrivateFields = '_meta' | '_dishInfo';
 
 class DishStore implements IDishStore {
-  public dishInfo: ExtendedDishType | null = null;
-  public error: ErrorResponseType | null = {
-    message: '',
-    isError: false,
-  };
+  private readonly _meta = new MetaStore();
+  private readonly _apiRequest = new ApiRequest();
+
+  private _dishInfo: ExtendedDishType | null = null;
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable<DishStore, PrivateFields>(this);
+  }
+
+  get meta() {
+    return this._meta;
+  }
+
+  get dishInfo() {
+    return this._dishInfo;
   }
 
   setDishInfo = (info: ExtendedDishType) => {
-    this.dishInfo = info;
-  };
-
-  setError = (err: ErrorResponseType) => {
-    this.error = err;
+    this._dishInfo = info;
   };
 
   getDish = async (id: number) => {
+    this._meta.setLoading();
     const url = getSingleRecipeUrl(id);
 
     try {
-      const response: { data: ExtendedDishApiType; status: number } = await axios.get(url);
+      const data = await this._apiRequest.request<ExtendedDishApiType>(url);
 
-      if (!response.data) {
-        // todo get error message
-        throw new Error('Error while handling request');
+      // todo delete mock
+      // const data = await new Promise<ExtendedDishType | null>((res) => {
+      //   setTimeout(() => res(mock), 2000);
+      // });
+
+      if (data) {
+        // this.setDishInfo(data);
+        this.setDishInfo(normalizeDish(data));
       }
 
-      console.log('getDish', response.data);
-
-      this.setDishInfo(normalizeDish(response.data));
       // todo configure error type
     } catch (error: any) {
-      this.setError({ isError: true, message: error.message });
+      this._meta.setError(error.message);
       throw new Error('getDish', error.message);
     }
+    this._meta.setInitial();
   };
 }
 

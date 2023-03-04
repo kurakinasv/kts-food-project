@@ -9,7 +9,7 @@ import { RootStoreProvider } from '@stores/RootStore';
 
 export enum RouterPaths {
   recipes = '/',
-  dish = '/dish/:id',
+  recipe = '/recipe/:id',
 }
 
 const Dish = () => (
@@ -24,7 +24,7 @@ const Router: FC = () => {
       <BrowserRouter>
         <Routes>
           <Route path={RouterPaths.recipes} element={<RecipesPage />} />
-          <Route path={RouterPaths.dish} element={<Dish />} />
+          <Route path={RouterPaths.recipe} element={<Dish />} />
           <Route path="*" element={<Navigate to={RouterPaths.recipes} replace />} />
         </Routes>
       </BrowserRouter>

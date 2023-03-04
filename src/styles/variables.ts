@@ -28,3 +28,8 @@ export const fonts = {
   primary: "'Avenir', sans-serif",
   secondary: "'DM Sans', sans-serif",
 };
+
+export const breakpoints = {
+  mobile: '769px',
+  desktop: '1021px',
+};

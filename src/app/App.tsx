@@ -1,4 +1,4 @@
-import GlobalStyle from '@styles/globalStyle';
+import GlobalStyle, { BackgroundImage } from '@styles/globalStyle';
 
 import Router from './Router';
 
@@ -6,6 +6,7 @@ const App = () => {
   return (
     <>
       <GlobalStyle />
+      <BackgroundImage />
       <Router />
     </>
   );

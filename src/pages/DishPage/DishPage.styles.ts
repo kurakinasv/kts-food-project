@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 
 import Button from '@components/Button';
-import { colors, fonts, gradients, rgbColors, shadows } from '@styles/variables';
-
-const mobileBreakpoint = '769px';
-const desktopBreakpoint = '1021px';
+import { breakpoints, colors, fonts, gradients, rgbColors, shadows } from '@styles/variables';
 
 const desctopPaddingTop = '80px';
 
@@ -12,14 +9,14 @@ export const PageWrapper = styled.div`
   height: 100vh;
   position: relative;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     height: auto;
 
     display: flex;
     gap: 50px;
   }
 
-  @media (min-width: ${desktopBreakpoint}) {
+  @media (min-width: ${breakpoints.desktop}) {
     gap: 100px;
   }
 `;
@@ -31,7 +28,7 @@ export const FixedButton = styled(Button)`
 
   z-index: 3;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     top: ${desctopPaddingTop};
     left: 2%;
   }
@@ -45,7 +42,7 @@ export const PhotoWrapper = styled.div`
   height: 100vh;
   z-index: 1;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     position: sticky;
     width: auto;
 
@@ -62,7 +59,7 @@ export const PhotoWrapper = styled.div`
 export const DishPhoto = styled.img`
   width: 100%;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     width: 90%;
     border-radius: 16px;
     margin-bottom: 40px;
@@ -73,13 +70,17 @@ export const DishPhoto = styled.img`
   @media (max-width: 550px) {
     width: auto;
     object-fit: contain;
+
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
   }
 `;
 
 export const Nutrition = styled.div`
   display: none;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     width: 100%;
     padding: 0 20px;
 
@@ -113,7 +114,7 @@ export const NutrientPercent = styled.span`
   font-weight: 600;
   font-size: 66px;
 
-  @media (max-width: ${desktopBreakpoint}) {
+  @media (max-width: ${breakpoints.desktop}) {
     font-size: 58px;
   }
 `;
@@ -152,7 +153,7 @@ export const RecipeInfo = styled.div`
     border-radius: 12px;
   }
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     min-height: auto;
     padding: ${desctopPaddingTop} 5% 60px 0;
 
@@ -161,6 +162,7 @@ export const RecipeInfo = styled.div`
 
     flex-basis: 60%;
     border-radius: 0;
+    background-color: transparent;
 
     &::after {
       display: none;
@@ -178,7 +180,7 @@ export const RecipeName = styled.h2`
 
   color: #09051c;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     margin-bottom: 26px;
 
     font-size: 40px;
@@ -189,17 +191,29 @@ export const RecipeName = styled.h2`
 export const RecipeStats = styled.div`
   margin-bottom: 25px;
   display: flex;
-  gap: 30px;
+  flex-wrap: wrap;
+  column-gap: 20px;
+  row-gap: 10px;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     margin-bottom: 35px;
+    column-gap: 30px;
   }
 `;
 
 export const StatsItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 7px;
+
+  & > svg {
+    max-width: 18px;
+    max-height: 25px;
+  }
+
+  @media (min-width: ${breakpoints.mobile}) {
+    gap: 15px;
+  }
 `;
 
 export const StatsName = styled.div`
@@ -209,13 +223,14 @@ export const StatsName = styled.div`
 
   color: rgba(${rgbColors.textGrey}, 0.3);
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     font-size: 18px;
   }
 `;
 
 export const RecipeDescription = styled.div`
   max-width: 750px;
+  margin-bottom: 35px;
 
   font-weight: 500;
   font-size: 12px;
@@ -223,7 +238,49 @@ export const RecipeDescription = styled.div`
 
   color: ${colors.black};
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${breakpoints.mobile}) {
     font-size: 16px;
+  }
+
+  & b {
+    color: ${colors.red};
+  }
+
+  & a {
+    color: ${colors.red};
+    position: relative;
+    display: inline-block;
+
+    &:hover::after {
+      height: 100%;
+    }
+
+    &:visited {
+      color: #6b01ac;
+
+      &::after {
+        background-color: #f0dcfc;
+      }
+    }
+
+    &::after {
+      content: '';
+      display: inline-block;
+      width: calc(100% + 6px);
+      height: 1px;
+
+      position: absolute;
+      bottom: 0;
+      left: -3px;
+      z-index: -1;
+
+      border-radius: 4px;
+      background-color: ${colors.pink};
+      transition: height 0.2s ease-in-out;
+    }
+  }
+
+  & p {
+    margin-bottom: 12px;
   }
 `;

@@ -4,3 +4,4 @@ export { default as HeartIcon } from './HeartIcon';
 export { default as ArrowIcon } from './ArrowIcon';
 export { default as UpArrowIcon } from './UpArrowIcon';
 export { default as PlusIcon } from './PlusIcon';
+export { default as DishIcon } from './DishIcon';

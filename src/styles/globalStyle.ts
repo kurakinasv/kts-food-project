@@ -1,4 +1,6 @@
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
+
+import pattern from '@static/images/bg-pattern.png';
 
 import AvenirFont from './fonts/Avenir/fonts';
 import DMSansFont from './fonts/DMSans/fonts';
@@ -40,6 +42,23 @@ const GlobalStyle = createGlobalStyle`
 
   ul, li, ol {
     list-style: none;
+  }
+`;
+
+export const BackgroundImage = styled.div`
+  width: 610px;
+  min-height: 400px;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  background-image: url(${pattern});
+  transform: translate3d(38%, -98%, 0) rotate(290deg);
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    transform: translate3d(44%, -108%, 0) rotate(290deg);
   }
 `;
 

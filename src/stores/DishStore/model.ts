@@ -24,6 +24,22 @@ type NutritionApiType = {
   };
 };
 
+type InstructionStepsApi = {
+  equipment: Array<unknown>;
+  ingredients: Array<unknown>;
+  length?: {
+    number: number;
+    unit: string;
+  };
+  number: number; // number of step
+  step: string;
+};
+
+type AnalyzedInstructionsApi = {
+  name: string;
+  steps: InstructionStepsApi[];
+};
+
 // getting all recipes by /complexSearch?addRecipeNutrition=true
 export type DishWithNutritionApiType = DishApiType & NutritionApiType;
 
@@ -35,6 +51,8 @@ export type ExtendedDishApiType = DishApiType &
     summary: string;
 
     instructions: string;
+    servings: number;
+    analyzedInstructions: AnalyzedInstructionsApi[];
   };
 
 //------------------------------------------
@@ -51,6 +69,11 @@ type NutritionType = {
   nutrients: NutrientType[];
 };
 
+export type InstructionStepsModel = {
+  number: number; // number of step
+  step: string;
+};
+
 export type DishWithNutritionType = DishType & NutritionType;
 
 export type ExtendedDishType = DishType &
@@ -60,6 +83,8 @@ export type ExtendedDishType = DishType &
     summary: string;
 
     instructions: string;
+    servings: number;
+    steps: InstructionStepsModel[];
   };
 
 //------------------------------------------
@@ -71,13 +96,46 @@ export interface IDishStore {
   getDish(id: number): Promise<void>;
 }
 
+const normalizeSteps = (steps: InstructionStepsApi[]): InstructionStepsModel[] =>
+  steps.map(({ number, step }) => ({ number, step }));
+
+const normalizeInstructions = (
+  apiInstructions: AnalyzedInstructionsApi[]
+): InstructionStepsApi[] => {
+  if (!apiInstructions.length) {
+    return [];
+  }
+
+  // add name property to the first step
+  const instructions = apiInstructions.map(({ name, steps }) => {
+    const [step1, ...subSteps] = steps;
+    const nameToAdd = !!name ? name + '. ' : '';
+    return [{ ...step1, step: `${nameToAdd}${step1.step}` }, ...subSteps];
+  });
+
+  return instructions.flat();
+};
+
 export const normalizeDish = (apiDish: ExtendedDishApiType): ExtendedDishType => {
-  const { id, aggregateLikes, image, instructions, readyInMinutes, summary, title, nutrition } =
-    apiDish;
+  const {
+    id,
+    aggregateLikes,
+    image,
+    instructions,
+    readyInMinutes,
+    summary,
+    title,
+    nutrition,
+    analyzedInstructions,
+    servings,
+  } = apiDish;
 
   const ingredients = nutrition.ingredients.map((item) => item.name);
 
   const { calories, nutrients } = normalizeNutrients(nutrition.nutrients);
+
+  const instructionSteps = normalizeInstructions(analyzedInstructions);
+  const steps = normalizeSteps(instructionSteps);
 
   const dish: ExtendedDishType = {
     id,
@@ -90,6 +148,8 @@ export const normalizeDish = (apiDish: ExtendedDishApiType): ExtendedDishType =>
     ingredients,
     calories,
     nutrients,
+    steps,
+    servings,
   };
 
   return dish;
