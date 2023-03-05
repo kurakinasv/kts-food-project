@@ -3,6 +3,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
+import Alert from '@components/Alert';
 import Loader from '@components/Loader';
 import { Option } from '@components/MultiDropdown';
 import OnTopButton from '@components/OnTopButton';
@@ -77,6 +78,13 @@ const RecipesPage: FC = () => {
         options={selectedOptions}
         setSearchValue={setSearchValue}
         setSelectedOptions={setSelectedOptions}
+      />
+
+      <Alert
+        message={meta.error?.message || ''}
+        status="error"
+        open={!meta.loading && meta.isError}
+        statusCode={meta.error?.code}
       />
 
       {!meta.loading && !totalResults && <EmptySearch resetButtonAction={clearFilters} />}

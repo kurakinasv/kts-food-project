@@ -47,11 +47,9 @@ class DishStore implements IDishStore {
         // this.setDishInfo(data);
         this.setDishInfo(normalizeDish(data));
       }
-
-      // todo configure error type
     } catch (error: any) {
-      this._meta.setError(error.message);
-      throw new Error('getDish', error.message);
+      this._meta.setError(this._apiRequest.error);
+      throw new Error(`getDish: ${error.message}`);
     }
     this._meta.setInitial();
   };

@@ -1,12 +1,12 @@
 import { makeAutoObservable } from 'mobx';
 
-import { Meta } from '@typings/meta';
+import { ErrorResponse, Meta } from '@typings/meta';
 
 type PrivateFields = '_currentState' | '_errorMessage';
 
 class MetaStore {
   private _currentState = Meta.initial;
-  private _errorMessage = '';
+  private _error: ErrorResponse | null = null;
 
   constructor() {
     makeAutoObservable<MetaStore, PrivateFields>(this);
@@ -16,28 +16,30 @@ class MetaStore {
     return this._currentState === Meta.loading;
   }
 
-  get error() {
+  get isError() {
     return this._currentState === Meta.error;
   }
 
-  get errorMessage() {
-    return this._errorMessage;
+  get error() {
+    return this._error;
   }
 
   setLoading = () => {
     this._currentState = Meta.loading;
   };
 
-  setError = (message?: string) => {
-    this._currentState = Meta.error;
-
-    if (message) {
-      this._errorMessage = message;
+  setError = (error: ErrorResponse | null) => {
+    if (error === null) {
+      this._currentState = Meta.initial;
+    } else {
+      this._currentState = Meta.error;
     }
+    this._error = error;
   };
 
   setInitial = () => {
     this._currentState = Meta.initial;
+    this._error = null;
   };
 }
 

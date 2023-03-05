@@ -1,7 +1,23 @@
-import axios from 'axios';
+import axios, { AxiosError, HttpStatusCode, isAxiosError } from 'axios';
+
+import { ErrorResponse } from '@typings/meta';
+
+type ApiResponse<T> = {
+  data: T;
+  status: HttpStatusCode;
+};
 
 class ApiRequest {
   private controller: AbortController | null = null;
+  private _error: ErrorResponse | null = null;
+
+  get error() {
+    return this._error;
+  }
+
+  private _setError = (err: ErrorResponse | null) => {
+    this._error = err;
+  };
 
   request = async <T>(url: string) => {
     if (this.controller !== null) {
@@ -12,7 +28,7 @@ class ApiRequest {
     this.controller = new AbortController();
 
     try {
-      const response: { data: T } = await axios.get(url, { signal: this.controller.signal });
+      const response: ApiResponse<T> = await axios.get(url, { signal: this.controller.signal });
 
       if (this.controller.signal.aborted) {
         return;
@@ -27,9 +43,28 @@ class ApiRequest {
       this.controller = null;
 
       return response.data;
-    } catch (error: any) {
-      throw new Error(error.message);
+    } catch (error: AxiosError | unknown) {
+      if (isAxiosError(error) && error.response) {
+        const res = error.response;
+
+        if (res.status === 401) {
+          this._throwError('Not relevant API key', 401);
+        }
+
+        this._throwError(res.data.message, res.data.code);
+      }
+
+      if (error instanceof Error) {
+        this._throwError(error.message);
+      }
+
+      this._throwError(`Unknown error: ${error}`);
     }
+  };
+
+  private _throwError = (message: string, code: HttpStatusCode = 404): Error => {
+    this._setError({ message, code });
+    throw new Error(message);
   };
 }
 

@@ -60,8 +60,8 @@ const DishPage: FC = () => {
     [dishInfo]
   );
 
-  if (!meta.loading && (meta.error || !dishInfo)) {
-    return <ErrorPage message={meta.errorMessage} />;
+  if (!meta.loading && (meta.isError || !dishInfo)) {
+    return <ErrorPage message={meta.error?.message || ''} />;
   }
 
   return (

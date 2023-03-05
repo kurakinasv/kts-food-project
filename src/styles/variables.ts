@@ -6,11 +6,14 @@ export const colors = {
   black: '#000000',
   textGrey: '#3b3b3b',
   textBlack: '#0d0d0d',
+  darkGreen: '#0C6C54',
+  green: '#009D76',
 };
 
 export const rgbColors = {
   textGrey: '59, 59, 59',
   red: '255, 0, 0',
+  green: '0, 157, 118',
 };
 
 export const gradients = {

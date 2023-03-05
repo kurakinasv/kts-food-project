@@ -79,8 +79,8 @@ class RecipesStore implements IRecipesStore {
         });
       }
     } catch (error: any) {
-      this._meta.setError();
-      throw new Error('getAllRecipes', error.message);
+      this._meta.setError(this._apiRequest.error);
+      throw new Error(`getAllRecipes: ${error.message}`);
     }
     this._meta.setInitial();
   };
