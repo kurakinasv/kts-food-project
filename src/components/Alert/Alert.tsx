@@ -1,6 +1,9 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, memo } from 'react';
 
+import { config, useTransition } from '@react-spring/web';
 import { HttpStatusCode } from 'axios';
+
+import { alertShowTime } from '@config/ui';
 
 import { AlertWrapper, Message, StatusCode } from './Alert.styles';
 
@@ -14,22 +17,33 @@ type AlertProps = {
 };
 
 const Alert: FC<AlertProps> = ({ message, status, open, statusCode }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const transitions = useTransition(open, {
+    from: { opacity: 0, x: '-50%', y: '0%', life: '100%' },
 
-  useEffect(() => {
-    setIsOpen(open);
-  }, [open]);
+    enter: (_) => async (next) => {
+      await next({ opacity: 1, y: '10%' });
+      await next({ life: '0%' });
+    },
 
-  if (open) {
-    setTimeout(() => setIsOpen(false), 3000);
-  }
+    leave: { opacity: 0, y: '0%' },
+
+    config: (_, __, phase) => (key) =>
+      phase === 'enter' && key === 'life' ? { duration: alertShowTime } : config.gentle,
+  });
 
   return (
-    <AlertWrapper status={status} active={isOpen}>
-      <Message>{message}</Message>
-      <StatusCode status={status}>{statusCode}</StatusCode>
-    </AlertWrapper>
+    <>
+      {transitions(
+        (styles, open) =>
+          open && (
+            <AlertWrapper style={styles} status={status}>
+              <Message>{message}</Message>
+              <StatusCode status={status}>{statusCode}</StatusCode>
+            </AlertWrapper>
+          )
+      )}
+    </>
   );
 };
 
-export default Alert;
+export default memo(Alert);

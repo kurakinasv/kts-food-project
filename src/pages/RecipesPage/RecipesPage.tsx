@@ -3,7 +3,7 @@ import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import Alert from '@components/Alert';
+import Alert, { useAlert } from '@components/Alert';
 import Loader from '@components/Loader';
 import { Option } from '@components/MultiDropdown';
 import OnTopButton from '@components/OnTopButton';
@@ -18,8 +18,15 @@ import { getInitialSelectedOptions } from './utils';
 
 const RecipesPage: FC = () => {
   const { getParam, decoratedRequest } = useQueryParams();
+  const { isOpen, openAlert } = useAlert();
 
   const { getAllRecipes, recipes, totalResults, meta } = useRecipes();
+
+  useEffect(() => {
+    if (!meta.loading && meta.isError) {
+      openAlert();
+    }
+  }, [meta.loading, meta.isError]);
 
   const [searchValue, setSearchValue] = useState(getParam('query'));
   const [selectedOptions, setSelectedOptions] = useState<Option[]>(
@@ -83,7 +90,7 @@ const RecipesPage: FC = () => {
       <Alert
         message={meta.error?.message || ''}
         status="error"
-        open={!meta.loading && meta.isError}
+        open={isOpen}
         statusCode={meta.error?.code}
       />
 

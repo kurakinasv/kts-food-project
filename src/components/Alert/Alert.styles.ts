@@ -1,10 +1,11 @@
+import { animated } from '@react-spring/web';
 import styled from 'styled-components';
 
 import { breakpoints, colors, fonts, rgbColors } from '@styles/variables';
 
 import { AlertStatus } from './Alert';
 
-export const AlertWrapper = styled.div<{ status: AlertStatus; active: boolean }>`
+export const AlertWrapper = styled(animated.div)<{ status: AlertStatus }>`
   width: clamp(400px, 100%, 30vw);
   min-height: 65px;
   padding: 16px;
@@ -22,16 +23,9 @@ export const AlertWrapper = styled.div<{ status: AlertStatus; active: boolean }>
   color: ${({ status }) => (status === 'error' ? colors.red : colors.darkGreen)};
 
   position: fixed;
-  top: 0;
+  top: 3%;
   left: 50%;
   z-index: 100;
-
-  transform: ${({ active }) => (active ? 'translate3d(-50%, 50%, 0)' : 'translate3d(-50%, 0, 0)')};
-  opacity: ${({ active }) => (active ? '1' : '0')};
-
-  transition-property: transform opacity;
-  transition-duration: 0.4s;
-  transition-timing-function: ease-in-out;
 
   @media (max-width: ${breakpoints.mobile}) {
     width: clamp(230px, 100%, 80vw);

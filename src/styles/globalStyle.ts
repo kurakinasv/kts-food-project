@@ -4,6 +4,7 @@ import pattern from '@static/images/bg-pattern.png';
 
 import AvenirFont from './fonts/Avenir/fonts';
 import DMSansFont from './fonts/DMSans/fonts';
+import { colors, rgbColors } from './variables';
 
 const GlobalStyle = createGlobalStyle`
   ${AvenirFont}
@@ -13,6 +14,18 @@ const GlobalStyle = createGlobalStyle`
     text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  
+    &::-webkit-scrollbar {
+        background-color: ${colors.pink};
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(${rgbColors.red}, 0.1);
+
+        &:hover{
+          background-color: rgba(${rgbColors.red}, 0.2);
+        }
+    }
   }
 
   *,
@@ -43,6 +56,7 @@ const GlobalStyle = createGlobalStyle`
   ul, li, ol {
     list-style: none;
   }
+
 `;
 
 export const BackgroundImage = styled.div`
