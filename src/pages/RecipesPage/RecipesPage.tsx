@@ -1,13 +1,14 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
+import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import Alert, { useAlert } from '@components/Alert';
 import Loader from '@components/Loader';
-import { Option } from '@components/MultiDropdown';
 import OnTopButton from '@components/OnTopButton';
 import { useRecipes } from '@stores/RootStore';
+import { Option } from '@typings/common';
 
 import EmptySearch from './EmptySearch';
 import RecipeCardsList from './RecipeCardsList';
@@ -23,9 +24,11 @@ const RecipesPage: FC = () => {
   const { getAllRecipes, recipes, totalResults, meta } = useRecipes();
 
   useEffect(() => {
-    if (!meta.loading && meta.isError) {
-      openAlert();
-    }
+    autorun(() => {
+      if (!meta.loading && meta.isError) {
+        openAlert();
+      }
+    });
   }, [meta.loading, meta.isError]);
 
   const [searchValue, setSearchValue] = useState(getParam('query'));
@@ -37,7 +40,7 @@ const RecipesPage: FC = () => {
   const getRecipes = useMemo(() => decoratedRequest(getAllRecipes), []);
 
   useEffect(() => {
-    if (!recipes) {
+    if (!recipes.length) {
       getRecipes(searchValue, selectedOptions);
     }
   }, []);

@@ -1,4 +1,5 @@
-import axios, { AxiosError, HttpStatusCode, isAxiosError } from 'axios';
+import axios, { AxiosError, CanceledError, HttpStatusCode, isAxiosError } from 'axios';
+import { action, makeAutoObservable, observable, runInAction } from 'mobx';
 
 import { ErrorResponse } from '@typings/meta';
 
@@ -7,9 +8,20 @@ type ApiResponse<T> = {
   status: HttpStatusCode;
 };
 
+type PrivateFields = '_controller' | '_error' | '_setError' | '_throwError';
+
 class ApiRequest {
-  private controller: AbortController | null = null;
+  private _controller: AbortController | null = null;
   private _error: ErrorResponse | null = null;
+
+  constructor() {
+    makeAutoObservable<ApiRequest, PrivateFields>(this, {
+      _controller: observable.ref,
+      _error: observable.ref,
+      _setError: action,
+      _throwError: action,
+    });
+  }
 
   get error() {
     return this._error;
@@ -20,30 +32,36 @@ class ApiRequest {
   };
 
   request = async <T>(url: string) => {
-    if (this.controller !== null) {
-      this.controller.abort('Controller is not null');
-      this.controller = null;
+    if (this._controller !== null) {
+      this._controller.abort('Controller is not null');
+      this._controller = null;
     }
 
-    this.controller = new AbortController();
+    this._controller = new AbortController();
 
     try {
-      const response: ApiResponse<T> = await axios.get(url, { signal: this.controller.signal });
+      const response: ApiResponse<T> = await axios.get(url, { signal: this._controller.signal });
 
-      if (this.controller.signal.aborted) {
-        return;
-      }
+      runInAction(() => {
+        if (this._controller && this._controller.signal.aborted) {
+          return;
+        }
 
-      if (!response.data) {
-        throw new Error('Error while fetching data');
-      }
+        if (!response.data) {
+          throw new Error('Error while fetching data');
+        }
 
-      // todo delete
-      console.log('request data:', response.data);
-      this.controller = null;
+        // todo delete
+        console.log('request data:', response.data);
+        this._controller = null;
+      });
 
       return response.data;
     } catch (error: AxiosError | unknown) {
+      if (error instanceof CanceledError) {
+        return;
+      }
+
       if (isAxiosError(error) && error.response) {
         const res = error.response;
 

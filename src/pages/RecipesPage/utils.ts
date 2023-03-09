@@ -1,5 +1,5 @@
-import { Option } from '@components/MultiDropdown';
-import { mealTypesOptions } from '@typings/api';
+import { mealTypesOptions } from '@stores/models/mealtypes';
+import { Option } from '@typings/common';
 
 const hasCommonOptions = (strToSearch: string | null) => (opt: Option) =>
   strToSearch?.split(',').includes(opt.key);

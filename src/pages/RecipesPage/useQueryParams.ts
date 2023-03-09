@@ -10,7 +10,13 @@ const useQueryParams = () => {
 
   const getParam = (paramName: SearchParamsNames) => searchParams.get(paramName) || '';
 
-  const updateParams = () => setSearchParams(getQueryString(getParams()));
+  const updateParams = () => {
+    const params = getParams();
+
+    if (params) {
+      setSearchParams(getQueryString(params));
+    }
+  };
 
   const decoratedRequest =
     <T extends Array<unknown>>(func: (...args: T) => Promise<void>) =>

@@ -1,31 +1,32 @@
+import { nutrientsNames } from '@config/recipe';
+
 export type NutrientsNames = 'Fat' | 'Carbohydrates' | 'Protein';
 
-export const nutrientsNames: NutrientsNames[] = ['Carbohydrates', 'Fat', 'Protein'];
 const caloriesApiName = 'Calories';
 
-export type NutrientApiType = {
+export type NutrientApi = {
   name: string;
   amount: number;
   unit: string;
   percentOfDailyNeeds: number;
 };
 
-export type NutrientType = {
+export type NutrientModel = {
   name: string;
   amount: number;
   unit: string;
 };
 
-export const normalizeNutrients = (apiNutrients: NutrientApiType[]) => {
+export const normalizeNutrients = (apiNutrients: NutrientApi[]) => {
   const calories = apiNutrients.find((item) => item.name === caloriesApiName)?.amount ?? 0;
 
   const filteredNutrients = apiNutrients.filter(
     ({ name }) => nutrientsNames.findIndex((item) => item === name) !== -1
   );
 
-  const nutrients: NutrientType[] = filteredNutrients.reduce(
-    (arr, { amount, name, unit }) => [...arr, { amount, name, unit }],
-    [] as NutrientType[]
+  const nutrients: NutrientModel[] = filteredNutrients.reduce(
+    (acc, { amount, name, unit }) => [...acc, { amount, name, unit }],
+    [] as NutrientModel[]
   );
 
   return { calories, nutrients };

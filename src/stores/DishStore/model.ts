@@ -1,51 +1,41 @@
+import {
+  AnalyzedInstructionsApi,
+  InstructionStepsModel,
+  normalizeInstructions,
+  normalizeSteps,
+} from '@stores/models/instructions';
+import { normalizeNutrients, NutrientApi, NutrientModel } from '@stores/models/nutrients';
 import { ImageType, ImageURL, UniqueId } from '@typings/common';
-import { normalizeNutrients, NutrientApiType, NutrientType } from '@typings/nutrients';
 
-type IngredientApiType = {
+type IngredientApi = {
   id: UniqueId;
   name: string;
   amount: number;
   unit: string;
-  nutrients: NutrientApiType[];
+  nutrients: NutrientApi[];
 };
 
 // getting data by /complexSearch
-type DishApiType = {
+type DishApi = {
   id: UniqueId;
   title: string;
   image: ImageURL;
   imageType: ImageType;
 };
 
-type NutritionApiType = {
+type NutritionApi = {
   nutrition: {
-    ingredients: IngredientApiType[];
-    nutrients: NutrientApiType[];
+    ingredients: IngredientApi[];
+    nutrients: NutrientApi[];
   };
-};
-
-type InstructionStepsApi = {
-  equipment: Array<unknown>;
-  ingredients: Array<unknown>;
-  length?: {
-    number: number;
-    unit: string;
-  };
-  number: number; // number of step
-  step: string;
-};
-
-type AnalyzedInstructionsApi = {
-  name: string;
-  steps: InstructionStepsApi[];
 };
 
 // getting all recipes by /complexSearch?addRecipeNutrition=true
-export type DishWithNutritionApiType = DishApiType & NutritionApiType;
+export type DishWithNutritionApi = DishApi & NutritionApi;
 
 // getting one recipe by :id/information?includeNutrition=true
-export type ExtendedDishApiType = DishApiType &
-  NutritionApiType & {
+export type ExtendedDishApi = DishApi &
+  NutritionApi & {
     aggregateLikes: number;
     readyInMinutes: number;
     summary: string;
@@ -57,27 +47,22 @@ export type ExtendedDishApiType = DishApiType &
 
 //------------------------------------------
 
-type DishType = {
+type DishModel = {
   id: UniqueId;
   title: string;
   image: ImageURL;
 };
 
-type NutritionType = {
+type NutritionModel = {
   ingredients: string[];
   calories: number;
-  nutrients: NutrientType[];
+  nutrients: NutrientModel[];
 };
 
-export type InstructionStepsModel = {
-  number: number; // number of step
-  step: string;
-};
+export type DishWithNutritionType = DishModel & NutritionModel;
 
-export type DishWithNutritionType = DishType & NutritionType;
-
-export type ExtendedDishType = DishType &
-  NutritionType & {
+export type ExtendedDishModel = DishModel &
+  NutritionModel & {
     aggregateLikes: number;
     readyInMinutes: number;
     summary: string;
@@ -90,33 +75,13 @@ export type ExtendedDishType = DishType &
 //------------------------------------------
 
 export interface IDishStore {
-  dishInfo: ExtendedDishType | null;
+  dishInfo: ExtendedDishModel | null;
 
-  setDishInfo(info: ExtendedDishType): void;
+  setDishInfo(info: ExtendedDishModel): void;
   getDish(id: number): Promise<void>;
 }
 
-const normalizeSteps = (steps: InstructionStepsApi[]): InstructionStepsModel[] =>
-  steps.map(({ number, step }) => ({ number, step }));
-
-const normalizeInstructions = (
-  apiInstructions: AnalyzedInstructionsApi[]
-): InstructionStepsApi[] => {
-  if (!apiInstructions.length) {
-    return [];
-  }
-
-  // add name property to the first step
-  const instructions = apiInstructions.map(({ name, steps }) => {
-    const [step1, ...subSteps] = steps;
-    const nameToAdd = !!name ? name + '. ' : '';
-    return [{ ...step1, step: `${nameToAdd}${step1.step}` }, ...subSteps];
-  });
-
-  return instructions.flat();
-};
-
-export const normalizeDish = (apiDish: ExtendedDishApiType): ExtendedDishType => {
+export const normalizeDish = (apiDish: ExtendedDishApi): ExtendedDishModel => {
   const {
     id,
     aggregateLikes,
@@ -137,7 +102,7 @@ export const normalizeDish = (apiDish: ExtendedDishApiType): ExtendedDishType =>
   const instructionSteps = normalizeInstructions(analyzedInstructions);
   const steps = normalizeSteps(instructionSteps);
 
-  const dish: ExtendedDishType = {
+  const dish: ExtendedDishModel = {
     id,
     aggregateLikes,
     image,

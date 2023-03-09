@@ -1,15 +1,18 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, observable } from 'mobx';
 
 import { ErrorResponse, Meta } from '@typings/meta';
 
-type PrivateFields = '_currentState' | '_errorMessage';
+type PrivateFields = '_currentState' | '_error';
 
 class MetaStore {
   private _currentState = Meta.initial;
   private _error: ErrorResponse | null = null;
 
   constructor() {
-    makeAutoObservable<MetaStore, PrivateFields>(this);
+    makeAutoObservable<MetaStore, PrivateFields>(this, {
+      _currentState: observable,
+      _error: observable.ref,
+    });
   }
 
   get loading() {

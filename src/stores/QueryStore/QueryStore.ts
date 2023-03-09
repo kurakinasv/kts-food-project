@@ -1,52 +1,34 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, observable } from 'mobx';
 
-import { searchParams } from '@config/api';
 import RootStore from '@stores/RootStore';
-import { ParamsMapType, SearchParamsNames, SearchParamsType } from '@typings/api';
+import { RecipesQueryParams, SearchParams } from '@typings/api';
 
-type PrivateFields = '_rootStore' | '_params';
+type PrivateFields = '_params';
 
 class QueryStore {
-  private _rootStore: RootStore;
-  private _params: Partial<SearchParamsType> | null = null;
+  private readonly _rootStore: RootStore;
+  private _params: Partial<SearchParams<RecipesQueryParams>> | null = null;
 
   constructor(rootStore: RootStore) {
-    makeAutoObservable<QueryStore, PrivateFields>(this);
+    makeAutoObservable<QueryStore, PrivateFields>(this, {
+      _params: observable.ref,
+    });
     this._rootStore = rootStore;
   }
 
   get query() {
-    return this._params?.query?.toString() || '';
+    return this._params?.query || '';
   }
 
   get type() {
-    return this._params?.type?.toString() || '';
+    return this._params?.type || '';
   }
 
   getParams = () => {
-    if (!this._params) {
-      return [];
-    }
-
-    // converting to key-value array
-    const paramsMapArray: ParamsMapType<SearchParamsNames> = Object.entries(this._params).reduce(
-      (acc, param) => {
-        const paramKey = param[0] as SearchParamsNames;
-
-        if (searchParams.includes(paramKey)) {
-          const key = paramKey;
-          return [...acc, [key, param[1]]];
-        }
-
-        return [...acc];
-      },
-      [] as ParamsMapType<SearchParamsNames>
-    );
-
-    return paramsMapArray;
+    return this._params;
   };
 
-  setParams = (params: Partial<SearchParamsType>) => {
+  setParams = (params: Partial<SearchParams<RecipesQueryParams>>) => {
     if (this._params) {
       this._params = { ...this._params, ...params };
     } else {

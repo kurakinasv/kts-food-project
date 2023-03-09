@@ -4,10 +4,10 @@ import { observer } from 'mobx-react-lite';
 
 import Button from '@components/Button';
 import Input from '@components/Input';
-import { Option } from '@components/MultiDropdown';
 import { SearchIcon } from '@static/icons';
+import { mealTypesOptions } from '@stores/models/mealtypes';
 import { useQueryStore, useRecipes } from '@stores/RootStore';
-import { mealTypesOptions } from '@typings/api';
+import { Option } from '@typings/common';
 
 import { SearchBarWrapper, StyledDropdown, SearchForm } from './SearchBar.styles';
 import useQueryParams from '../useQueryParams';

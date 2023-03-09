@@ -1,22 +1,24 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, observable, runInAction } from 'mobx';
 
 import { mock } from '@pages/DishPage/mock';
 import ApiRequest from '@stores/ApiRequest';
 import MetaStore from '@stores/MetaStore';
 import { getSingleRecipeUrl } from '@utils/getUrl';
 
-import { IDishStore, ExtendedDishApiType, ExtendedDishType, normalizeDish } from './model';
+import { IDishStore, ExtendedDishApi, ExtendedDishModel, normalizeDish } from './model';
 
-type PrivateFields = '_meta' | '_dishInfo';
+type PrivateFields = '_dishInfo';
 
 class DishStore implements IDishStore {
   private readonly _meta = new MetaStore();
   private readonly _apiRequest = new ApiRequest();
 
-  private _dishInfo: ExtendedDishType | null = null;
+  private _dishInfo: ExtendedDishModel | null = null;
 
   constructor() {
-    makeAutoObservable<DishStore, PrivateFields>(this);
+    makeAutoObservable<DishStore, PrivateFields>(this, {
+      _dishInfo: observable.ref,
+    });
   }
 
   get meta() {
@@ -27,7 +29,7 @@ class DishStore implements IDishStore {
     return this._dishInfo;
   }
 
-  setDishInfo = (info: ExtendedDishType) => {
+  setDishInfo = (info: ExtendedDishModel) => {
     this._dishInfo = info;
   };
 
@@ -36,22 +38,28 @@ class DishStore implements IDishStore {
     const url = getSingleRecipeUrl(id);
 
     try {
-      const data = await this._apiRequest.request<ExtendedDishApiType>(url);
+      const data = await this._apiRequest.request<ExtendedDishApi>(url);
 
       // todo delete mock
       // const data = await new Promise<ExtendedDishType | null>((res) => {
       //   setTimeout(() => res(mock), 2000);
       // });
 
-      if (data) {
-        // this.setDishInfo(data);
-        this.setDishInfo(normalizeDish(data));
-      }
+      runInAction(() => {
+        if (data) {
+          // this.setDishInfo(data);
+          this.setDishInfo(normalizeDish(data));
+        }
+      });
     } catch (error: any) {
-      this._meta.setError(this._apiRequest.error);
+      runInAction(() => {
+        this._meta.setError(this._apiRequest.error);
+      });
       throw new Error(`getDish: ${error.message}`);
     }
-    this._meta.setInitial();
+    runInAction(() => {
+      this._meta.setInitial();
+    });
   };
 }
 

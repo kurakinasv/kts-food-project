@@ -1,16 +1,13 @@
 import React, { memo, useState } from 'react';
 
+import { Option } from '@typings/common';
+
 import {
   DropdownButton,
   DropdownMenu,
   DropdownOption,
   DropdownWrapper,
 } from './MultiDropdown.styles';
-
-export type Option = {
-  key: string;
-  value: string;
-};
 
 export type MultiDropdownProps = {
   options: Option[];

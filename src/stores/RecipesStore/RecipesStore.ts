@@ -1,18 +1,29 @@
-import { makeAutoObservable, runInAction } from 'mobx';
+import { action, computed, makeAutoObservable, observable, runInAction } from 'mobx';
 
-import { Option } from '@components/MultiDropdown';
 import { mock } from '@pages/RecipesPage/mock';
 import ApiRequest from '@stores/ApiRequest';
 import { DishWithNutritionType } from '@stores/DishStore';
 import MetaStore from '@stores/MetaStore';
+import {
+  CollectionModel,
+  getInitialCollection,
+  linearizeCollection,
+  normalizeCollection,
+} from '@stores/models/shared';
 import QueryStore from '@stores/QueryStore';
 import RootStore from '@stores/RootStore';
 import { AllRecipesPaths } from '@typings/api';
+import { Option, UniqueId } from '@typings/common';
 import { getAllRecipesUrl } from '@utils/getUrl';
 
-import { IRecipesStore, normalizeRecipes, RecipesType } from './model';
+import { IRecipesStore, normalizeRecipes, RecipesModel } from './model';
 
-type PrivateFields = '_queryStore' | '_meta' | 'currentOffset';
+type PrivateFields =
+  | '_rootStore'
+  | '_recipes'
+  | '_currentOffset'
+  | '_mealTypes'
+  | '_onParamsUpdate';
 
 class RecipesStore implements IRecipesStore {
   private readonly _rootStore: RootStore;
@@ -24,13 +35,19 @@ class RecipesStore implements IRecipesStore {
   // todo call first 30 items
   private readonly requestItemsNumber = 20;
 
-  public recipes: DishWithNutritionType[] | null = null;
+  private _recipes: CollectionModel<UniqueId, DishWithNutritionType> = getInitialCollection();
 
-  private currentOffset = 0;
+  private _currentOffset = 0;
   public totalResults: null | number = null;
 
   constructor(rootStore: RootStore) {
-    makeAutoObservable<RecipesStore, PrivateFields>(this);
+    makeAutoObservable<RecipesStore, PrivateFields>(this, {
+      _rootStore: false,
+      _recipes: observable.ref,
+      _currentOffset: observable,
+      _mealTypes: computed,
+      _onParamsUpdate: action,
+    });
     this._rootStore = rootStore;
     this._queryStore = this._rootStore.queryStore;
   }
@@ -39,24 +56,29 @@ class RecipesStore implements IRecipesStore {
     return this._meta;
   }
 
-  private get mealTypes() {
+  get recipes(): DishWithNutritionType[] {
+    return linearizeCollection(this._recipes);
+  }
+
+  private get _mealTypes() {
     const type = this._queryStore.type;
     return !!type ? type.split(',') : [];
   }
 
   setRecipes = (recipes: DishWithNutritionType[]) => {
-    this.recipes = recipes;
+    this._recipes = normalizeCollection(recipes, (recipes) => recipes.id);
   };
 
   getAllRecipes = async (qStr?: string, typesOpts?: Option[]) => {
     this._meta.setLoading();
     this._onParamsUpdate({ qStr, typesOpts });
-    this._queryStore.setParams({ offset: String(this.currentOffset) });
+    this._queryStore.setParams({ offset: String(this._currentOffset) });
 
-    const url = getAllRecipesUrl(AllRecipesPaths.complex, this._queryStore.getParams());
+    const params = this._queryStore.getParams() || undefined;
+    const url = getAllRecipesUrl(AllRecipesPaths.complex, params);
 
     try {
-      const data = await this._apiRequest.request<RecipesType>(url);
+      const data = await this._apiRequest.request<RecipesModel>(url);
 
       // todo delete mock
       // const mockData: RecipesType = { results: [], totalResults: 0 };
@@ -70,19 +92,22 @@ class RecipesStore implements IRecipesStore {
       //   setTimeout(() => res(mockData), 2000);
       // });
 
-      if (data) {
-        this.setRecipes([...(this.recipes ?? []), ...normalizeRecipes(data)]);
-
-        runInAction(() => {
+      runInAction(() => {
+        if (data) {
+          this.setRecipes([...this.recipes, ...normalizeRecipes(data)]);
           this.totalResults = data.totalResults;
-          this.currentOffset += this.requestItemsNumber;
-        });
-      }
+          this._currentOffset += this.requestItemsNumber;
+        }
+      });
     } catch (error: any) {
-      this._meta.setError(this._apiRequest.error);
+      runInAction(() => {
+        this._meta.setError(this._apiRequest.error);
+      });
       throw new Error(`getAllRecipes: ${error.message}`);
     }
-    this._meta.setInitial();
+    runInAction(() => {
+      this._meta.setInitial();
+    });
   };
 
   private _onParamsUpdate = ({ qStr, typesOpts }: { qStr?: string; typesOpts?: Option[] }) => {
@@ -93,8 +118,8 @@ class RecipesStore implements IRecipesStore {
 
     const didTypesUpdate =
       types !== undefined &&
-      (types.length !== this.mealTypes.length ||
-        types.every((type) => this.mealTypes.includes(type)));
+      (types.length !== this._mealTypes.length ||
+        types.every((type) => this._mealTypes.includes(type)));
 
     const didSearchUpdate = didQueryUpdate || didTypesUpdate;
 
@@ -110,7 +135,7 @@ class RecipesStore implements IRecipesStore {
 
     if (didSearchUpdate) {
       this.setRecipes([]);
-      this.currentOffset = 0;
+      this._currentOffset = 0;
       this._queryStore.setParams({ offset: String(0) });
     }
   };

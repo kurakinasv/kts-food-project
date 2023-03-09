@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback } from 'react';
 
-import { InstructionStepsModel } from '@stores/DishStore';
+import { InstructionStepsModel } from '@stores/models/instructions';
 
 import { InstructionsWrapper, RecipeSteps } from './RecipeInstructions.styles';
 
