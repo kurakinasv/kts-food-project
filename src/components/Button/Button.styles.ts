@@ -28,9 +28,14 @@ export const ButtonWrapper = styled.button<StyledProps>`
           background-color: rgba(${rgbColors.red}, 0.1);
           color: ${colors.red};
         `
-      : css`
+      : bgColor === 'solid'
+      ? css`
           background-color: ${colors.red};
           color: white;
+        `
+      : css`
+          background-color: 'transparent';
+          color: ${colors.red};
         `}
 
   border: none;
@@ -44,7 +49,9 @@ export const ButtonWrapper = styled.button<StyledProps>`
   }
 
   &:disabled {
-    background-color: ${colors.grey};
+    background-color: ${({ bgColor }) =>
+      bgColor === 'solid' || bgColor === 'transparent' ? colors.grey : 'transparent'};
+
     pointer-events: none;
     user-select: none;
     cursor: default;

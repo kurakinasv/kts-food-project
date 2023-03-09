@@ -2,7 +2,12 @@ import styled from 'styled-components';
 
 import { colors, gradients, rgbColors } from '@styles/variables';
 
-export const InputWrapper = styled.input`
+export const InputWrapper = styled.div`
+  width: 100%;
+  position: relative;
+`;
+
+export const StyledInput = styled.input`
   width: 100%;
   padding: 10px;
 
@@ -39,4 +44,11 @@ export const InputWrapper = styled.input`
     pointer-events: none;
     cursor: default;
   }
+`;
+
+export const ClearButtonWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translate3d(0, -50%, 0);
 `;

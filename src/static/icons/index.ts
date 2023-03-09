@@ -5,3 +5,4 @@ export { default as ArrowIcon } from './ArrowIcon';
 export { default as UpArrowIcon } from './UpArrowIcon';
 export { default as PlusIcon } from './PlusIcon';
 export { default as DishIcon } from './DishIcon';
+export { default as XMarkIcon } from './XMarkIcon';

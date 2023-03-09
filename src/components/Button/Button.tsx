@@ -8,7 +8,7 @@ export type StyledProps = {
   height?: string;
   minWidth?: string;
   padding?: string;
-  bgColor?: 'solid' | 'transparent';
+  bgColor?: 'solid' | 'transparent' | 'none';
   shape?: ButtonShape;
 };
 

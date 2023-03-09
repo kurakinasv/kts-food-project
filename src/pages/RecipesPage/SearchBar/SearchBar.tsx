@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
@@ -27,19 +27,33 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
 
   const getRecipes = useMemo(() => decoratedRequest(getAllRecipes), []);
 
-  const handleSelect = async (options: Option[]) => {
-    setSelectedOptions(options);
+  const handleSelect = useCallback(
+    async (options: Option[]) => {
+      setSelectedOptions(options);
+      await getRecipes(undefined, options, '');
+    },
+    [setSelectedOptions, getRecipes]
+  );
 
-    await getRecipes(undefined, options, '');
-  };
-
-  const searchRecipes = async () => {
+  const searchRecipes = useCallback(async () => {
     if (!value || query === value.toLocaleLowerCase()) {
       return;
     }
-
     await getRecipes(value, undefined, '');
-  };
+  }, [value, query, getRecipes]);
+
+  const clearSearch = useCallback(async () => {
+    setSearchValue('');
+
+    if (query) {
+      await getRecipes('', undefined, '');
+    }
+  }, [query, setSearchValue, getRecipes]);
+
+  const clearFiltration = useCallback(async () => {
+    setSelectedOptions([]);
+    await getRecipes(undefined, [], '');
+  }, [setSelectedOptions, getRecipes]);
 
   return (
     <SearchBarWrapper>
@@ -49,6 +63,9 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
         placeholder="Pick categories"
         onChange={handleSelect}
         pluralizeOptions={(values: Option[]) => values.map(({ value }) => value).join(', ')}
+        clearOptions={clearFiltration}
+        disabled={meta.loading}
+        loading={meta.loading}
       />
 
       <SearchForm>
@@ -58,6 +75,7 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
           disabled={meta.loading}
           onChange={setSearchValue}
           keyDownHandler={searchRecipes}
+          clearValue={clearSearch}
         />
         <Button
           icon={<SearchIcon />}

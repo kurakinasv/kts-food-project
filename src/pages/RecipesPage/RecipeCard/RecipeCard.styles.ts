@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { textOverflow } from '@styles/mixins';
 import { colors, fonts, shadows } from '@styles/variables';
 
 export const CardWrapper = styled.div`
@@ -45,9 +46,7 @@ export const RecipeName = styled.div`
 
   color: ${colors.textBlack};
 
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+  ${textOverflow()};
 `;
 
 export const Ingredients = styled.div`
@@ -57,11 +56,7 @@ export const Ingredients = styled.div`
 
   color: ${colors.textGrey};
 
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  ${textOverflow(2)};
 
   opacity: 0.5;
   cursor: text;

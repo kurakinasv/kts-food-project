@@ -1,8 +1,13 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 
+import Button from '@components/Button';
+import useComponentVisible from '@hooks/useComponentVisible';
+import { XMarkIcon } from '@static/icons';
+import { rgbColors } from '@styles/variables';
 import { Option } from '@typings/common';
 
 import {
+  ButtonWrapper,
   DropdownButton,
   DropdownMenu,
   DropdownOption,
@@ -15,22 +20,31 @@ export type MultiDropdownProps = {
   value: Option[];
   onChange: (value: Option[]) => void;
   disabled?: boolean;
+  loading?: boolean;
   /** Преобразовывает выбранные значения в строку. Отображается в дропдауне в качестве выбранного значения */
   pluralizeOptions: (value: Option[]) => string;
   className?: string;
   placeholder?: string;
+  clearOptions: VoidFunction;
 };
 
 const MultiDropdown: React.FC<MultiDropdownProps> = ({
   options,
   value,
   onChange,
-  disabled,
+  disabled = false,
+  loading = false,
   pluralizeOptions,
+  clearOptions,
   className = '',
   placeholder = '',
 }) => {
   const [open, setOpen] = useState(false);
+
+  const { ref } = useComponentVisible({
+    visible: open,
+    setNotVisible: () => setOpen(false),
+  });
 
   const openMenu = () => {
     setOpen((v) => !v);
@@ -77,8 +91,19 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
     </DropdownOption>
   ));
 
+  const clearIcon = useMemo(
+    () => (
+      <XMarkIcon
+        fillColor={
+          loading || disabled ? `rgba(${rgbColors.textGrey}, 0.7)` : `rgba(${rgbColors.red}, 0.7)`
+        }
+      />
+    ),
+    [loading, disabled]
+  );
+
   return (
-    <DropdownWrapper className={className}>
+    <DropdownWrapper className={className} ref={ref}>
       <DropdownButton
         type="button"
         disabled={disabled}
@@ -86,7 +111,22 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
         onClick={openMenu}
         isEmpty={!pluralizeOptions(value)}
       />
-      {open && !disabled && <DropdownMenu visible={open && !disabled}>{optionNodes}</DropdownMenu>}
+      {(!!value.length || disabled || loading) && (
+        <ButtonWrapper>
+          <Button
+            icon={clearIcon}
+            shape="circle"
+            bgColor="none"
+            minWidth={loading ? '36px' : '22px'}
+            width={loading ? '36px' : '22px'}
+            padding="6px"
+            onClick={clearOptions}
+            loading={loading}
+            disabled={disabled}
+          />
+        </ButtonWrapper>
+      )}
+      {open && <DropdownMenu visible={open}>{optionNodes}</DropdownMenu>}
     </DropdownWrapper>
   );
 };

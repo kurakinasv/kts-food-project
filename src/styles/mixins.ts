@@ -17,3 +17,20 @@ export const getButtonSizes = (width = '', height = '36px', shape: ButtonShape =
     height: ${height};
   `;
 };
+
+export const textOverflow = (lines = 1) => {
+  if (lines === 1) {
+    return css`
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    `;
+  }
+  return css`
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  `;
+};
