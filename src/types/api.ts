@@ -12,10 +12,11 @@ export type RecipesQueryParams =
   | 'addRecipeNutrition'
   | 'offset'
   | 'apiKey'
-  | 'type';
+  | 'type'
+  | 'results';
 
 export type DishQueryParams = 'includeNutrition' | 'apiKey';
 
-export type SearchParamsNames = Extract<RecipesQueryParams, 'number' | 'query' | 'type' | 'offset'>;
+export type SearchParamsNames = Extract<RecipesQueryParams, 'query' | 'type' | 'results'>;
 
 export type SearchParams<T extends RecipesQueryParams | DishQueryParams> = Record<T, string>;

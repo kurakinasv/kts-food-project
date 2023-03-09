@@ -4,8 +4,9 @@ import parse from 'html-react-parser';
 import { observer } from 'mobx-react-lite';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { useLocalStore } from '@hooks/useLocalStore';
 import { ArrowIcon, ClockIcon, DishIcon, HeartIcon } from '@static/icons';
-import { useDishStore } from '@stores/DishStore';
+import DishStore from '@stores/DishStore';
 import { formPlural } from '@utils/formPlural';
 import { uefCallback } from '@utils/handleUseEffectAsyncRequest';
 import { replaceImage } from '@utils/replaceImage';
@@ -33,7 +34,8 @@ import ErrorPage from './ErrorPage';
 const DishPage: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getDish, dishInfo, meta } = useDishStore();
+
+  const { getDish, dishInfo, meta } = useLocalStore<DishStore>(() => new DishStore());
 
   useEffect(uefCallback(getDish, Number(id)), []);
 
@@ -73,6 +75,7 @@ const DishPage: FC = () => {
         shape="square"
         bgColor="transparent"
       />
+
       <DishPageSkeleton loading={meta.loading} />
 
       {!meta.loading && dishInfo && (

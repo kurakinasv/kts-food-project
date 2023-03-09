@@ -23,7 +23,8 @@ type PrivateFields =
   | '_recipes'
   | '_currentOffset'
   | '_mealTypes'
-  | '_onParamsUpdate';
+  | '_onParamsUpdate'
+  | '_paramsToSearch';
 
 class RecipesStore implements IRecipesStore {
   private readonly _rootStore: RootStore;
@@ -38,6 +39,7 @@ class RecipesStore implements IRecipesStore {
   private _recipes: CollectionModel<UniqueId, DishWithNutritionType> = getInitialCollection();
 
   private _currentOffset = 0;
+  private _loadNext = this.requestItemsNumber;
   public totalResults: null | number = null;
 
   constructor(rootStore: RootStore) {
@@ -46,6 +48,7 @@ class RecipesStore implements IRecipesStore {
       _recipes: observable.ref,
       _currentOffset: observable,
       _mealTypes: computed,
+      _paramsToSearch: computed,
       _onParamsUpdate: action,
     });
     this._rootStore = rootStore;
@@ -65,17 +68,28 @@ class RecipesStore implements IRecipesStore {
     return !!type ? type.split(',') : [];
   }
 
+  private get _paramsToSearch() {
+    const params = this._queryStore.getParams() || undefined;
+
+    const paramsToSet = {
+      number: String(this._loadNext),
+      offset: String(this._currentOffset),
+      query: params?.query,
+      type: params?.type,
+    };
+
+    return paramsToSet;
+  }
+
   setRecipes = (recipes: DishWithNutritionType[]) => {
     this._recipes = normalizeCollection(recipes, (recipes) => recipes.id);
   };
 
-  getAllRecipes = async (qStr?: string, typesOpts?: Option[]) => {
+  getAllRecipes = async (query?: string, typesOptions?: Option[], results?: string) => {
     this._meta.setLoading();
-    this._onParamsUpdate({ qStr, typesOpts });
-    this._queryStore.setParams({ offset: String(this._currentOffset) });
+    this._onParamsUpdate({ query, typesOptions, results });
 
-    const params = this._queryStore.getParams() || undefined;
-    const url = getAllRecipesUrl(AllRecipesPaths.complex, params);
+    const url = getAllRecipesUrl(AllRecipesPaths.complex, this._paramsToSearch);
 
     try {
       const data = await this._apiRequest.request<RecipesModel>(url);
@@ -110,9 +124,17 @@ class RecipesStore implements IRecipesStore {
     });
   };
 
-  private _onParamsUpdate = ({ qStr, typesOpts }: { qStr?: string; typesOpts?: Option[] }) => {
-    const q = qStr?.toLocaleLowerCase();
-    const types = typesOpts?.map((type) => type.key);
+  private _onParamsUpdate = ({
+    query,
+    typesOptions,
+    results,
+  }: {
+    query?: string;
+    typesOptions?: Option[];
+    results?: string;
+  }) => {
+    const q = query?.toLocaleLowerCase();
+    const types = typesOptions?.map((type) => type.key);
 
     const didQueryUpdate = q !== undefined && q !== this._queryStore.query;
 
@@ -131,12 +153,34 @@ class RecipesStore implements IRecipesStore {
       this._queryStore.setParams({ type: types.join(',') });
     }
 
-    this._queryStore.setParams({ number: String(this.requestItemsNumber) });
-
     if (didSearchUpdate) {
       this.setRecipes([]);
       this._currentOffset = 0;
-      this._queryStore.setParams({ offset: String(0) });
+    }
+
+    this._updateResultsCount(didSearchUpdate, results);
+  };
+
+  private _updateResultsCount = (didSearchUpdate: boolean, results?: string) => {
+    // on page reload
+    if (didSearchUpdate && !!results) {
+      this._loadNext = Number(results);
+      this._queryStore.setParams({ results });
+    }
+
+    // on filtration and search
+    if (didSearchUpdate && !results) {
+      this._loadNext = this.requestItemsNumber;
+      this._queryStore.setParams({ results: String(this.requestItemsNumber) });
+    }
+
+    // on page scroll
+    if (!didSearchUpdate && !!results) {
+      this._currentOffset = Number(results);
+      this._loadNext = this.requestItemsNumber;
+      this._queryStore.setParams({
+        results: String(Number(results) + this.requestItemsNumber),
+      });
     }
   };
 }

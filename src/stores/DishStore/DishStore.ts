@@ -1,5 +1,6 @@
 import { makeAutoObservable, observable, runInAction } from 'mobx';
 
+import { ILocalStore } from '@hooks/useLocalStore';
 import { mock } from '@pages/DishPage/mock';
 import ApiRequest from '@stores/ApiRequest';
 import MetaStore from '@stores/MetaStore';
@@ -9,7 +10,7 @@ import { IDishStore, ExtendedDishApi, ExtendedDishModel, normalizeDish } from '.
 
 type PrivateFields = '_dishInfo';
 
-class DishStore implements IDishStore {
+class DishStore implements IDishStore, ILocalStore {
   private readonly _meta = new MetaStore();
   private readonly _apiRequest = new ApiRequest();
 
@@ -29,7 +30,7 @@ class DishStore implements IDishStore {
     return this._dishInfo;
   }
 
-  setDishInfo = (info: ExtendedDishModel) => {
+  setDishInfo = (info: ExtendedDishModel | null) => {
     this._dishInfo = info;
   };
 
@@ -60,6 +61,11 @@ class DishStore implements IDishStore {
     runInAction(() => {
       this._meta.setInitial();
     });
+  };
+
+  destroy = () => {
+    this.setDishInfo(null);
+    this._meta.setInitial();
   };
 }
 

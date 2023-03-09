@@ -30,7 +30,7 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
   const handleSelect = async (options: Option[]) => {
     setSelectedOptions(options);
 
-    await getRecipes(undefined, options);
+    await getRecipes(undefined, options, '');
   };
 
   const searchRecipes = async () => {
@@ -38,7 +38,7 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
       return;
     }
 
-    await getRecipes(value);
+    await getRecipes(value, undefined, '');
   };
 
   return (

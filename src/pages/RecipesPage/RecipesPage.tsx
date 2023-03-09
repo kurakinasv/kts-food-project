@@ -41,7 +41,7 @@ const RecipesPage: FC = () => {
 
   useEffect(() => {
     if (!recipes.length) {
-      getRecipes(searchValue, selectedOptions);
+      getRecipes(searchValue, selectedOptions, getParam('results'));
     }
   }, []);
 
@@ -69,11 +69,11 @@ const RecipesPage: FC = () => {
     setSearchValue('');
     setSelectedOptions([]);
 
-    await getRecipes('', []);
+    await getRecipes('', [], '');
   }, []);
 
   const next = async () => {
-    await getRecipes();
+    await getRecipes(undefined, undefined, getParam('results'));
   };
 
   const hasMore = useMemo(
