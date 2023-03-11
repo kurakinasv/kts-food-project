@@ -1,6 +1,11 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
+import { observer } from 'mobx-react-lite';
+import { useNavigate } from 'react-router-dom';
+
+import { RouterPaths } from '@app/Router';
 import logo from '@static/images/logo.png';
+import { useRecipes } from '@stores/RootStore';
 
 import DiceIcon from './DiceIcon';
 import {
@@ -11,11 +16,15 @@ import {
   Navbar,
   NavLink,
   BurgerContent,
+  NavButton,
 } from './Header.styles';
 
 const Header: FC = () => {
+  const navigate = useNavigate();
   const [small, setSmall] = useState(false);
   const [burgerActive, setBurgerActive] = useState(false);
+
+  const { getRandom, meta } = useRecipes();
 
   const scrollHandler = useCallback(() => {
     if (window.scrollY > 80) {
@@ -34,6 +43,15 @@ const Header: FC = () => {
     setBurgerActive((v) => !v);
   }, []);
 
+  const redirectToRandomDish = async () => {
+    const res = await getRandom();
+    const path = RouterPaths.recipe.split(':')[0];
+
+    if (!!res) {
+      navigate(`${path}${res}`);
+    }
+  };
+
   return (
     <HeaderWrapper small={small}>
       <HeaderContent>
@@ -45,14 +63,14 @@ const Header: FC = () => {
 
         <Navbar open={burgerActive}>
           <NavLink to="">Collection</NavLink>
-          <NavLink to="" title="Get random recipe">
-            <DiceIcon />
+          <NavButton title="Get random recipe" onClick={redirectToRandomDish}>
+            <DiceIcon loading={meta.loading} />
             <span>Random recipe</span>
-          </NavLink>
+          </NavButton>
         </Navbar>
       </HeaderContent>
     </HeaderWrapper>
   );
 };
 
-export default Header;
+export default observer(Header);

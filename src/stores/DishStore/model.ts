@@ -16,7 +16,7 @@ type IngredientApi = {
 };
 
 // getting data by /complexSearch
-type DishApi = {
+export type DishApi = {
   id: UniqueId;
   title: string;
   image: ImageURL;

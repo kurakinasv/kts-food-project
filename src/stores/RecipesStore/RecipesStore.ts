@@ -2,7 +2,7 @@ import { action, computed, makeAutoObservable, observable, runInAction } from 'm
 
 import { mock } from '@pages/RecipesPage/mock';
 import ApiRequest from '@stores/ApiRequest';
-import { DishWithNutritionType } from '@stores/DishStore';
+import { DishApi, DishWithNutritionType } from '@stores/DishStore';
 import MetaStore from '@stores/MetaStore';
 import {
   CollectionModel,
@@ -76,6 +76,7 @@ class RecipesStore implements IRecipesStore {
       offset: String(this._currentOffset),
       query: params?.query,
       type: params?.type,
+      addRecipeNutrition: 'true',
     };
 
     return paramsToSet;
@@ -122,6 +123,30 @@ class RecipesStore implements IRecipesStore {
     runInAction(() => {
       this._meta.setInitial();
     });
+  };
+
+  getRandom = async (): Promise<string> => {
+    this._meta.setLoading();
+    const url = getAllRecipesUrl(AllRecipesPaths.random, { number: '1' });
+
+    try {
+      const data = await this._apiRequest.request<{ recipes: DishApi[] }>(url);
+      let randomId = '';
+
+      runInAction(() => {
+        if (data) {
+          randomId = String(data.recipes[0].id);
+          this._meta.setInitial();
+        }
+      });
+
+      return randomId;
+    } catch (error: any) {
+      runInAction(() => {
+        this._meta.setError(this._apiRequest.error);
+      });
+      throw new Error(`getAllRecipes: ${error.message}`);
+    }
   };
 
   private _onParamsUpdate = ({

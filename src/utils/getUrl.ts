@@ -32,7 +32,6 @@ export const getAllRecipesUrl = (
   const paramsToParse: SearchParams<RecipesQueryParams> = {
     ...(params ?? []),
     ...getApiParam(),
-    addRecipeNutrition: 'true',
   };
 
   const query = getQueryString<RecipesQueryParams>(paramsToParse);

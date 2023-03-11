@@ -182,44 +182,24 @@ export const Navbar = styled.nav<{ open: boolean }>`
   }
 `;
 
-export const NavLink = styled(Link)`
+const navItemText = css`
+  font-family: ${fonts.secondary};
+  font-weight: 500;
+  font-size: 17px;
+
+  text-transform: uppercase;
+  color: ${colors.red};
+  transition: opacity 0.3s ease-in-out;
+`;
+
+const navItem = css`
   position: relative;
-
-  &,
-  & > span {
-    font-family: ${fonts.secondary};
-    font-weight: 500;
-    font-size: 17px;
-
-    text-transform: uppercase;
-    color: ${colors.red};
-    transition: opacity 0.3s ease-in-out;
-  }
-
-  &:hover:not(:last-of-type) {
-    opacity: 0.5;
-  }
-
-  // dice navlink
-  & > span:last-of-type {
-    display: none;
-  }
-  // dice icon
-  & > span:first-of-type {
-    display: block;
-  }
+  cursor: pointer;
 
   @media (max-width: 600px) {
     width: 100%;
     padding: 20px;
     text-align: center;
-
-    & > span:last-of-type {
-      display: inline-block;
-    }
-    & > span:first-of-type {
-      display: none;
-    }
 
     // line under link name
     &::after {
@@ -234,6 +214,42 @@ export const NavLink = styled(Link)`
       height: 1px;
 
       background-color: rgba(${rgbColors.red}, 0.1);
+    }
+  }
+`;
+
+export const NavLink = styled(Link)`
+  ${navItem};
+  ${navItemText};
+
+  &:hover {
+    opacity: 0.5;
+  }
+`;
+
+export const NavButton = styled.button`
+  ${navItem};
+
+  &,
+  & > span {
+    ${navItemText};
+  }
+
+  // dice navlink
+  & > span:last-of-type {
+    display: none;
+  }
+  // dice icon
+  & > span:first-of-type {
+    display: block;
+  }
+
+  @media (max-width: 600px) {
+    & > span:last-of-type {
+      display: inline-block;
+    }
+    & > span:first-of-type {
+      display: none;
     }
   }
 `;

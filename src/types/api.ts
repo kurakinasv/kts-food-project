@@ -4,6 +4,7 @@ export enum SingleRecipePaths {
 
 export enum AllRecipesPaths {
   complex = '/complexSearch',
+  random = '/random',
 }
 
 export type RecipesQueryParams =

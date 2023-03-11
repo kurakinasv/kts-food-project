@@ -1,8 +1,19 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
+
+import Loader, { LoaderSize } from '@components/Loader';
 
 import { BackDice, Wrapper } from './DiceIcon.styles';
 
-const DiceIcon: FC = () => {
+const DiceIcon: FC<{ loading: boolean }> = ({ loading }) => {
+  if (loading) {
+    return (
+      <>
+        <Loader size={LoaderSize.s} />
+        <span></span>
+      </>
+    );
+  }
+
   return (
     <Wrapper>
       <svg
@@ -48,4 +59,4 @@ const DiceIcon: FC = () => {
   );
 };
 
-export default DiceIcon;
+export default memo(DiceIcon);
