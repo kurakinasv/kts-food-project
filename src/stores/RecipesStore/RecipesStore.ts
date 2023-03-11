@@ -69,7 +69,7 @@ class RecipesStore implements IRecipesStore {
   }
 
   private get _paramsToSearch() {
-    const params = this._queryStore.getParams() || undefined;
+    const params = this._queryStore.params || undefined;
 
     const paramsToSet = {
       number: String(this._loadNext),
@@ -95,14 +95,14 @@ class RecipesStore implements IRecipesStore {
       const data = await this._apiRequest.request<RecipesModel>(url);
 
       // todo delete mock
-      // const mockData: RecipesType = { results: [], totalResults: 0 };
+      // const mockData: RecipesModel = { results: [], totalResults: 0 };
       // const eightyItems = Array(40)
       //   .fill([...mock])
       //   .flat();
       // mockData.results = [...eightyItems];
       // mockData.totalResults = mockData.results.length;
 
-      // const data = await new Promise<RecipesType>((res) => {
+      // const data = await new Promise<RecipesModel>((res) => {
       //   setTimeout(() => res(mockData), 2000);
       // });
 
@@ -133,7 +133,7 @@ class RecipesStore implements IRecipesStore {
     typesOptions?: Option[];
     results?: string;
   }) => {
-    const q = query?.toLocaleLowerCase();
+    const q = query?.trim().toLocaleLowerCase();
     const types = typesOptions?.map((type) => type.key);
 
     const didQueryUpdate = q !== undefined && q !== this._queryStore.query;

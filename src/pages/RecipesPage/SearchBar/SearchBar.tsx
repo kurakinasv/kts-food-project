@@ -9,7 +9,6 @@ import { useQueryStore, useRecipes } from '@stores/RootStore';
 import { Option } from '@typings/common';
 
 import { SearchBarWrapper, StyledDropdown, SearchForm, StyledButton } from './SearchBar.styles';
-import useQueryParams from '../useQueryParams';
 
 type SearchBarProps = {
   value: string;
@@ -22,37 +21,33 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
   const { getAllRecipes, meta } = useRecipes();
   const { query } = useQueryStore();
 
-  const { decoratedRequest } = useQueryParams();
-
-  const getRecipes = useMemo(() => decoratedRequest(getAllRecipes), []);
-
   const handleSelect = useCallback(
     async (options: Option[]) => {
       setSelectedOptions(options);
-      await getRecipes(undefined, options, '');
+      await getAllRecipes(undefined, options, '');
     },
-    [setSelectedOptions, getRecipes]
+    [setSelectedOptions, getAllRecipes]
   );
 
   const searchRecipes = useCallback(async () => {
     if (!value || query === value.toLocaleLowerCase()) {
       return;
     }
-    await getRecipes(value, undefined, '');
-  }, [value, query, getRecipes]);
+    await getAllRecipes(value, undefined, '');
+  }, [value, query, getAllRecipes]);
 
   const clearSearch = useCallback(async () => {
     setSearchValue('');
 
     if (query) {
-      await getRecipes('', undefined, '');
+      await getAllRecipes('', undefined, '');
     }
-  }, [query, setSearchValue, getRecipes]);
+  }, [query, setSearchValue, getAllRecipes]);
 
   const clearFiltration = useCallback(async () => {
     setSelectedOptions([]);
-    await getRecipes(undefined, [], '');
-  }, [setSelectedOptions, getRecipes]);
+    await getAllRecipes(undefined, [], '');
+  }, [setSelectedOptions, getAllRecipes]);
 
   return (
     <SearchBarWrapper>

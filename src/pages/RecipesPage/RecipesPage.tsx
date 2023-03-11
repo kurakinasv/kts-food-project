@@ -8,6 +8,7 @@ import Alert, { useAlert } from '@components/Alert';
 import Header from '@components/Header';
 import Loader from '@components/Loader';
 import OnTopButton from '@components/OnTopButton';
+import useQueryParams from '@hooks/useQueryParams';
 import { useRecipes } from '@stores/RootStore';
 import { Option } from '@typings/common';
 
@@ -15,11 +16,10 @@ import EmptySearch from './EmptySearch';
 import RecipeCardsList from './RecipeCardsList';
 import { LoaderWrapper, PageWrapper } from './RecipesPage.styles';
 import SearchBar from './SearchBar';
-import useQueryParams from './useQueryParams';
 import { getInitialSelectedOptions } from './utils';
 
 const RecipesPage: FC = () => {
-  const { getParam, decoratedRequest } = useQueryParams();
+  const { getParam } = useQueryParams();
   const { isOpen, openAlert } = useAlert();
 
   const { getAllRecipes, recipes, totalResults, meta } = useRecipes();
@@ -38,11 +38,9 @@ const RecipesPage: FC = () => {
   );
   const [skeletonCardsAmount, setCardsAmount] = useState(5);
 
-  const getRecipes = useMemo(() => decoratedRequest(getAllRecipes), []);
-
   useEffect(() => {
     if (!recipes.length) {
-      getRecipes(searchValue, selectedOptions, getParam('results'));
+      getAllRecipes(searchValue, selectedOptions, getParam('results'));
     }
   }, []);
 
@@ -70,11 +68,11 @@ const RecipesPage: FC = () => {
     setSearchValue('');
     setSelectedOptions([]);
 
-    await getRecipes('', [], '');
+    await getAllRecipes('', [], '');
   }, []);
 
   const next = async () => {
-    await getRecipes(undefined, undefined, getParam('results'));
+    await getAllRecipes(undefined, undefined, getParam('results'));
   };
 
   const hasMore = useMemo(

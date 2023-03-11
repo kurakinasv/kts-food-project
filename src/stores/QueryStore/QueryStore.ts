@@ -24,9 +24,9 @@ class QueryStore {
     return this._params?.type || '';
   }
 
-  getParams = () => {
+  get params() {
     return this._params;
-  };
+  }
 
   setParams = (params: Partial<SearchParams<RecipesQueryParams>>) => {
     if (this._params) {
