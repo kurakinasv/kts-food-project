@@ -2,14 +2,13 @@ import { FC, useCallback, useMemo } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
-import Button from '@components/Button';
 import Input from '@components/Input';
 import { SearchIcon } from '@static/icons';
 import { mealTypesOptions } from '@stores/models/mealtypes';
 import { useQueryStore, useRecipes } from '@stores/RootStore';
 import { Option } from '@typings/common';
 
-import { SearchBarWrapper, StyledDropdown, SearchForm } from './SearchBar.styles';
+import { SearchBarWrapper, StyledDropdown, SearchForm, StyledButton } from './SearchBar.styles';
 import useQueryParams from '../useQueryParams';
 
 type SearchBarProps = {
@@ -77,11 +76,14 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
           keyDownHandler={searchRecipes}
           clearValue={clearSearch}
         />
-        <Button
+        <StyledButton
           icon={<SearchIcon />}
           loading={meta.loading}
-          padding="0px"
           onClick={searchRecipes}
+          padding="0px"
+          shape="square"
+          minWidth="46px"
+          height="46px"
         />
       </SearchForm>
     </SearchBarWrapper>

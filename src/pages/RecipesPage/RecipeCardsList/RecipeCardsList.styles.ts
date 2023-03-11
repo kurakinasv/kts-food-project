@@ -9,7 +9,7 @@ export const CardsWrapper = styled.div`
   grid-template-columns: repeat(var(--columns-count), 1fr);
   justify-items: center;
   column-gap: 17px;
-  row-gap: 35px;
+  row-gap: 24px;
 
   @media (max-width: 1130px) {
     --columns-count: 4;

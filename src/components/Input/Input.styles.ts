@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { colors, gradients, rgbColors } from '@styles/variables';
+import { breakpoints, colors, gradients, rgbColors } from '@styles/variables';
 
 export const InputWrapper = styled.div`
   width: 100%;
@@ -9,10 +9,10 @@ export const InputWrapper = styled.div`
 
 export const StyledInput = styled.input`
   width: 100%;
-  padding: 10px;
+  padding: 15px;
 
   font-weight: 400;
-  font-size: 12px;
+  font-size: 15px;
 
   line-height: 16px;
   letter-spacing: 0.01em;
@@ -43,6 +43,11 @@ export const StyledInput = styled.input`
 
     pointer-events: none;
     cursor: default;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 12px;
+    padding: 10px;
   }
 `;
 

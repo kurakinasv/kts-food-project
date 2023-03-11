@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router';
 import { RouterPaths } from '@app/Router';
 import { DishWithNutritionType } from '@stores/DishStore';
 
+import { CardsWrapper } from './RecipeCardsList.styles';
+import RecipeCard from '../RecipeCard';
 import CardSkeleton from '../RecipeCard/CardSkeleton';
-import RecipeCard from '../RecipeCard/RecipeCard';
-import { CardsWrapper } from '../RecipesPage.styles';
 
 type RecipeCardsProps = {
   loading: boolean;

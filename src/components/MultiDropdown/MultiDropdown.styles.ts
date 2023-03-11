@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import { textOverflow } from '@styles/mixins';
-import { breakpoints, colors, gradients, rgbColors } from '@styles/variables';
+import { breakpoints, colors, gradients, rgbColors, shadows } from '@styles/variables';
 
 export const DropdownWrapper = styled.div`
   width: 100%;
@@ -10,10 +10,10 @@ export const DropdownWrapper = styled.div`
 
 const commonButtonOptionStyles = css`
   width: 100%;
-  padding: 10px 16px 10px 10px;
+  padding: 15px 16px 15px 10px;
 
   font-weight: 400;
-  font-size: 12px;
+  font-size: 15px;
 
   line-height: 16px;
   letter-spacing: 0.01em;
@@ -22,6 +22,7 @@ const commonButtonOptionStyles = css`
   cursor: pointer;
 
   @media (max-width: ${breakpoints.mobile}) {
+    font-size: 12px;
     padding: 10px 26px 10px 10px;
   }
 `;
@@ -63,6 +64,7 @@ export const DropdownMenu = styled.div<{ visible: boolean }>`
 
   background-color: ${colors.lightPink};
   border-radius: 7px;
+  box-shadow: ${shadows.black};
   z-index: 100;
 `;
 

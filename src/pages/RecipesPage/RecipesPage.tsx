@@ -5,6 +5,7 @@ import { observer } from 'mobx-react-lite';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import Alert, { useAlert } from '@components/Alert';
+import Header from '@components/Header';
 import Loader from '@components/Loader';
 import OnTopButton from '@components/OnTopButton';
 import { useRecipes } from '@stores/RootStore';
@@ -82,48 +83,52 @@ const RecipesPage: FC = () => {
   );
 
   return (
-    <PageWrapper>
-      <SearchBar
-        value={searchValue}
-        options={selectedOptions}
-        setSearchValue={setSearchValue}
-        setSelectedOptions={setSelectedOptions}
-      />
+    <>
+      <Header />
 
-      <Alert
-        message={meta.error?.message || ''}
-        status="error"
-        open={isOpen}
-        statusCode={meta.error?.code}
-      />
+      <PageWrapper>
+        <SearchBar
+          value={searchValue}
+          options={selectedOptions}
+          setSearchValue={setSearchValue}
+          setSelectedOptions={setSelectedOptions}
+        />
 
-      {!meta.loading && !totalResults && <EmptySearch resetButtonAction={clearFilters} />}
-      {meta.loading && !recipes?.length && (
-        <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount * 3} />
-      )}
+        <Alert
+          message={meta.error?.message || ''}
+          status="error"
+          open={isOpen}
+          statusCode={meta.error?.code}
+        />
 
-      {recipes && !!recipes.length && (
-        <InfiniteScroll
-          dataLength={recipes.length}
-          next={next}
-          hasMore={hasMore}
-          loader={
-            <>
-              <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount} />
-              <LoaderWrapper>
-                <Loader />
-              </LoaderWrapper>
-            </>
-          }
-          scrollThreshold={0.9}
-          style={{ margin: '-10px' }}
-        >
-          <RecipeCardsList loading={false} recipes={recipes} />
-        </InfiniteScroll>
-      )}
+        {!meta.loading && !totalResults && <EmptySearch resetButtonAction={clearFilters} />}
+        {meta.loading && !recipes?.length && (
+          <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount * 3} />
+        )}
 
-      <OnTopButton />
-    </PageWrapper>
+        {recipes && !!recipes.length && (
+          <InfiniteScroll
+            dataLength={recipes.length}
+            next={next}
+            hasMore={hasMore}
+            loader={
+              <>
+                <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount} />
+                <LoaderWrapper>
+                  <Loader />
+                </LoaderWrapper>
+              </>
+            }
+            scrollThreshold={0.9}
+            style={{ margin: '-10px' }}
+          >
+            <RecipeCardsList loading={false} recipes={recipes} />
+          </InfiniteScroll>
+        )}
+
+        <OnTopButton />
+      </PageWrapper>
+    </>
   );
 };
 
