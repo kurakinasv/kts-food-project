@@ -1,13 +1,25 @@
 export const colors = {
   red: '#ff0000',
+  secondaryRed: '#EE4D4D',
+
   pink: '#ffe5e5',
   lightPink: '#fff7f7',
+  secondaryPink: '#ffcbcb',
+
   grey: '#D9D9D9',
-  black: '#000000',
   textGrey: '#3b3b3b',
+
+  black: '#000000',
   textBlack: '#0d0d0d',
-  darkGreen: '#0C6C54',
+
   green: '#009D76',
+  darkGreen: '#0C6C54',
+
+  lightPurple: '#f0dcfc',
+  purple: '#6b01ac',
+
+  blue: '#008BE4',
+  darkBlue: '#09051c',
 };
 
 export const rgbColors = {

@@ -3,7 +3,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { RouterPaths } from '@app/Router';
+import { RouterPaths, routes } from '@config/routes';
 import logo from '@static/images/logo.png';
 import { useRecipes } from '@stores/RootStore';
 
@@ -22,6 +22,7 @@ import {
 const Header: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [small, setSmall] = useState(false);
   const [burgerActive, setBurgerActive] = useState(false);
 
@@ -44,14 +45,13 @@ const Header: FC = () => {
     setBurgerActive((v) => !v);
   }, []);
 
-  const redirectToRandomDish = async () => {
+  const redirectToRandomDish = useCallback(async () => {
     const res = await getRandom();
-    const path = RouterPaths.recipe.split(':')[0];
 
     if (!!res) {
-      navigate(`${path}${res}`);
+      navigate(routes.recipe.id(res));
     }
-  };
+  }, [getRandom]);
 
   const redirectToMain = useCallback(() => {
     if (location.pathname !== RouterPaths.recipes) {

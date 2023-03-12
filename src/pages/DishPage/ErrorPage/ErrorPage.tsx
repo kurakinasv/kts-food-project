@@ -1,6 +1,8 @@
 import { FC, memo } from 'react';
 
-import { RouterPaths } from 'app/Router';
+import { RouterPaths } from '@config/routes';
+import { emotes } from '@config/ui';
+import { getRandomInteger } from '@utils/getRandomInteger';
 
 import {
   Emote,
@@ -18,7 +20,7 @@ type ErrorPageProps = {
 const ErrorPage: FC<ErrorPageProps> = ({ message }) => {
   return (
     <ErrorWrapper>
-      <Emote>{'=('}</Emote>
+      <Emote>{emotes[getRandomInteger(emotes.length)]}</Emote>
       <ErrorText>
         <Decription>Unfortunately, we couldn’t find what you were looking for</Decription>
         <ErrorMessage>{message}</ErrorMessage>

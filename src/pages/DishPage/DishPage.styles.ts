@@ -149,7 +149,7 @@ export const RecipeInfo = styled.div`
     width: 58px;
     height: 5px;
 
-    background-color: #ffcbcb;
+    background-color: ${colors.secondaryPink};
     border-radius: 12px;
   }
 
@@ -178,7 +178,7 @@ export const RecipeName = styled.h2`
   font-size: 27px;
   line-height: 35px;
 
-  color: #09051c;
+  color: ${colors.darkBlue};
 
   @media (min-width: ${breakpoints.mobile}) {
     margin-bottom: 26px;
@@ -256,10 +256,10 @@ export const RecipeDescription = styled.div`
     }
 
     &:visited {
-      color: #6b01ac;
+      color: ${colors.purple};
 
       &::after {
-        background-color: #f0dcfc;
+        background-color: ${colors.lightPurple};
       }
     }
 

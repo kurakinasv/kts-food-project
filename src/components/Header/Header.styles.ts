@@ -231,6 +231,8 @@ export const NavLink = styled(Link)<{ active: boolean }>`
     active &&
     css`
       cursor: default;
+      pointer-events: none;
+
       &:hover {
         opacity: 1;
       }
@@ -243,7 +245,8 @@ export const NavLink = styled(Link)<{ active: boolean }>`
 
         position: absolute;
         bottom: -4px;
-        left: 0;
+        left: 50%;
+        transform: translate3d(-50%, 0, 0);
 
         background-color: ${colors.red};
       }

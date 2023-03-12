@@ -1,6 +1,7 @@
 import { FC, memo, useMemo } from 'react';
 
 import Button from '@components/Button';
+import { emotes } from '@config/ui';
 import { getRandomInteger } from '@utils/getRandomInteger';
 
 import { Emote, Text, Wrapper } from './EmptySearch.styles';
@@ -11,7 +12,6 @@ const EmptySearch: FC<{ resetButtonAction(): Promise<void> | void }> = ({ resetB
   };
 
   const pickEmote = useMemo(() => {
-    const emotes = ['(≥o≤)', '(^-^*)', '=(', '＞︿＜', 'T-T', 'ಥ_ಥ'];
     const index = getRandomInteger(emotes.length);
     return emotes[index];
   }, []);

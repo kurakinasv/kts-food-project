@@ -2,7 +2,7 @@ import React, { FC, memo, useCallback } from 'react';
 
 import { useNavigate } from 'react-router';
 
-import { RouterPaths } from '@app/Router';
+import { routes } from '@config/routes';
 import { DishWithNutritionModel } from '@stores/DishStore';
 
 import { CardsWrapper } from './RecipeCardsList.styles';
@@ -20,8 +20,7 @@ const RecipeCardsList: FC<RecipeCardsProps> = ({ loading, recipes, loadItemsAmou
 
   const redirect = useCallback(
     (id: number) => () => {
-      const path = RouterPaths.recipe.split(':')[0];
-      navigate(`${path}${id}`);
+      navigate(routes.recipe.id(id));
     },
     []
   );

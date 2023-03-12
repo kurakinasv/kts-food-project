@@ -2,16 +2,11 @@ import { FC } from 'react';
 
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
+import { RouterPaths } from '@config/routes';
 import CollectionPage from '@pages/CollectionPage';
 import DishPage from '@pages/DishPage';
 import RecipesPage from '@pages/RecipesPage';
 import { RootStoreProvider } from '@stores/RootStore';
-
-export enum RouterPaths {
-  recipes = '/',
-  recipe = '/recipe/:id',
-  collection = '/collection',
-}
 
 const Router: FC = () => {
   return (

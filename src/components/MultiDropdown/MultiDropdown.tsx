@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import Button from '@components/Button';
 import useComponentVisible from '@hooks/useComponentVisible';
@@ -46,50 +46,69 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
     setNotVisible: () => setOpen(false),
   });
 
-  const openMenu = () => {
+  const handleMenu = () => {
     setOpen((v) => !v);
   };
 
-  const isOptionSelected = (option: Option) => {
-    const foundOption = value.findIndex((outerValue) => outerValue.key === option.key);
-    return foundOption !== -1;
-  };
-
-  const toggleOptions = (optionToCheck: Option) => {
-    if (!isOptionSelected(optionToCheck)) {
-      return [...value, optionToCheck];
+  useEffect(() => {
+    if (loading || disabled) {
+      setOpen(false);
     }
+  }, [loading, disabled]);
 
-    const filtered = value.filter(
-      (option) => option.key !== optionToCheck.key && option.value !== optionToCheck.value
-    );
+  const isOptionSelected = useCallback(
+    (option: Option) => {
+      const foundOption = value.findIndex((outerValue) => outerValue.key === option.key);
+      return foundOption !== -1;
+    },
+    [value]
+  );
 
-    return filtered;
-  };
+  const toggleOptions = useCallback(
+    (optionToCheck: Option) => {
+      if (!isOptionSelected(optionToCheck)) {
+        return [...value, optionToCheck];
+      }
 
-  const chooseOption = (e: React.MouseEvent<HTMLDivElement>) => {
-    const currentKey = e.currentTarget.dataset.key;
-    const currentValue = e.currentTarget.textContent;
+      const filtered = value.filter(
+        (option) => option.key !== optionToCheck.key && option.value !== optionToCheck.value
+      );
 
-    if (!currentKey || !currentValue) {
-      return;
-    }
+      return filtered;
+    },
+    [value, isOptionSelected]
+  );
 
-    const currentSelected: Option = { key: currentKey, value: currentValue };
+  const chooseOption = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const currentKey = e.currentTarget.dataset.key;
+      const currentValue = e.currentTarget.textContent;
 
-    onChange(toggleOptions(currentSelected));
-  };
+      if (!currentKey || !currentValue) {
+        return;
+      }
 
-  const optionNodes = options.map(({ key, value }) => (
-    <DropdownOption
-      selected={isOptionSelected({ key, value })}
-      key={key}
-      data-key={key}
-      onClick={chooseOption}
-    >
-      {value}
-    </DropdownOption>
-  ));
+      const currentSelected: Option = { key: currentKey, value: currentValue };
+
+      onChange(toggleOptions(currentSelected));
+    },
+    [onChange, toggleOptions]
+  );
+
+  const optionNodes = useMemo(
+    () =>
+      options.map(({ key, value }) => (
+        <DropdownOption
+          selected={isOptionSelected({ key, value })}
+          key={key}
+          data-key={key}
+          onClick={chooseOption}
+        >
+          {value}
+        </DropdownOption>
+      )),
+    [options, isOptionSelected, chooseOption]
+  );
 
   const clearIcon = useMemo(
     () => (
@@ -108,7 +127,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
         type="button"
         disabled={disabled}
         value={pluralizeOptions(value) || placeholder}
-        onClick={openMenu}
+        onClick={handleMenu}
         isEmpty={!pluralizeOptions(value)}
       />
       {(!!value.length || disabled || loading) && (
@@ -126,7 +145,7 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
           />
         </ButtonWrapper>
       )}
-      {open && <DropdownMenu visible={open}>{optionNodes}</DropdownMenu>}
+      {open && !disabled && <DropdownMenu visible={open && !disabled}>{optionNodes}</DropdownMenu>}
     </DropdownWrapper>
   );
 };
