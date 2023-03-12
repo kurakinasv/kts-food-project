@@ -43,6 +43,7 @@ export const CardImage = styled.img`
 
 export const CardInfo = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -66,6 +67,8 @@ export const Ingredients = styled.div`
   font-weight: 400;
   font-size: 12px;
   letter-spacing: -0.03em;
+
+  flex-grow: 1;
 
   color: ${colors.textGrey};
   opacity: 0.5;

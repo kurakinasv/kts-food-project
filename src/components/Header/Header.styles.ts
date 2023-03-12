@@ -63,6 +63,7 @@ export const Logo = styled.img<{ small: boolean }>`
   height: 44px;
 
   user-select: none;
+  cursor: pointer;
   transition: height 0.5s ease-in-out;
 
   ${({ small }) =>
@@ -218,13 +219,35 @@ const navItem = css`
   }
 `;
 
-export const NavLink = styled(Link)`
+export const NavLink = styled(Link)<{ active: boolean }>`
   ${navItem};
   ${navItemText};
 
   &:hover {
     opacity: 0.5;
   }
+
+  ${({ active }) =>
+    active &&
+    css`
+      cursor: default;
+      &:hover {
+        opacity: 1;
+      }
+
+      &::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 2px;
+
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+
+        background-color: ${colors.red};
+      }
+    `}
 `;
 
 export const NavButton = styled.button`

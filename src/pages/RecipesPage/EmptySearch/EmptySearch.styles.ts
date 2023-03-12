@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { colors, fonts, rgbColors } from '@styles/variables';
 
 export const Wrapper = styled.div`
-  height: 80vh;
-  padding: 60px 30px 20px 30px;
+  height: 64vh;
+  padding: 30px;
 
   display: flex;
   flex-direction: column;
@@ -12,9 +12,9 @@ export const Wrapper = styled.div`
   justify-content: space-between;
 
   @media (max-width: 571px) {
-    height: 64vh;
-    height: 64dvh;
-    padding: 30px 30px 20px 30px;
+    height: 60vh;
+    height: 60dvh;
+    padding: 20px;
   }
 `;
 

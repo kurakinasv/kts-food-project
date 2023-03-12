@@ -3,7 +3,7 @@ import React, { FC, memo, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
 import { RouterPaths } from '@app/Router';
-import { DishWithNutritionType } from '@stores/DishStore';
+import { DishWithNutritionModel } from '@stores/DishStore';
 
 import { CardsWrapper } from './RecipeCardsList.styles';
 import RecipeCard from '../RecipeCard';
@@ -11,7 +11,7 @@ import CardSkeleton from '../RecipeCard/CardSkeleton';
 
 type RecipeCardsProps = {
   loading: boolean;
-  recipes?: DishWithNutritionType[];
+  recipes?: DishWithNutritionModel[];
   loadItemsAmount?: number;
 };
 
@@ -42,6 +42,7 @@ const RecipeCardsList: FC<RecipeCardsProps> = ({ loading, recipes, loadItemsAmou
     <CardsWrapper>
       {recipes.map((dish, index) => (
         <RecipeCard
+          id={dish.id}
           key={'' + dish.id + index}
           image={dish.image}
           title={dish.title}

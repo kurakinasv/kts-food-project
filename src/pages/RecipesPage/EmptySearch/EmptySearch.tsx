@@ -5,7 +5,7 @@ import { getRandomInteger } from '@utils/getRandomInteger';
 
 import { Emote, Text, Wrapper } from './EmptySearch.styles';
 
-const EmptySearch: FC<{ resetButtonAction: () => Promise<void> }> = ({ resetButtonAction }) => {
+const EmptySearch: FC<{ resetButtonAction(): Promise<void> | void }> = ({ resetButtonAction }) => {
   const clickHandler = async () => {
     await resetButtonAction();
   };

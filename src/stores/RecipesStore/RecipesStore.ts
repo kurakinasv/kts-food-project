@@ -2,7 +2,7 @@ import { action, computed, makeAutoObservable, observable, runInAction } from 'm
 
 import { mock } from '@pages/RecipesPage/mock';
 import ApiRequest from '@stores/ApiRequest';
-import { DishApi, DishWithNutritionType } from '@stores/DishStore';
+import { DishFullInfoApi, DishWithNutritionModel } from '@stores/DishStore';
 import MetaStore from '@stores/MetaStore';
 import {
   CollectionModel,
@@ -16,7 +16,7 @@ import { AllRecipesPaths } from '@typings/api';
 import { Option, UniqueId } from '@typings/common';
 import { getAllRecipesUrl } from '@utils/getUrl';
 
-import { IRecipesStore, normalizeRecipes, RecipesModel } from './model';
+import { IRecipesStore, normalizeRecipes, RecipesApi, RecipesModel } from './model';
 
 type PrivateFields =
   | '_rootStore'
@@ -36,7 +36,7 @@ class RecipesStore implements IRecipesStore {
   // todo call first 30 items
   private readonly requestItemsNumber = 20;
 
-  private _recipes: CollectionModel<UniqueId, DishWithNutritionType> = getInitialCollection();
+  private _recipes: CollectionModel<UniqueId, DishWithNutritionModel> = getInitialCollection();
 
   private _currentOffset = 0;
   private _loadNext = this.requestItemsNumber;
@@ -59,8 +59,12 @@ class RecipesStore implements IRecipesStore {
     return this._meta;
   }
 
-  get recipes(): DishWithNutritionType[] {
+  get recipes(): DishWithNutritionModel[] {
     return linearizeCollection(this._recipes);
+  }
+
+  get recipesCollection() {
+    return this._recipes;
   }
 
   private get _mealTypes() {
@@ -82,7 +86,7 @@ class RecipesStore implements IRecipesStore {
     return paramsToSet;
   }
 
-  setRecipes = (recipes: DishWithNutritionType[]) => {
+  setRecipes = (recipes: DishWithNutritionModel[]) => {
     this._recipes = normalizeCollection(recipes, (recipes) => recipes.id);
   };
 
@@ -93,17 +97,17 @@ class RecipesStore implements IRecipesStore {
     const url = getAllRecipesUrl(AllRecipesPaths.complex, this._paramsToSearch);
 
     try {
-      const data = await this._apiRequest.request<RecipesModel>(url);
+      const data = await this._apiRequest.request<RecipesApi>(url);
 
       // todo delete mock
-      // const mockData: RecipesModel = { results: [], totalResults: 0 };
+      // const mockData: RecipesApi = { results: [], totalResults: 0, number: 30, offset: 0 };
       // const eightyItems = Array(40)
       //   .fill([...mock])
       //   .flat();
       // mockData.results = [...eightyItems];
       // mockData.totalResults = mockData.results.length;
 
-      // const data = await new Promise<RecipesModel>((res) => {
+      // const data = await new Promise<RecipesApi>((res) => {
       //   setTimeout(() => res(mockData), 2000);
       // });
 
@@ -130,7 +134,7 @@ class RecipesStore implements IRecipesStore {
     const url = getAllRecipesUrl(AllRecipesPaths.random, { number: '1' });
 
     try {
-      const data = await this._apiRequest.request<{ recipes: DishApi[] }>(url);
+      const data = await this._apiRequest.request<{ recipes: DishFullInfoApi[] }>(url);
       let randomId = '';
 
       runInAction(() => {

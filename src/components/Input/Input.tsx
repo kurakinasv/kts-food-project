@@ -9,7 +9,7 @@ import { ClearButtonWrapper, InputWrapper, StyledInput } from './Input.styles';
 export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & {
   value: string;
   onChange: (value: string) => void;
-  keyDownHandler: () => Promise<void>;
+  keyDownHandler?(): Promise<void> | void;
   clearValue: VoidFunction;
 };
 
@@ -32,7 +32,7 @@ const Input: React.FC<InputProps> = ({
 
   const handleKeyDown = useCallback(
     async (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && keyDownHandler) {
         await keyDownHandler();
       }
     },

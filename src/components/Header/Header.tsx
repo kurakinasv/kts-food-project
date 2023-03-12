@@ -1,7 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import { observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { RouterPaths } from '@app/Router';
 import logo from '@static/images/logo.png';
@@ -21,6 +21,7 @@ import {
 
 const Header: FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [small, setSmall] = useState(false);
   const [burgerActive, setBurgerActive] = useState(false);
 
@@ -52,17 +53,28 @@ const Header: FC = () => {
     }
   };
 
+  const redirectToMain = useCallback(() => {
+    if (location.pathname !== RouterPaths.recipes) {
+      navigate(RouterPaths.recipes);
+    }
+  }, [location.pathname]);
+
   return (
     <HeaderWrapper small={small}>
       <HeaderContent>
-        <Logo src={logo} alt="app logo" small={small} />
+        <Logo src={logo} alt="app logo" small={small} onClick={redirectToMain} />
 
         <Burger onClick={handleBurger}>
           <BurgerContent active={burgerActive} />
         </Burger>
 
         <Navbar open={burgerActive}>
-          <NavLink to="">Collection</NavLink>
+          <NavLink
+            to={RouterPaths.collection}
+            active={location.pathname === RouterPaths.collection}
+          >
+            Collection
+          </NavLink>
           <NavButton title="Get random recipe" onClick={redirectToRandomDish}>
             <DiceIcon loading={meta.loading} />
             <span>Random recipe</span>

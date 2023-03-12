@@ -1,4 +1,4 @@
-import { DishWithNutritionType, DishWithNutritionApi } from '@stores/DishStore';
+import { DishWithNutritionModel, DishWithNutritionApi } from '@stores/DishStore';
 import { normalizeNutrients } from '@stores/models/nutrients';
 import { Option } from '@typings/common';
 
@@ -9,16 +9,19 @@ export type RecipesApi = {
   totalResults: number;
 };
 
-export type RecipesModel = Pick<RecipesApi, 'results' | 'totalResults'>;
+export type RecipesModel = {
+  results: DishWithNutritionModel[];
+  totalResults: number;
+};
 
 export interface IRecipesStore {
-  recipes: DishWithNutritionType[] | null;
+  recipes: DishWithNutritionModel[] | null;
 
-  setRecipes(recipes: DishWithNutritionType[]): void;
+  setRecipes(recipes: DishWithNutritionModel[]): void;
   getAllRecipes(query?: string, types?: Option[]): Promise<void>;
 }
 
-export const normalizeRecipes = (apiRecipes: RecipesModel) => {
+export const normalizeRecipes = (apiRecipes: RecipesApi) => {
   return apiRecipes.results.reduce((res, apiRecipe) => {
     const { id, image, title, nutrition } = apiRecipe;
 
@@ -26,7 +29,7 @@ export const normalizeRecipes = (apiRecipes: RecipesModel) => {
 
     const { calories, nutrients } = normalizeNutrients(nutrition.nutrients);
 
-    const currentRecipe: DishWithNutritionType = {
+    const currentRecipe: DishWithNutritionModel = {
       id,
       image,
       title,
@@ -36,5 +39,5 @@ export const normalizeRecipes = (apiRecipes: RecipesModel) => {
     };
 
     return [...res, currentRecipe];
-  }, [] as DishWithNutritionType[]);
+  }, [] as DishWithNutritionModel[]);
 };

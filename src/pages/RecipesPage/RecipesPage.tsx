@@ -5,22 +5,22 @@ import { observer } from 'mobx-react-lite';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import Alert, { useAlert } from '@components/Alert';
-import Header from '@components/Header';
+import Layout from '@components/Layout';
 import Loader from '@components/Loader';
-import OnTopButton from '@components/OnTopButton';
 import useQueryParams from '@hooks/useQueryParams';
-import { useRecipes } from '@stores/RootStore';
+import { useCollectionStore, useRecipes } from '@stores/RootStore';
 import { Option } from '@typings/common';
 
 import EmptySearch from './EmptySearch';
 import RecipeCardsList from './RecipeCardsList';
-import { LoaderWrapper, PageWrapper } from './RecipesPage.styles';
+import { LoaderWrapper } from './RecipesPage.styles';
 import SearchBar from './SearchBar';
 import { getInitialSelectedOptions } from './utils';
 
 const RecipesPage: FC = () => {
   const { getParam } = useQueryParams();
   const { isOpen, openAlert } = useAlert();
+  const { initCollection } = useCollectionStore();
 
   const { getAllRecipes, recipes, totalResults, meta } = useRecipes();
 
@@ -39,6 +39,8 @@ const RecipesPage: FC = () => {
   const [skeletonCardsAmount, setCardsAmount] = useState(5);
 
   useEffect(() => {
+    initCollection();
+
     if (!recipes.length) {
       getAllRecipes(searchValue, selectedOptions, getParam('results'));
     }
@@ -81,52 +83,46 @@ const RecipesPage: FC = () => {
   );
 
   return (
-    <>
-      <Header />
+    <Layout>
+      <SearchBar
+        value={searchValue}
+        options={selectedOptions}
+        setSearchValue={setSearchValue}
+        setSelectedOptions={setSelectedOptions}
+      />
 
-      <PageWrapper>
-        <SearchBar
-          value={searchValue}
-          options={selectedOptions}
-          setSearchValue={setSearchValue}
-          setSelectedOptions={setSelectedOptions}
-        />
+      <Alert
+        message={meta.error?.message || ''}
+        status="error"
+        open={isOpen}
+        statusCode={meta.error?.code}
+      />
 
-        <Alert
-          message={meta.error?.message || ''}
-          status="error"
-          open={isOpen}
-          statusCode={meta.error?.code}
-        />
+      {!meta.loading && !totalResults && <EmptySearch resetButtonAction={clearFilters} />}
+      {meta.loading && !recipes?.length && (
+        <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount * 3} />
+      )}
 
-        {!meta.loading && !totalResults && <EmptySearch resetButtonAction={clearFilters} />}
-        {meta.loading && !recipes?.length && (
-          <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount * 3} />
-        )}
-
-        {recipes && !!recipes.length && (
-          <InfiniteScroll
-            dataLength={recipes.length}
-            next={next}
-            hasMore={hasMore}
-            loader={
-              <>
-                <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount} />
-                <LoaderWrapper>
-                  <Loader />
-                </LoaderWrapper>
-              </>
-            }
-            scrollThreshold={0.9}
-            style={{ margin: '-10px' }}
-          >
-            <RecipeCardsList loading={false} recipes={recipes} />
-          </InfiniteScroll>
-        )}
-
-        <OnTopButton />
-      </PageWrapper>
-    </>
+      {recipes && !!recipes.length && (
+        <InfiniteScroll
+          dataLength={recipes.length}
+          next={next}
+          hasMore={hasMore}
+          loader={
+            <>
+              <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount} />
+              <LoaderWrapper>
+                <Loader />
+              </LoaderWrapper>
+            </>
+          }
+          scrollThreshold={0.9}
+          style={{ margin: '-10px' }}
+        >
+          <RecipeCardsList loading={false} recipes={recipes} />
+        </InfiniteScroll>
+      )}
+    </Layout>
   );
 };
 

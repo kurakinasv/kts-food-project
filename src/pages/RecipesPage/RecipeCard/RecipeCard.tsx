@@ -1,7 +1,12 @@
-import React, { memo } from 'react';
+import React from 'react';
 
+import { observer } from 'mobx-react-lite';
+
+import Alert, { useAlert } from '@components/Alert';
 import Button from '@components/Button';
-import { PlusIcon } from '@static/icons';
+import { PlusIcon, XMarkIcon } from '@static/icons';
+import { useCollectionStore } from '@stores/RootStore';
+import { UniqueId } from '@typings/common';
 import { replaceImage } from '@utils/replaceImage';
 
 import {
@@ -15,6 +20,7 @@ import {
 } from './RecipeCard.styles';
 
 export type CardProps = {
+  id: UniqueId;
   image: string;
   title: React.ReactNode;
   ingredients: string;
@@ -23,23 +29,48 @@ export type CardProps = {
   onClick?: React.MouseEventHandler;
 };
 
-const RecipeCard: React.FC<CardProps> = ({ image, title, ingredients, calories, onClick }) => {
-  return (
-    <CardWrapper onClick={onClick}>
-      <div>
-        <CardImage src={image} alt="dish serving" onError={replaceImage} />
-      </div>
-      <CardInfo>
-        <RecipeName>{title}</RecipeName>
-        <Ingredients>{ingredients}</Ingredients>
+const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calories, onClick }) => {
+  const { isOpen, openAlert } = useAlert();
 
-        <CardFooter>
-          <Calories>{calories} kcal</Calories>
-          <Button icon={<PlusIcon />} shape="circle" width="24px" padding="0" minWidth="24px" />
-        </CardFooter>
-      </CardInfo>
-    </CardWrapper>
+  const { addToCollection, isDishExistInCollection } = useCollectionStore();
+
+  const addButtonHandler = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCollection(id);
+    openAlert();
+  };
+
+  return (
+    <>
+      <Alert
+        message={isDishExistInCollection(id) ? 'Added to collection' : 'Removed from collection'}
+        status="success"
+        open={isOpen}
+      />
+
+      <CardWrapper onClick={onClick}>
+        <div>
+          <CardImage src={image} alt="dish serving" onError={replaceImage} />
+        </div>
+        <CardInfo>
+          <RecipeName>{title}</RecipeName>
+          <Ingredients>{ingredients}</Ingredients>
+
+          <CardFooter>
+            <Calories>{calories} kcal</Calories>
+            <Button
+              onClick={addButtonHandler}
+              icon={isDishExistInCollection(id) ? <XMarkIcon fillColor="white" /> : <PlusIcon />}
+              shape="circle"
+              width="24px"
+              padding="0"
+              minWidth="24px"
+            />
+          </CardFooter>
+        </CardInfo>
+      </CardWrapper>
+    </>
   );
 };
 
-export default memo(RecipeCard);
+export default observer(RecipeCard);

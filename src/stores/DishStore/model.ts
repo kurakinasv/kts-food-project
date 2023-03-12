@@ -16,7 +16,7 @@ type IngredientApi = {
 };
 
 // getting data by /complexSearch
-export type DishApi = {
+type DishApi = {
   id: UniqueId;
   title: string;
   image: ImageURL;
@@ -30,20 +30,24 @@ type NutritionApi = {
   };
 };
 
+type DishAdditionalInfoApi = {
+  aggregateLikes: number;
+  readyInMinutes: number;
+  summary: string;
+
+  instructions: string;
+  servings: number;
+  analyzedInstructions: AnalyzedInstructionsApi[];
+};
+
 // getting all recipes by /complexSearch?addRecipeNutrition=true
 export type DishWithNutritionApi = DishApi & NutritionApi;
 
 // getting one recipe by :id/information?includeNutrition=true
-export type ExtendedDishApi = DishApi &
-  NutritionApi & {
-    aggregateLikes: number;
-    readyInMinutes: number;
-    summary: string;
+export type ExtendedDishApi = DishApi & NutritionApi & DishAdditionalInfoApi;
 
-    instructions: string;
-    servings: number;
-    analyzedInstructions: AnalyzedInstructionsApi[];
-  };
+// getting one recipe by :id/information
+export type DishFullInfoApi = DishApi & DishAdditionalInfoApi;
 
 //------------------------------------------
 
@@ -59,18 +63,21 @@ type NutritionModel = {
   nutrients: NutrientModel[];
 };
 
-export type DishWithNutritionType = DishModel & NutritionModel;
+type DishAdditionalInfoModel = {
+  aggregateLikes: number;
+  readyInMinutes: number;
+  summary: string;
 
-export type ExtendedDishModel = DishModel &
-  NutritionModel & {
-    aggregateLikes: number;
-    readyInMinutes: number;
-    summary: string;
+  instructions: string;
+  servings: number;
+  steps: InstructionStepsModel[];
+};
 
-    instructions: string;
-    servings: number;
-    steps: InstructionStepsModel[];
-  };
+export type DishWithNutritionModel = DishModel & NutritionModel;
+
+export type ExtendedDishModel = DishModel & NutritionModel & DishAdditionalInfoModel;
+
+export type DishFullInfoModel = DishModel & DishAdditionalInfoModel;
 
 //------------------------------------------
 
