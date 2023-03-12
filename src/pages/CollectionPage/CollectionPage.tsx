@@ -1,12 +1,14 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
 import Input from '@components/Input';
 import Layout from '@components/Layout';
+import useQueryParams from '@hooks/useQueryParams';
 import EmptySearch from '@pages/RecipesPage/EmptySearch';
 import RecipeCardsList from '@pages/RecipesPage/RecipeCardsList';
-import { useCollectionStore } from '@stores/RootStore';
+import { useCollectionStore, useQueryStore } from '@stores/RootStore';
+import { debounce } from '@utils/debounce';
 
 import { InputWrapper, ListWrapper, Placeholder } from './CollectionPage.styles';
 
@@ -14,16 +16,32 @@ const CollectionPage: FC = () => {
   const { collectionRecipes, initCollection, searchRecipes, filteredRecipes } =
     useCollectionStore();
 
-  const [value, setValue] = useState('');
+  const { getParam } = useQueryParams();
+  const { setParams } = useQueryStore();
+
+  const [value, setValue] = useState(getParam('query'));
 
   useEffect(() => {
     initCollection();
   }, []);
 
-  const search = (val: string) => {
+  const search = useCallback((val: string) => {
     setValue(val);
-    searchRecipes(val);
-  };
+    setParams({ query: val });
+    debouncedSearch(val);
+  }, []);
+
+  const clearSearch = useCallback(() => {
+    setValue('');
+    setParams({ query: '' });
+  }, []);
+
+  const debouncedSearch = useCallback(
+    debounce((val: string) => {
+      searchRecipes(val);
+    }, 500),
+    []
+  );
 
   return (
     <Layout>
@@ -31,7 +49,7 @@ const CollectionPage: FC = () => {
         <Input
           value={value}
           onChange={search}
-          clearValue={() => setValue('')}
+          clearValue={clearSearch}
           placeholder="Search by name or ingredient"
         />
       </InputWrapper>
@@ -39,7 +57,7 @@ const CollectionPage: FC = () => {
       {!collectionRecipes.length && <Placeholder />}
 
       {value && !filteredRecipes.length && !!collectionRecipes.length && (
-        <EmptySearch resetButtonAction={() => setValue('')} />
+        <EmptySearch resetButtonAction={clearSearch} />
       )}
 
       {!!collectionRecipes.length && (

@@ -10,6 +10,7 @@ import Loader from '@components/Loader';
 import useQueryParams from '@hooks/useQueryParams';
 import { useCollectionStore, useRecipes } from '@stores/RootStore';
 import { Option } from '@typings/common';
+import { debounce } from '@utils/debounce';
 
 import EmptySearch from './EmptySearch';
 import RecipeCardsList from './RecipeCardsList';
@@ -47,7 +48,7 @@ const RecipesPage: FC = () => {
   }, []);
 
   useEffect(() => {
-    const resizeHandler = () => {
+    const resizeHandler = debounce(() => {
       if (960 < window.innerWidth && window.innerWidth <= 1130) {
         setCardsAmount(4);
       } else if (500 < window.innerWidth && window.innerWidth <= 960) {
@@ -57,7 +58,7 @@ const RecipesPage: FC = () => {
       } else {
         setCardsAmount(5);
       }
-    };
+    }, 250);
 
     resizeHandler();
 

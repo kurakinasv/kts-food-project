@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback } from 'react';
 
 import { observer } from 'mobx-react-lite';
 
@@ -7,6 +7,7 @@ import { SearchIcon } from '@static/icons';
 import { mealTypesOptions } from '@stores/models/mealtypes';
 import { useQueryStore, useRecipes } from '@stores/RootStore';
 import { Option } from '@typings/common';
+import { debounce } from '@utils/debounce';
 
 import { SearchBarWrapper, StyledDropdown, SearchForm, StyledButton } from './SearchBar.styles';
 
@@ -24,7 +25,7 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
   const handleSelect = useCallback(
     async (options: Option[]) => {
       setSelectedOptions(options);
-      await getAllRecipes(undefined, options, '');
+      debouncedSelect(options);
     },
     [setSelectedOptions, getAllRecipes]
   );
@@ -48,6 +49,11 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
     setSelectedOptions([]);
     await getAllRecipes(undefined, [], '');
   }, [setSelectedOptions, getAllRecipes]);
+
+  const debouncedSelect = useCallback(
+    debounce(async (options: Option[]) => await getAllRecipes(undefined, options, '')),
+    []
+  );
 
   return (
     <SearchBarWrapper>
