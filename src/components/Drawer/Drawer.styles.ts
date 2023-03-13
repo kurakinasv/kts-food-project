@@ -2,7 +2,7 @@ import { animated } from '@react-spring/web';
 import styled from 'styled-components';
 
 import { scrollbar } from '@styles/mixins';
-import { colors, fonts, gradients } from '@styles/variables';
+import { breakpoints, colors, fonts, gradients } from '@styles/variables';
 
 export const DrawerWrapper = styled.div`
   width: 100%;
@@ -36,6 +36,11 @@ export const DrawerBody = styled(animated.div)`
   flex-direction: column;
 
   background: ${gradients.lightRed};
+
+  @media (max-width: 510px) {
+    width: 100%;
+    padding: 25px 28px 60px 28px;
+  }
 `;
 
 export const Header = styled.div`
@@ -56,6 +61,13 @@ export const ButtonWrapper = styled.div`
     width: 30px;
     height: 30px;
   }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    & svg {
+      width: 25px;
+      height: 25px;
+    }
+  }
 `;
 
 export const Title = styled.h4`
@@ -67,7 +79,11 @@ export const Title = styled.h4`
 
   text-transform: uppercase;
   text-align: center;
-  color: #ee4d4d;
+  color: ${colors.secondaryRed};
+
+  @media (max-width: ${breakpoints.mobile}) {
+    font-size: 20px;
+  }
 `;
 
 export const Content = styled.div`
@@ -76,9 +92,11 @@ export const Content = styled.div`
   align-items: center;
   gap: 16px;
   flex-grow: 1;
+
   margin: -5px -10px;
   padding: 5px 10px;
 
+  overflow-x: hidden;
   overflow-y: auto;
   ${scrollbar('0.5em')};
 `;
@@ -89,9 +107,16 @@ export const Empty = styled.div`
 
   display: flex;
   align-items: center;
+  justify-content: center;
 
   & > * {
     max-width: 350px;
+  }
+
+  @media (max-width: ${breakpoints.mobile}) {
+    & > * {
+      max-width: 250px;
+    }
   }
 `;
 

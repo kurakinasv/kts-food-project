@@ -39,10 +39,15 @@ export const getAllRecipesUrl = (
   return BASE_URL + path + query;
 };
 
-export const getSingleRecipeUrl = (id: number, hanledPath?: SingleRecipePaths) => {
+export const getSingleRecipeUrl = (
+  id: number,
+  hanledPath?: SingleRecipePaths,
+  params?: Partial<SearchParams<DishQueryParams>>
+) => {
   const path = hanledPath ?? SingleRecipePaths.info;
 
   const paramsToParse: SearchParams<DishQueryParams> = {
+    ...(params ?? []),
     ...getApiParam(),
     includeNutrition: 'true',
   };

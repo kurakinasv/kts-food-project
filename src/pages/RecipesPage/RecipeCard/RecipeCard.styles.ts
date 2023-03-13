@@ -30,10 +30,13 @@ export const CardWrapper = styled.div`
   }
 `;
 
+export const ImageWrapper = styled.div`
+  margin-bottom: 8px;
+`;
+
 export const CardImage = styled.img`
   width: 100%;
   max-height: 110px;
-  margin-bottom: 8px;
 
   @media (max-width: ${breakpoints.mobile}) {
     max-height: 70px;

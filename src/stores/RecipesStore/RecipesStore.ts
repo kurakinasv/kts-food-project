@@ -1,8 +1,9 @@
 import { action, computed, makeAutoObservable, observable, runInAction } from 'mobx';
 
+import { mockSomeRecipes } from '@pages/DishPage/mock';
 import { mock } from '@pages/RecipesPage/mock';
 import ApiRequest from '@stores/ApiRequest';
-import { DishFullInfoApi, DishWithNutritionModel } from '@stores/DishStore';
+import { DishFullInfoApi, DishWithNutritionApi, DishWithNutritionModel } from '@stores/DishStore';
 import {
   CollectionModel,
   getInitialCollection,
@@ -15,7 +16,7 @@ import { AllRecipesPaths } from '@typings/api';
 import { Option, UniqueId } from '@typings/common';
 import { getAllRecipesUrl } from '@utils/getUrl';
 
-import { IRecipesStore, normalizeRecipes, RecipesApi, RecipesModel } from './model';
+import { IRecipesStore, normalizeRecipe, RecipesApi } from './model';
 
 type PrivateFields =
   | '_rootStore'
@@ -36,6 +37,8 @@ class RecipesStore implements IRecipesStore {
   private readonly requestItemsNumber = 20;
 
   private _recipes: CollectionModel<UniqueId, DishWithNutritionModel> = getInitialCollection();
+  private _additionalRecipes: CollectionModel<UniqueId, DishWithNutritionModel> =
+    getInitialCollection();
 
   private _currentOffset = 0;
   private _loadNext = this.requestItemsNumber;
@@ -57,6 +60,10 @@ class RecipesStore implements IRecipesStore {
 
   get recipes(): DishWithNutritionModel[] {
     return linearizeCollection(this._recipes);
+  }
+
+  get additionalRecipes() {
+    return this._additionalRecipes;
   }
 
   get recipesCollection() {
@@ -87,7 +94,11 @@ class RecipesStore implements IRecipesStore {
   }
 
   setRecipes = (recipes: DishWithNutritionModel[]) => {
-    this._recipes = normalizeCollection(recipes, (recipes) => recipes.id);
+    this._recipes = normalizeCollection(recipes, (recipe) => recipe.id);
+  };
+
+  setAdditionalRecipes = (recipes: DishWithNutritionModel[]) => {
+    this._additionalRecipes = normalizeCollection(recipes, (recipe) => recipe.id);
   };
 
   getAllRecipes = async (query?: string, typesOptions?: Option[], results?: string) => {
@@ -97,23 +108,23 @@ class RecipesStore implements IRecipesStore {
     const url = getAllRecipesUrl(AllRecipesPaths.complex, this._paramsToSearch);
 
     try {
-      // const data = await this._apiRequest.request<RecipesApi>(url);
+      const data = await this._apiRequest.request<RecipesApi>(url);
 
       // todo delete mock
-      const mockData: RecipesApi = { results: [], totalResults: 0, number: 30, offset: 0 };
-      const eightyItems = Array(40)
-        .fill([...mock])
-        .flat();
-      mockData.results = [...eightyItems];
-      mockData.totalResults = mockData.results.length;
+      // const mockData: RecipesApi = { results: [], totalResults: 0, number: 30, offset: 0 };
+      // const eightyItems = Array(40)
+      //   .fill([...mock])
+      //   .flat();
+      // mockData.results = [...eightyItems];
+      // mockData.totalResults = mockData.results.length;
 
-      const data = await new Promise<RecipesApi>((res) => {
-        setTimeout(() => res(mockData), 2000);
-      });
+      // const data = await new Promise<RecipesApi>((res) => {
+      //   setTimeout(() => res(mockData), 500);
+      // });
 
       runInAction(() => {
         if (data) {
-          this.setRecipes([...this.recipes, ...normalizeRecipes(data)]);
+          this.setRecipes([...this.recipes, ...data.results.map(normalizeRecipe)]);
           this.totalResults = data.totalResults;
           this._currentOffset += this.requestItemsNumber;
         }
@@ -149,7 +160,37 @@ class RecipesStore implements IRecipesStore {
       runInAction(() => {
         this._meta.setError(this._apiRequest.error);
       });
-      throw new Error(`getAllRecipes: ${error.message}`);
+      throw new Error(`getRandom: ${error.message}`);
+    }
+  };
+
+  getSomeRecipes = async (ids: UniqueId[]) => {
+    this._meta.setLoading();
+
+    const url = getAllRecipesUrl(AllRecipesPaths.bulk, {
+      ids: ids.join(','),
+      includeNutrition: 'true',
+    });
+
+    try {
+      const data = await this._apiRequest.request<DishWithNutritionApi[]>(url);
+
+      // todo delete mock
+      // const data = await new Promise<DishWithNutritionApi[]>((res) => {
+      //   setTimeout(() => res(mockSomeRecipes), 500);
+      // });
+
+      runInAction(() => {
+        if (data) {
+          this.setAdditionalRecipes(data.map(normalizeRecipe));
+          this._meta.setInitial();
+        }
+      });
+    } catch (error: any) {
+      runInAction(() => {
+        this._meta.setError(this._apiRequest.error);
+      });
+      throw new Error(`getSomeRecipes: ${error.message}`);
     }
   };
 

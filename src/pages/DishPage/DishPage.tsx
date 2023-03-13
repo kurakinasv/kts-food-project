@@ -1,20 +1,21 @@
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useEffect } from 'react';
 
 import parse from 'html-react-parser';
 import { observer } from 'mobx-react-lite';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { stats } from '@config/recipe';
 import { useLocalStore } from '@hooks/useLocalStore';
-import { ArrowIcon, ClockIcon, DishIcon, HeartIcon } from '@static/icons';
+import { ArrowIcon } from '@static/icons';
 import DishStore from '@stores/DishStore';
-import { useIngredientsListStore, useMetaStore } from '@stores/RootStore';
+import { useCollectionStore, useIngredientsListStore, useMetaStore } from '@stores/RootStore';
 import { formPlural } from '@utils/formPlural';
-import { uefCallback } from '@utils/handleUseEffectAsyncRequest';
 import { replaceImage } from '@utils/replaceImage';
 
 import DishPageSkeleton from './components/DishPageSkeleton';
 import Ingredients from './components/Ingredients';
 import RecipeInstructions from './components/RecipeInstructions';
+import SimilarRecipes from './components/SimilarRecipes';
 import {
   DishPhoto,
   PageWrapper,
@@ -30,6 +31,7 @@ import {
   Nutrient,
   NutrientName,
   NutrientPercent,
+  RecipeSections,
 } from './DishPage.styles';
 import ErrorPage from './ErrorPage';
 
@@ -37,38 +39,25 @@ const DishPage: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { getDish, dishInfo } = useLocalStore<DishStore>(() => new DishStore());
+  const { getDish, dishInfo, similar, getSimilar } = useLocalStore<DishStore>(
+    () => new DishStore()
+  );
   const { loading, error, isError } = useMetaStore();
   const { initIngredientsList } = useIngredientsListStore();
-
-  useEffect(uefCallback(getDish, Number(id)), []);
+  const { initCollection } = useCollectionStore();
 
   useEffect(() => {
-    initIngredientsList();
-  }, []);
+    const init = async () => {
+      await getDish(Number(id));
+      await getSimilar(Number(id));
+      initIngredientsList();
+      initCollection();
+    };
+
+    init();
+  }, [id]);
 
   const goBack = () => navigate(-1);
-
-  const stats = useMemo(
-    () => [
-      {
-        name: 'minute',
-        icon: <ClockIcon />,
-        quantity: dishInfo?.readyInMinutes,
-      },
-      {
-        name: 'like',
-        icon: <HeartIcon />,
-        quantity: dishInfo?.aggregateLikes,
-      },
-      {
-        name: 'serving',
-        icon: <DishIcon />,
-        quantity: dishInfo?.servings,
-      },
-    ],
-    [dishInfo]
-  );
 
   if (!loading && (isError || !dishInfo)) {
     return <ErrorPage message={error?.message || ''} />;
@@ -108,7 +97,7 @@ const DishPage: FC = () => {
             <RecipeName>{dishInfo.title}</RecipeName>
 
             <RecipeStats>
-              {stats.map(({ icon, quantity, name }, i) => (
+              {stats(dishInfo).map(({ icon, quantity, name }, i) => (
                 <StatsItem key={i}>
                   {icon}
                   <StatsName>
@@ -118,11 +107,15 @@ const DishPage: FC = () => {
               ))}
             </RecipeStats>
 
-            <RecipeDescription>{parse(dishInfo.summary)}</RecipeDescription>
+            <RecipeSections>
+              <RecipeDescription>{parse(dishInfo.summary)}</RecipeDescription>
 
-            <Ingredients ingredients={dishInfo.extendedIngredients} />
+              <Ingredients ingredients={dishInfo.extendedIngredients} />
 
-            {!!dishInfo.steps.length && <RecipeInstructions steps={dishInfo.steps} />}
+              {!!dishInfo.steps.length && <RecipeInstructions steps={dishInfo.steps} />}
+
+              <SimilarRecipes recipes={similar} />
+            </RecipeSections>
           </RecipeInfo>
         </>
       )}

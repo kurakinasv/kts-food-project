@@ -17,6 +17,7 @@ import {
   RecipeName,
   CardWrapper,
   Calories,
+  ImageWrapper,
 } from './RecipeCard.styles';
 
 export type CardProps = {
@@ -49,9 +50,10 @@ const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calori
       />
 
       <CardWrapper onClick={onClick}>
-        <div>
+        <ImageWrapper>
           <CardImage src={image} alt="dish serving" onError={replaceImage} />
-        </div>
+        </ImageWrapper>
+
         <CardInfo>
           <RecipeName>{title}</RecipeName>
           <Ingredients>{ingredients}</Ingredients>

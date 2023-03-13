@@ -23,11 +23,15 @@ export const colors = {
 };
 
 export const rgbColors = {
-  textGrey: '59, 59, 59',
   red: '255, 0, 0',
-  green: '0, 157, 118',
   pink: '255, 229, 229',
   lightPink: '255, 247, 247',
+
+  textGrey: '59, 59, 59',
+
+  green: '0, 157, 118',
+  purple: '107, 1, 172',
+  blue: '0, 139, 228',
 };
 
 export const gradients = {

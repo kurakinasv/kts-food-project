@@ -21,23 +21,19 @@ export interface IRecipesStore {
   getAllRecipes(query?: string, types?: Option[]): Promise<void>;
 }
 
-export const normalizeRecipes = (apiRecipes: RecipesApi) => {
-  return apiRecipes.results.reduce((res, apiRecipe) => {
-    const { id, image, title, nutrition } = apiRecipe;
+export const normalizeRecipe = (apiRecipe: DishWithNutritionApi): DishWithNutritionModel => {
+  const { id, image, title, nutrition } = apiRecipe;
 
-    const ingredients = nutrition.ingredients.map((item) => item.name);
+  const ingredients = nutrition.ingredients.map((item) => item.name);
 
-    const { calories, nutrients } = normalizeNutrients(nutrition.nutrients);
+  const { calories, nutrients } = normalizeNutrients(nutrition.nutrients);
 
-    const currentRecipe: DishWithNutritionModel = {
-      id,
-      image,
-      title,
-      ingredients,
-      calories,
-      nutrients,
-    };
-
-    return [...res, currentRecipe];
-  }, [] as DishWithNutritionModel[]);
+  return {
+    id,
+    image,
+    title,
+    ingredients,
+    calories,
+    nutrients,
+  };
 };

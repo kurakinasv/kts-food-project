@@ -228,10 +228,20 @@ export const StatsName = styled.div`
   }
 `;
 
-export const RecipeDescription = styled.div`
+export const RecipeSections = styled.div`
   max-width: 750px;
-  margin-bottom: 35px;
+  min-width: 230px;
 
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+
+  @media (max-width: ${breakpoints.mobile}) {
+    gap: 25px;
+  }
+`;
+
+export const RecipeDescription = styled.div`
   font-weight: 500;
   font-size: 12px;
   line-height: 22px;
@@ -287,7 +297,7 @@ export const RecipeDescription = styled.div`
 `;
 
 export const SectionTitle = styled.h3`
-  margin-bottom: 8px;
+  margin-bottom: 14px;
   padding: 2px 5px;
 
   font-size: 1.2em;

@@ -50,6 +50,11 @@ const Ingredients: FC<IngredientsProps> = ({ ingredients }) => {
               </IngredientInfo>
 
               <Button
+                title={
+                  isIngredientInList(ingredient.id)
+                    ? 'Remove from shopping list'
+                    : 'Add to shopping list'
+                }
                 icon={
                   isIngredientInList(ingredient.id) ? <XMarkIcon fillColor="white" /> : <PlusIcon />
                 }

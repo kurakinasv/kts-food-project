@@ -61,7 +61,12 @@ class CollectionStore {
       return;
     }
 
-    const recipeToAdd = this._rootStore.recipesStore.recipesCollection.entities[id];
+    let recipeToAdd;
+    if (this._rootStore.recipesStore.recipes.length) {
+      recipeToAdd = this._rootStore.recipesStore.recipesCollection.entities[id];
+    } else {
+      recipeToAdd = this._rootStore.recipesStore.additionalRecipes.entities[id];
+    }
     const updatedCollection = [...(this.collectionRecipes ?? []), recipeToAdd];
 
     this.setCollectionRecipes(updatedCollection);
