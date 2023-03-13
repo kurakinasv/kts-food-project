@@ -1,6 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import { observer } from 'mobx-react-lite';
+import { useLocation } from 'react-router-dom';
 
 import Input from '@components/Input';
 import Layout from '@components/Layout';
@@ -19,10 +20,15 @@ const CollectionPage: FC = () => {
   const { getParam } = useQueryParams();
   const { setParams } = useQueryStore();
 
+  const { state } = useLocation();
   const [value, setValue] = useState(getParam('query'));
 
   useEffect(() => {
     initCollection();
+
+    if (state?.prevPath) {
+      setParams({ query: '', results: '', type: '' });
+    }
   }, []);
 
   const search = useCallback((val: string) => {

@@ -219,7 +219,9 @@ const navItem = css`
   }
 `;
 
-export const NavLink = styled(Link)<{ active: boolean }>`
+export const NavLink = styled(Link).withConfig({
+  shouldForwardProp: (prop) => !['active'].includes(prop),
+})<{ active: boolean }>`
   ${navItem};
   ${navItemText};
 

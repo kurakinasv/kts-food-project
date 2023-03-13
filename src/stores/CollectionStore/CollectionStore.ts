@@ -1,6 +1,6 @@
 import { action, makeAutoObservable, observable } from 'mobx';
 
-import { collectionStorage } from '@config/collection';
+import { collectionStorage } from '@config/storage';
 import { DishWithNutritionModel } from '@stores/DishStore';
 import {
   CollectionModel,

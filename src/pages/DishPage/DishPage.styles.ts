@@ -243,7 +243,8 @@ export const RecipeDescription = styled.div`
   }
 
   & b {
-    color: ${colors.red};
+    color: ${colors.secondaryRed};
+    letter-spacing: 0.02em;
   }
 
   & a {
@@ -283,4 +284,17 @@ export const RecipeDescription = styled.div`
   & p {
     margin-bottom: 12px;
   }
+`;
+
+export const SectionTitle = styled.h3`
+  margin-bottom: 8px;
+  padding: 2px 5px;
+
+  font-size: 1.2em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: white;
+
+  background-color: rgba(${rgbColors.red}, 0.4);
 `;

@@ -18,7 +18,6 @@ export const useLocalStore = <T extends ILocalStore>(creator: () => T): T => {
       autorun(() => {
         storeContainer.current?.destroy();
       });
-      storeContainer.current = null;
     };
   }, []);
 

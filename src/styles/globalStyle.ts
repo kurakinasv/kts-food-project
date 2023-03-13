@@ -4,9 +4,9 @@ import pattern from '@static/images/bg-pattern.png';
 
 import AvenirFont from './fonts/Avenir/fonts';
 import DMSansFont from './fonts/DMSans/fonts';
-import { colors, rgbColors } from './variables';
+import { scrollbar } from './mixins';
 
-const GlobalStyle = createGlobalStyle`
+const GlobalStyle = createGlobalStyle<{ disableScroll: boolean }>`
   ${AvenirFont}
   ${DMSansFont}
 
@@ -15,17 +15,7 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   
-    &::-webkit-scrollbar {
-        background-color: ${colors.pink};
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: rgba(${rgbColors.red}, 0.1);
-
-        &:hover{
-          background-color: rgba(${rgbColors.red}, 0.2);
-        }
-    }
+    ${scrollbar()};
   }
 
   *,
@@ -46,6 +36,10 @@ const GlobalStyle = createGlobalStyle`
   html {
     width: 100%;
     scroll-behavior: smooth;
+  }
+
+  body{
+    overflow: ${({ disableScroll }) => (disableScroll ? 'hidden' : 'auto')};
   }
 
   button, a {

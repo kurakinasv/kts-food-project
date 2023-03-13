@@ -1,5 +1,6 @@
 import React, { FC, memo, useCallback } from 'react';
 
+import { SectionTitle } from '@pages/DishPage/DishPage.styles';
 import { InstructionStepsModel } from '@stores/models/instructions';
 
 import { InstructionsWrapper, RecipeSteps } from './RecipeInstructions.styles';
@@ -39,7 +40,7 @@ const RecipeInstructions: FC<RecipeInstructionsProps> = ({ steps }) => {
 
   return (
     <InstructionsWrapper>
-      <h3>Recipe instructions</h3>
+      <SectionTitle>Recipe instructions</SectionTitle>
 
       <RecipeSteps>
         {steps.map(({ step, number }, i) => (

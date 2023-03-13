@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import Input from '@components/Input';
 import { SearchIcon } from '@static/icons';
 import { mealTypesOptions } from '@stores/models/mealtypes';
-import { useQueryStore, useRecipes } from '@stores/RootStore';
+import { useMetaStore, useQueryStore, useRecipes } from '@stores/RootStore';
 import { Option } from '@typings/common';
 import { debounce } from '@utils/debounce';
 
@@ -19,7 +19,8 @@ type SearchBarProps = {
 };
 
 const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSelectedOptions }) => {
-  const { getAllRecipes, meta } = useRecipes();
+  const { getAllRecipes } = useRecipes();
+  const { loading } = useMetaStore();
   const { query } = useQueryStore();
 
   const handleSelect = useCallback(
@@ -64,22 +65,22 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
         onChange={handleSelect}
         pluralizeOptions={(values: Option[]) => values.map(({ value }) => value).join(', ')}
         clearOptions={clearFiltration}
-        disabled={meta.loading}
-        loading={meta.loading}
+        disabled={loading}
+        loading={loading}
       />
 
       <SearchForm>
         <Input
           placeholder="Search"
           value={value}
-          disabled={meta.loading}
+          disabled={loading}
           onChange={setSearchValue}
           keyDownHandler={searchRecipes}
           clearValue={clearSearch}
         />
         <StyledButton
           icon={<SearchIcon />}
-          loading={meta.loading}
+          loading={loading}
           onClick={searchRecipes}
           padding="0px"
           shape="square"

@@ -1,4 +1,9 @@
 import {
+  ExtendedIngredientApi,
+  ExtendedIngredientModel,
+  normalizeIngredients,
+} from '@stores/models/ingredients';
+import {
   AnalyzedInstructionsApi,
   InstructionStepsModel,
   normalizeInstructions,
@@ -38,6 +43,7 @@ type DishAdditionalInfoApi = {
   instructions: string;
   servings: number;
   analyzedInstructions: AnalyzedInstructionsApi[];
+  extendedIngredients: ExtendedIngredientApi[];
 };
 
 // getting all recipes by /complexSearch?addRecipeNutrition=true
@@ -71,6 +77,7 @@ type DishAdditionalInfoModel = {
   instructions: string;
   servings: number;
   steps: InstructionStepsModel[];
+  extendedIngredients: ExtendedIngredientModel[];
 };
 
 export type DishWithNutritionModel = DishModel & NutritionModel;
@@ -100,6 +107,7 @@ export const normalizeDish = (apiDish: ExtendedDishApi): ExtendedDishModel => {
     nutrition,
     analyzedInstructions,
     servings,
+    extendedIngredients,
   } = apiDish;
 
   const ingredients = nutrition.ingredients.map((item) => item.name);
@@ -108,6 +116,8 @@ export const normalizeDish = (apiDish: ExtendedDishApi): ExtendedDishModel => {
 
   const instructionSteps = normalizeInstructions(analyzedInstructions);
   const steps = normalizeSteps(instructionSteps);
+
+  const extIngredients = extendedIngredients.map(normalizeIngredients);
 
   const dish: ExtendedDishModel = {
     id,
@@ -122,6 +132,7 @@ export const normalizeDish = (apiDish: ExtendedDishApi): ExtendedDishModel => {
     nutrients,
     steps,
     servings,
+    extendedIngredients: extIngredients,
   };
 
   return dish;

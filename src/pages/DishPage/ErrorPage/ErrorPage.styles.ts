@@ -12,7 +12,7 @@ export const ErrorWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  padding: 150px 0 100px 0;
+  padding: 100px 0;
 `;
 
 export const Emote = styled.div`
@@ -23,7 +23,7 @@ export const Emote = styled.div`
 
   font-family: ${fonts.secondary};
   font-weight: 700;
-  font-size: 50vmin;
+  font-size: 35vmin;
   white-space: nowrap;
   color: rgba(${rgbColors.red}, 0.05);
 

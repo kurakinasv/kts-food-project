@@ -2,7 +2,7 @@ import { createContext, FC, PropsWithChildren, useContext } from 'react';
 
 import RootStore from './RootStore';
 
-const rootStore = new RootStore();
+export const rootStore = new RootStore();
 
 const RootStoreContext = createContext<RootStore>(rootStore);
 

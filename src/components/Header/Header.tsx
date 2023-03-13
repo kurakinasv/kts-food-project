@@ -1,11 +1,12 @@
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import { observer } from 'mobx-react-lite';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { useDrawer } from '@components/Drawer';
 import { RouterPaths, routes } from '@config/routes';
 import logo from '@static/images/logo.png';
-import { useRecipes } from '@stores/RootStore';
+import { useMetaStore, useRecipes } from '@stores/RootStore';
 
 import DiceIcon from './DiceIcon';
 import {
@@ -18,6 +19,7 @@ import {
   BurgerContent,
   NavButton,
 } from './Header.styles';
+import IngredientsListDrawer from './IngredientsListDrawer';
 
 const Header: FC = () => {
   const navigate = useNavigate();
@@ -25,8 +27,12 @@ const Header: FC = () => {
 
   const [small, setSmall] = useState(false);
   const [burgerActive, setBurgerActive] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  const { getRandom, meta } = useRecipes();
+  const { getRandom } = useRecipes();
+  const { loading } = useMetaStore();
+
+  const { open, openDrawer, closeDrawer } = useDrawer();
 
   const scrollHandler = useCallback(() => {
     if (window.scrollY > 80) {
@@ -60,28 +66,38 @@ const Header: FC = () => {
   }, [location.pathname]);
 
   return (
-    <HeaderWrapper small={small}>
-      <HeaderContent>
-        <Logo src={logo} alt="app logo" small={small} onClick={redirectToMain} />
+    <>
+      <IngredientsListDrawer isOpen={open} closeDrawer={closeDrawer} openButtonRef={buttonRef} />
 
-        <Burger onClick={handleBurger}>
-          <BurgerContent active={burgerActive} />
-        </Burger>
+      <HeaderWrapper small={small}>
+        <HeaderContent>
+          <Logo src={logo} alt="app logo" small={small} onClick={redirectToMain} />
 
-        <Navbar open={burgerActive}>
-          <NavLink
-            to={RouterPaths.collection}
-            active={location.pathname === RouterPaths.collection}
-          >
-            Collection
-          </NavLink>
-          <NavButton title="Get random recipe" onClick={redirectToRandomDish}>
-            <DiceIcon loading={meta.loading} />
-            <span>Random recipe</span>
-          </NavButton>
-        </Navbar>
-      </HeaderContent>
-    </HeaderWrapper>
+          <Burger onClick={handleBurger}>
+            <BurgerContent active={burgerActive} />
+          </Burger>
+
+          <Navbar open={burgerActive}>
+            <NavLink
+              to={{ pathname: RouterPaths.collection }}
+              state={{ prevPath: location.pathname }}
+              active={location.pathname === RouterPaths.collection}
+            >
+              Collection
+            </NavLink>
+
+            <NavButton ref={buttonRef} onClick={openDrawer}>
+              Shopping list
+            </NavButton>
+
+            <NavButton title="Get random recipe" onClick={redirectToRandomDish}>
+              <DiceIcon loading={loading} />
+              <span>Random recipe</span>
+            </NavButton>
+          </Navbar>
+        </HeaderContent>
+      </HeaderWrapper>
+    </>
   );
 };
 

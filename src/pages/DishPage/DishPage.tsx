@@ -7,11 +7,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useLocalStore } from '@hooks/useLocalStore';
 import { ArrowIcon, ClockIcon, DishIcon, HeartIcon } from '@static/icons';
 import DishStore from '@stores/DishStore';
+import { useIngredientsListStore, useMetaStore } from '@stores/RootStore';
 import { formPlural } from '@utils/formPlural';
 import { uefCallback } from '@utils/handleUseEffectAsyncRequest';
 import { replaceImage } from '@utils/replaceImage';
 
 import DishPageSkeleton from './components/DishPageSkeleton';
+import Ingredients from './components/Ingredients';
 import RecipeInstructions from './components/RecipeInstructions';
 import {
   DishPhoto,
@@ -35,9 +37,15 @@ const DishPage: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { getDish, dishInfo, meta } = useLocalStore<DishStore>(() => new DishStore());
+  const { getDish, dishInfo } = useLocalStore<DishStore>(() => new DishStore());
+  const { loading, error, isError } = useMetaStore();
+  const { initIngredientsList } = useIngredientsListStore();
 
   useEffect(uefCallback(getDish, Number(id)), []);
+
+  useEffect(() => {
+    initIngredientsList();
+  }, []);
 
   const goBack = () => navigate(-1);
 
@@ -62,8 +70,8 @@ const DishPage: FC = () => {
     [dishInfo]
   );
 
-  if (!meta.loading && (meta.isError || !dishInfo)) {
-    return <ErrorPage message={meta.error?.message || ''} />;
+  if (!loading && (isError || !dishInfo)) {
+    return <ErrorPage message={error?.message || ''} />;
   }
 
   return (
@@ -76,9 +84,9 @@ const DishPage: FC = () => {
         bgColor="transparent"
       />
 
-      <DishPageSkeleton loading={meta.loading} />
+      <DishPageSkeleton loading={loading} />
 
-      {!meta.loading && dishInfo && (
+      {!loading && dishInfo && (
         <>
           <PhotoWrapper>
             <DishPhoto src={dishInfo.image} alt="dish serving option" onError={replaceImage} />
@@ -111,6 +119,8 @@ const DishPage: FC = () => {
             </RecipeStats>
 
             <RecipeDescription>{parse(dishInfo.summary)}</RecipeDescription>
+
+            <Ingredients ingredients={dishInfo.extendedIngredients} />
 
             {!!dishInfo.steps.length && <RecipeInstructions steps={dishInfo.steps} />}
           </RecipeInfo>

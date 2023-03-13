@@ -3,7 +3,6 @@ import { action, computed, makeAutoObservable, observable, runInAction } from 'm
 import { mock } from '@pages/RecipesPage/mock';
 import ApiRequest from '@stores/ApiRequest';
 import { DishFullInfoApi, DishWithNutritionModel } from '@stores/DishStore';
-import MetaStore from '@stores/MetaStore';
 import {
   CollectionModel,
   getInitialCollection,
@@ -20,6 +19,7 @@ import { IRecipesStore, normalizeRecipes, RecipesApi, RecipesModel } from './mod
 
 type PrivateFields =
   | '_rootStore'
+  | '_meta'
   | '_recipes'
   | '_currentOffset'
   | '_mealTypes'
@@ -31,7 +31,6 @@ class RecipesStore implements IRecipesStore {
   private readonly _queryStore: QueryStore;
 
   private readonly _apiRequest = new ApiRequest();
-  private readonly _meta = new MetaStore();
 
   // todo call first 30 items
   private readonly requestItemsNumber = 20;
@@ -45,6 +44,7 @@ class RecipesStore implements IRecipesStore {
   constructor(rootStore: RootStore) {
     makeAutoObservable<RecipesStore, PrivateFields>(this, {
       _rootStore: false,
+      _meta: false,
       _recipes: observable.ref,
       _currentOffset: observable,
       _mealTypes: computed,
@@ -55,16 +55,16 @@ class RecipesStore implements IRecipesStore {
     this._queryStore = this._rootStore.queryStore;
   }
 
-  get meta() {
-    return this._meta;
-  }
-
   get recipes(): DishWithNutritionModel[] {
     return linearizeCollection(this._recipes);
   }
 
   get recipesCollection() {
     return this._recipes;
+  }
+
+  private get _meta() {
+    return this._rootStore.metaStore;
   }
 
   private get _mealTypes() {
@@ -97,19 +97,19 @@ class RecipesStore implements IRecipesStore {
     const url = getAllRecipesUrl(AllRecipesPaths.complex, this._paramsToSearch);
 
     try {
-      const data = await this._apiRequest.request<RecipesApi>(url);
+      // const data = await this._apiRequest.request<RecipesApi>(url);
 
       // todo delete mock
-      // const mockData: RecipesApi = { results: [], totalResults: 0, number: 30, offset: 0 };
-      // const eightyItems = Array(40)
-      //   .fill([...mock])
-      //   .flat();
-      // mockData.results = [...eightyItems];
-      // mockData.totalResults = mockData.results.length;
+      const mockData: RecipesApi = { results: [], totalResults: 0, number: 30, offset: 0 };
+      const eightyItems = Array(40)
+        .fill([...mock])
+        .flat();
+      mockData.results = [...eightyItems];
+      mockData.totalResults = mockData.results.length;
 
-      // const data = await new Promise<RecipesApi>((res) => {
-      //   setTimeout(() => res(mockData), 2000);
-      // });
+      const data = await new Promise<RecipesApi>((res) => {
+        setTimeout(() => res(mockData), 2000);
+      });
 
       runInAction(() => {
         if (data) {

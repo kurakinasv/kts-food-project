@@ -1,14 +1,12 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { autorun } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-import Alert, { useAlert } from '@components/Alert';
 import Layout from '@components/Layout';
 import Loader from '@components/Loader';
 import useQueryParams from '@hooks/useQueryParams';
-import { useCollectionStore, useRecipes } from '@stores/RootStore';
+import { useCollectionStore, useMetaStore, useRecipes } from '@stores/RootStore';
 import { Option } from '@typings/common';
 import { debounce } from '@utils/debounce';
 
@@ -20,18 +18,10 @@ import { getInitialSelectedOptions } from './utils';
 
 const RecipesPage: FC = () => {
   const { getParam } = useQueryParams();
-  const { isOpen, openAlert } = useAlert();
   const { initCollection } = useCollectionStore();
 
-  const { getAllRecipes, recipes, totalResults, meta } = useRecipes();
-
-  useEffect(() => {
-    autorun(() => {
-      if (!meta.loading && meta.isError) {
-        openAlert();
-      }
-    });
-  }, [meta.loading, meta.isError]);
+  const { getAllRecipes, recipes, totalResults } = useRecipes();
+  const { loading } = useMetaStore();
 
   const [searchValue, setSearchValue] = useState(getParam('query'));
   const [selectedOptions, setSelectedOptions] = useState<Option[]>(
@@ -92,15 +82,8 @@ const RecipesPage: FC = () => {
         setSelectedOptions={setSelectedOptions}
       />
 
-      <Alert
-        message={meta.error?.message || ''}
-        status="error"
-        open={isOpen}
-        statusCode={meta.error?.code}
-      />
-
-      {!meta.loading && !totalResults && <EmptySearch resetButtonAction={clearFilters} />}
-      {meta.loading && !recipes?.length && (
+      {!loading && !totalResults && <EmptySearch resetButtonAction={clearFilters} />}
+      {loading && !recipes?.length && (
         <RecipeCardsList loading={true} loadItemsAmount={skeletonCardsAmount * 3} />
       )}
 

@@ -3,15 +3,14 @@ import { makeAutoObservable, observable, runInAction } from 'mobx';
 import { ILocalStore } from '@hooks/useLocalStore';
 import { mock } from '@pages/DishPage/mock';
 import ApiRequest from '@stores/ApiRequest';
-import MetaStore from '@stores/MetaStore';
+import { rootStore } from '@stores/RootStore';
 import { getSingleRecipeUrl } from '@utils/getUrl';
 
 import { IDishStore, ExtendedDishApi, ExtendedDishModel, normalizeDish } from './model';
 
-type PrivateFields = '_dishInfo';
+type PrivateFields = '_dishInfo' | '_meta';
 
 class DishStore implements IDishStore, ILocalStore {
-  private readonly _meta = new MetaStore();
   private readonly _apiRequest = new ApiRequest();
 
   private _dishInfo: ExtendedDishModel | null = null;
@@ -19,11 +18,12 @@ class DishStore implements IDishStore, ILocalStore {
   constructor() {
     makeAutoObservable<DishStore, PrivateFields>(this, {
       _dishInfo: observable.ref,
+      _meta: false,
     });
   }
 
-  get meta() {
-    return this._meta;
+  private get _meta() {
+    return rootStore.metaStore;
   }
 
   get dishInfo() {
@@ -42,8 +42,8 @@ class DishStore implements IDishStore, ILocalStore {
       const data = await this._apiRequest.request<ExtendedDishApi>(url);
 
       // todo delete mock
-      // const data = await new Promise<ExtendedDishType | null>((res) => {
-      //   setTimeout(() => res(mock), 2000);
+      // const data = await new Promise<ExtendedDishModel | null>((res) => {
+      //   setTimeout(() => res(mock), 500);
       // });
 
       runInAction(() => {
@@ -64,8 +64,10 @@ class DishStore implements IDishStore, ILocalStore {
   };
 
   destroy = () => {
-    this.setDishInfo(null);
-    this._meta.setInitial();
+    runInAction(() => {
+      this.setDishInfo(null);
+      this._meta.setInitial();
+    });
   };
 }
 

@@ -6,19 +6,6 @@ export const InstructionsWrapper = styled.div`
   font-size: 12px;
   font-weight: 500;
 
-  & > h3 {
-    margin-bottom: 8px;
-    padding: 2px 5px;
-
-    font-size: 1.2em;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: white;
-
-    background-color: rgba(${rgbColors.red}, 0.4);
-  }
-
   @media (min-width: ${breakpoints.mobile}) {
     font-size: 16px;
   }
