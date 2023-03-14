@@ -64,7 +64,8 @@ class CollectionStore {
     let recipeToAdd;
     if (this._rootStore.recipesStore.recipes.length) {
       recipeToAdd = this._rootStore.recipesStore.recipesCollection.entities[id];
-    } else {
+    }
+    if (!recipeToAdd) {
       recipeToAdd = this._rootStore.recipesStore.additionalRecipes.entities[id];
     }
     const updatedCollection = [...(this.collectionRecipes ?? []), recipeToAdd];

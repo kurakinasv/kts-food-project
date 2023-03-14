@@ -27,7 +27,7 @@ export const AlertWrapper = styled(animated.div)<{ status: AlertStatus }>`
   position: fixed;
   top: 3%;
   left: 50%;
-  z-index: 100;
+  z-index: 300;
 
   @media (max-width: ${breakpoints.mobile}) {
     width: clamp(230px, 100%, 80vw);

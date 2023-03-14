@@ -32,7 +32,7 @@ const RecipesPage: FC = () => {
   useEffect(() => {
     initCollection();
 
-    if (!recipes.length) {
+    if (!recipes.length || !getParam('results')) {
       getAllRecipes(searchValue, selectedOptions, getParam('results'));
     }
   }, []);

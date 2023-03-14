@@ -1,7 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
-import pattern from '@static/images/bg-pattern.png';
-
 import AvenirFont from './fonts/Avenir/fonts';
 import DMSansFont from './fonts/DMSans/fonts';
 import { scrollbar } from './mixins';

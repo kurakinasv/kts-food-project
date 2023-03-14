@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { routes } from '@config/routes';
 import { SectionTitle } from '@pages/DishPage/DishPage.styles';
-import { SimilarRecipeModel } from '@stores/DishStore';
+import { SimilarRecipeModel } from '@stores/models/similarRecipe';
 
 import { SimilarList, Wrapper } from './SimilarRecipes.styles';
 import SimilarRecipeCard from '../SimilarRecipeCard';
