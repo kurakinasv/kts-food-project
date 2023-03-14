@@ -1,8 +1,9 @@
 import React, { memo, useCallback, useMemo } from 'react';
 
+import { useTheme } from 'styled-components';
+
 import Button from '@components/Button';
 import { XMarkIcon } from '@static/icons';
-import { rgbColors } from '@styles/variables';
 
 import { ClearButtonWrapper, InputWrapper, StyledInput } from './Input.styles';
 
@@ -23,6 +24,8 @@ const Input: React.FC<InputProps> = ({
   className = '',
   ...attrs
 }) => {
+  const { rgbColors } = useTheme();
+
   const handleInput = useCallback(
     (e: React.FormEvent<HTMLInputElement>) => {
       onChange(e.currentTarget.value);

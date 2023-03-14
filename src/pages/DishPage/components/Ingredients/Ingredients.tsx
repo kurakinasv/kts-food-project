@@ -1,6 +1,7 @@
 import { FC, useMemo } from 'react';
 
 import { observer } from 'mobx-react-lite';
+import { useTheme } from 'styled-components';
 
 import Button from '@components/Button';
 import { SectionTitle } from '@pages/DishPage/DishPage.styles';
@@ -21,6 +22,8 @@ type IngredientsProps = {
 };
 
 const Ingredients: FC<IngredientsProps> = ({ ingredients }) => {
+  const { colors } = useTheme();
+
   const { addToIngredientsList, isIngredientInList } = useIngredientsListStore();
 
   const uniqueIngredients = useMemo(() => {
@@ -56,7 +59,11 @@ const Ingredients: FC<IngredientsProps> = ({ ingredients }) => {
                     : 'Add to shopping list'
                 }
                 icon={
-                  isIngredientInList(ingredient.id) ? <XMarkIcon fillColor="white" /> : <PlusIcon />
+                  isIngredientInList(ingredient.id) ? (
+                    <XMarkIcon fillColor={colors.white} />
+                  ) : (
+                    <PlusIcon />
+                  )
                 }
                 shape="circle"
                 width="24px"

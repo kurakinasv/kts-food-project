@@ -17,9 +17,9 @@ export const StyledInput = styled.input`
   line-height: 16px;
   letter-spacing: 0.01em;
 
-  color: ${colors.black};
+  color: ${({ theme }) => theme.colors.black};
 
-  background: ${gradients.lightRed};
+  background: ${({ theme }) => theme.gradients.lightRed};
   border-radius: 7px;
   border: none;
   // to remove background transparency
@@ -27,19 +27,19 @@ export const StyledInput = styled.input`
 
   &::placeholder {
     font-family: inherit;
-    color: rgba(${rgbColors.textGrey}, 0.5);
+    color: rgba(${({ theme }) => theme.rgbColors.textGrey}, 0.5);
 
     user-select: none;
   }
 
   &:focus {
-    background: ${gradients.red};
+    background: ${({ theme }) => theme.gradients.red};
     outline: none;
   }
 
   &:disabled {
-    color: rgba(${rgbColors.textGrey}, 0.5);
-    background: ${gradients.grey};
+    color: rgba(${({ theme }) => theme.rgbColors.textGrey}, 0.5);
+    background: ${({ theme }) => theme.gradients.grey};
 
     pointer-events: none;
     cursor: default;

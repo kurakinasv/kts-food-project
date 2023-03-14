@@ -18,7 +18,7 @@ export const DishPhotoSkeleton = styled.div`
     aspect-ratio: 3/2;
     ${skeletonAnimation('white')};
 
-    box-shadow: ${shadows.black};
+    box-shadow: ${({ theme }) => theme.shadows.black};
   }
 
   @media (max-width: 550px) {
@@ -45,7 +45,7 @@ export const StyledNumber = styled(animated.div)`
     font-weight: 600;
     font-size: 66px;
     font-family: ${fonts.secondary};
-    color: ${colors.red};
+    color: ${({ theme }) => theme.colors.red};
     opacity: 0.3;
 
     @media (max-width: ${breakpoints.desktop}) {

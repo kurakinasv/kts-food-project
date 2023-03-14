@@ -52,7 +52,7 @@ export const PhotoWrapper = styled.div`
     justify-content: center;
     flex-basis: 40%;
 
-    background: ${gradients.lightRed};
+    background: ${({ theme }) => theme.gradients.secondaryLightRed};
   }
 `;
 
@@ -64,7 +64,7 @@ export const DishPhoto = styled.img`
     border-radius: 16px;
     margin-bottom: 40px;
 
-    box-shadow: ${shadows.black};
+    box-shadow: ${({ theme }) => theme.shadows.black};
   }
 
   @media (max-width: 550px) {
@@ -98,7 +98,7 @@ export const Nutrient = styled.div`
   gap: 6px;
 
   font-family: ${fonts.secondary};
-  color: ${colors.red};
+  color: ${({ theme }) => theme.colors.red};
   opacity: 0.3;
 
   user-select: none;
@@ -136,7 +136,7 @@ export const RecipeInfo = styled.div`
   padding: 68px 16px 34px 33px;
 
   border-radius: 10px 10px 0 0;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
 
   &::after {
     content: '';
@@ -149,7 +149,7 @@ export const RecipeInfo = styled.div`
     width: 58px;
     height: 5px;
 
-    background-color: ${colors.secondaryPink};
+    background-color: ${({ theme }) => theme.colors.secondaryPink};
     border-radius: 12px;
   }
 
@@ -178,7 +178,7 @@ export const RecipeName = styled.h2`
   font-size: 27px;
   line-height: 35px;
 
-  color: ${colors.darkBlue};
+  color: ${({ theme }) => theme.colors.darkBlue};
 
   @media (min-width: ${breakpoints.mobile}) {
     margin-bottom: 26px;
@@ -221,7 +221,7 @@ export const StatsName = styled.div`
   font-size: 14px;
   letter-spacing: 0.5px;
 
-  color: rgba(${rgbColors.textGrey}, 0.3);
+  color: rgba(${({ theme }) => theme.rgbColors.textGrey}, 0.3);
 
   @media (min-width: ${breakpoints.mobile}) {
     font-size: 18px;
@@ -246,19 +246,19 @@ export const RecipeDescription = styled.div`
   font-size: 12px;
   line-height: 22px;
 
-  color: ${colors.black};
+  color: ${({ theme }) => theme.colors.textBlack};
 
   @media (min-width: ${breakpoints.mobile}) {
     font-size: 16px;
   }
 
   & b {
-    color: ${colors.secondaryRed};
+    color: ${({ theme }) => theme.colors.secondaryRed};
     letter-spacing: 0.02em;
   }
 
   & a {
-    color: ${colors.red};
+    color: ${({ theme }) => theme.colors.red};
     position: relative;
     display: inline-block;
 
@@ -267,10 +267,10 @@ export const RecipeDescription = styled.div`
     }
 
     &:visited {
-      color: ${colors.purple};
+      color: ${({ theme }) => theme.colors.purple};
 
       &::after {
-        background-color: ${colors.lightPurple};
+        background-color: ${({ theme }) => theme.colors.lightPurple};
       }
     }
 
@@ -286,7 +286,7 @@ export const RecipeDescription = styled.div`
       z-index: -1;
 
       border-radius: 4px;
-      background-color: ${colors.pink};
+      background-color: ${({ theme }) => theme.colors.pink};
       transition: height 0.2s ease-in-out;
     }
   }
@@ -304,7 +304,7 @@ export const SectionTitle = styled.h3`
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: white;
+  color: ${({ theme }) => theme.colors.white};
 
-  background-color: rgba(${rgbColors.red}, 0.4);
+  background-color: rgba(${({ theme }) => theme.rgbColors.red}, 0.4);
 `;

@@ -2,7 +2,7 @@ import { animated } from '@react-spring/web';
 import styled from 'styled-components';
 
 import { scrollbar } from '@styles/mixins';
-import { breakpoints, colors, fonts, gradients } from '@styles/variables';
+import { breakpoints, fonts } from '@styles/variables';
 
 export const DrawerWrapper = styled.div`
   width: 100%;
@@ -20,7 +20,7 @@ export const DrawerOverlay = styled(animated.div)`
   position: fixed;
   z-index: 499;
 
-  background-color: ${colors.textGrey};
+  background-color: ${({ theme }) => theme.colors.textGrey};
 `;
 
 export const DrawerBody = styled(animated.div)`
@@ -35,7 +35,7 @@ export const DrawerBody = styled(animated.div)`
   display: flex;
   flex-direction: column;
 
-  background: ${gradients.lightRed};
+  background: ${({ theme }) => theme.gradients.secondaryLightRed};
 
   @media (max-width: 510px) {
     width: 100%;
@@ -79,7 +79,7 @@ export const Title = styled.h4`
 
   text-transform: uppercase;
   text-align: center;
-  color: ${colors.secondaryRed};
+  color: ${({ theme }) => theme.colors.secondaryRed};
 
   @media (max-width: ${breakpoints.mobile}) {
     font-size: 20px;

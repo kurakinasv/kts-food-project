@@ -1,10 +1,11 @@
 import { FC, useCallback } from 'react';
 
 import { observer } from 'mobx-react-lite';
+import { useTheme } from 'styled-components';
 
 import Alert, { useAlert } from '@components/Alert';
 import { PlusIcon, XMarkIcon } from '@static/icons';
-import { SimilarRecipeModel } from '@stores/DishStore';
+import { SimilarRecipeModel } from '@stores/models/similarRecipe';
 import { useCollectionStore } from '@stores/RootStore';
 import { formPlural } from '@utils/formPlural';
 
@@ -28,6 +29,7 @@ const SimilarRecipeCard: FC<SimilarRecipeCardProps> = ({
   servings,
   onClick,
 }) => {
+  const { colors } = useTheme();
   const { isOpen, openAlert } = useAlert();
 
   const { addToCollection, isDishExistInCollection } = useCollectionStore();
@@ -65,7 +67,7 @@ const SimilarRecipeCard: FC<SimilarRecipeCardProps> = ({
         <StyledButton
           title={isDishExistInCollection(id) ? 'Remove from collection' : 'Add to collection'}
           onClick={addButtonHandler}
-          icon={isDishExistInCollection(id) ? <XMarkIcon fillColor="white" /> : <PlusIcon />}
+          icon={isDishExistInCollection(id) ? <XMarkIcon fillColor={colors.white} /> : <PlusIcon />}
           shape="circle"
           padding="6px"
           minWidth="36px"

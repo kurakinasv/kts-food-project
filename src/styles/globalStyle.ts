@@ -39,6 +39,7 @@ const GlobalStyle = createGlobalStyle<{ disableScroll: boolean }>`
   }
 
   body{
+    background-color: ${({ theme }) => theme.backgroundColor};
     overflow: ${({ disableScroll }) => (disableScroll ? 'hidden' : 'auto')};
   }
 
@@ -61,7 +62,7 @@ export const BackgroundImage = styled.div`
   top: 0;
   right: 0;
 
-  background-image: url(${pattern});
+  background-image: url(${({ theme }) => theme.pattern});
   transform: translate3d(38%, -98%, 0) rotate(290deg);
   pointer-events: none;
 

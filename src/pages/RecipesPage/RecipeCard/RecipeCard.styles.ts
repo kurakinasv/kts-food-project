@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { textOverflow } from '@styles/mixins';
-import { breakpoints, colors, fonts, shadows } from '@styles/variables';
+import { breakpoints, fonts } from '@styles/variables';
 
 export const CardWrapper = styled.div`
   min-width: 120px;
@@ -13,14 +13,14 @@ export const CardWrapper = styled.div`
   align-items: center;
 
   border-radius: 10px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
 
   filter: opacity(1);
-  box-shadow: ${shadows.black};
+  box-shadow: ${({ theme }) => theme.shadows.black};
   transition: box-shadow 0.3s ease;
 
   &:hover {
-    box-shadow: ${shadows.blackHover};
+    box-shadow: ${({ theme }) => theme.shadows.blackHover};
     cursor: pointer;
   }
 
@@ -61,7 +61,7 @@ export const RecipeName = styled.div`
   font-size: 18px;
   letter-spacing: -0.03em;
 
-  color: ${colors.textBlack};
+  color: ${({ theme }) => theme.colors.textBlack};
 
   ${textOverflow()};
 `;
@@ -73,7 +73,7 @@ export const Ingredients = styled.div`
 
   flex-grow: 1;
 
-  color: ${colors.textGrey};
+  color: ${({ theme }) => theme.colors.textGrey};
   opacity: 0.5;
 
   ${textOverflow(2)};
@@ -94,7 +94,7 @@ export const Calories = styled.span`
   font-weight: 700;
   font-size: 16px;
 
-  color: ${colors.red};
+  color: ${({ theme }) => theme.colors.red};
 
   @media (max-width: ${breakpoints.mobile}) {
     font-size: 14px;

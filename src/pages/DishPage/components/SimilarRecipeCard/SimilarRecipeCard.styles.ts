@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 import Button from '@components/Button';
 import { square, textOverflow } from '@styles/mixins';
-import { breakpoints, colors, rgbColors, shadows } from '@styles/variables';
+import { breakpoints } from '@styles/variables';
 
 export const CardWrapper = styled.div`
   width: 100%;
@@ -13,13 +13,13 @@ export const CardWrapper = styled.div`
   gap: 8px;
 
   border-radius: 10px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
 
-  box-shadow: ${shadows.black};
+  box-shadow: ${({ theme }) => theme.shadows.black};
   transition: box-shadow 0.3s ease;
 
   &:hover {
-    box-shadow: ${shadows.blackHover};
+    box-shadow: ${({ theme }) => theme.shadows.blackHover};
     cursor: pointer;
   }
 
@@ -44,7 +44,7 @@ export const RecipeName = styled.h4`
   font-size: 18px;
   letter-spacing: -0.03em;
 
-  color: ${colors.textBlack};
+  color: ${({ theme }) => theme.colors.textBlack};
 
   ${textOverflow(2)};
 
@@ -64,10 +64,10 @@ export const Tag = styled.div<{ color: 'purple' | 'blue' | 'red' }>`
   font-size: 14px;
   border-radius: 20px;
 
-  ${({ color }) => css`
-    color: ${colors[color]};
-    border: 1px solid ${colors[color]};
-    background-color: rgba(${rgbColors[color]}, 0.1);
+  ${({ color, theme }) => css`
+    color: ${theme.colors[color]};
+    border: 1px solid ${theme.colors[color]};
+    background-color: rgba(${theme.rgbColors[color]}, 0.1);
   `}
 
   @media (max-width: ${breakpoints.mobile}) {

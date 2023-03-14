@@ -1,9 +1,10 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useTheme } from 'styled-components';
+
 import Button from '@components/Button';
 import useComponentVisible from '@hooks/useComponentVisible';
 import { XMarkIcon } from '@static/icons';
-import { rgbColors } from '@styles/variables';
 import { Option } from '@typings/common';
 
 import {
@@ -39,6 +40,8 @@ const MultiDropdown: React.FC<MultiDropdownProps> = ({
   className = '',
   placeholder = '',
 }) => {
+  const { rgbColors } = useTheme();
+
   const [open, setOpen] = useState(false);
 
   const { ref } = useComponentVisible({

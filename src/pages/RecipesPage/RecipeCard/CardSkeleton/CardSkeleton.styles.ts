@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { skeletonAnimation } from '@styles/skeleton';
-import { breakpoints, shadows } from '@styles/variables';
+import { breakpoints } from '@styles/variables';
 
 export const CardWrapper = styled.div`
   min-width: 120px;
@@ -13,10 +13,10 @@ export const CardWrapper = styled.div`
   align-items: center;
 
   border-radius: 10px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
 
   filter: opacity(1);
-  box-shadow: ${shadows.black};
+  box-shadow: ${({ theme }) => theme.shadows.black};
 
   @media (max-width: ${breakpoints.mobile}) {
     min-width: 90px;

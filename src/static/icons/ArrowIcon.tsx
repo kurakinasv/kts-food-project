@@ -1,6 +1,8 @@
-import { colors } from '@styles/variables';
+import { useTheme } from 'styled-components';
 
 const ArrowIcon = () => {
+  const { colors } = useTheme();
+
   return (
     <svg width="10" height="17" viewBox="0 0 12 17" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path

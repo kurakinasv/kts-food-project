@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { observer } from 'mobx-react-lite';
+import { useTheme } from 'styled-components';
 
 import Alert, { useAlert } from '@components/Alert';
 import Button from '@components/Button';
@@ -31,6 +32,8 @@ export type CardProps = {
 };
 
 const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calories, onClick }) => {
+  const { colors } = useTheme();
+
   const { isOpen, openAlert } = useAlert();
 
   const { addToCollection, isDishExistInCollection } = useCollectionStore();
@@ -62,7 +65,9 @@ const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calori
             <Calories>{calories} kcal</Calories>
             <Button
               onClick={addButtonHandler}
-              icon={isDishExistInCollection(id) ? <XMarkIcon fillColor="white" /> : <PlusIcon />}
+              icon={
+                isDishExistInCollection(id) ? <XMarkIcon fillColor={colors.white} /> : <PlusIcon />
+              }
               shape="circle"
               width="24px"
               padding="0"

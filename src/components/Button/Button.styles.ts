@@ -22,20 +22,20 @@ export const ButtonWrapper = styled.button<StyledProps>`
   line-height: 25px;
   text-align: center;
 
-  ${({ bgColor }) =>
+  ${({ bgColor, theme }) =>
     bgColor === 'transparent'
       ? css`
-          background-color: rgba(${rgbColors.red}, 0.1);
-          color: ${colors.red};
+          background-color: rgba(${({ theme }) => theme.rgbColors.red}, 0.1);
+          color: ${theme.colors.red};
         `
       : bgColor === 'solid'
       ? css`
-          background-color: ${colors.red};
-          color: white;
+          background-color: ${theme.colors.red};
+          color: ${theme.colors.white};
         `
       : css`
           background-color: 'transparent';
-          color: ${colors.red};
+          color: ${theme.colors.red};
         `}
 
   border: none;
@@ -49,8 +49,8 @@ export const ButtonWrapper = styled.button<StyledProps>`
   }
 
   &:disabled {
-    background-color: ${({ bgColor }) =>
-      bgColor === 'solid' || bgColor === 'transparent' ? colors.grey : 'transparent'};
+    background-color: ${({ bgColor, theme }) =>
+      bgColor === 'solid' || bgColor === 'transparent' ? theme.colors.grey : 'transparent'};
 
     pointer-events: none;
     user-select: none;
@@ -59,6 +59,6 @@ export const ButtonWrapper = styled.button<StyledProps>`
 `;
 
 export const StyledLoader = styled(Loader)`
-  border: 3px solid white;
+  border: 3px solid ${({ theme }) => theme.colors.white};
   border-right: 3px solid transparent;
 `;

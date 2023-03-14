@@ -25,7 +25,7 @@ export const Emote = styled.div`
   font-weight: 700;
   font-size: 35vmin;
   white-space: nowrap;
-  color: rgba(${rgbColors.red}, 0.05);
+  color: rgba(${({ theme }) => theme.rgbColors.red}, 0.05);
 
   user-select: none;
   pointer-events: none;
@@ -43,14 +43,14 @@ export const Decription = styled.div`
   font-size: 40px;
   text-align: center;
 
-  color: ${colors.textBlack};
+  color: ${({ theme }) => theme.colors.textBlack};
 `;
 
 export const ErrorMessage = styled.div`
   font-size: 18px;
   text-align: center;
   text-transform: uppercase;
-  color: ${colors.textBlack};
+  color: ${({ theme }) => theme.colors.textBlack};
   opacity: 0.4;
 `;
 
@@ -58,7 +58,7 @@ export const StyledLink = styled(Link)`
   position: relative;
 
   font-size: 20px;
-  color: rgba(${rgbColors.red}, 0.6);
+  color: rgba(${({ theme }) => theme.rgbColors.red}, 0.6);
 
   transition: color 0.2s ease-in-out;
 
@@ -70,13 +70,13 @@ export const StyledLink = styled(Link)`
     width: 100%;
     height: 5px;
 
-    border-bottom: 1px solid rgba(${rgbColors.red}, 0.6);
+    border-bottom: 1px solid rgba(${({ theme }) => theme.rgbColors.red}, 0.6);
     transform: scaleX(0);
     transition: transform 0.2s ease-in-out;
   }
 
   &:hover {
-    color: rgba(${rgbColors.red}, 1);
+    color: rgba(${({ theme }) => theme.rgbColors.red}, 1);
 
     &::after {
       transform: scaleX(1);

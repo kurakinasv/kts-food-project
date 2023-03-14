@@ -23,7 +23,7 @@ export const Emote = styled.div`
   font-size: 30vmin;
   font-weight: 700;
   white-space: nowrap;
-  color: rgba(${rgbColors.red}, 0.05);
+  color: rgba(${({ theme }) => theme.rgbColors.red}, 0.05);
 
   user-select: none;
   pointer-events: none;
@@ -34,7 +34,7 @@ export const Text = styled.div`
   font-size: 40px;
   text-align: center;
 
-  color: ${colors.textBlack};
+  color: ${({ theme }) => theme.colors.textBlack};
 
   @media (max-width: 571px) {
     font-size: 28px;

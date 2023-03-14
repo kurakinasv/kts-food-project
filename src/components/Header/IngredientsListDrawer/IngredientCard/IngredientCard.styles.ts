@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import { textOverflow } from '@styles/mixins';
-import { colors, shadows } from '@styles/variables';
 
 export const CardWrapper = styled.div`
   width: 100%;
@@ -11,9 +10,9 @@ export const CardWrapper = styled.div`
   display: flex;
   align-items: center;
 
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
   border-radius: 7px;
-  box-shadow: ${shadows.black};
+  box-shadow: ${({ theme }) => theme.shadows.black};
 `;
 
 export const ImageWrapper = styled.div`
@@ -41,7 +40,7 @@ export const Name = styled.div`
 
   font-weight: 500;
   font-size: 18px;
-  color: ${colors.textBlack};
+  color: ${({ theme }) => theme.colors.textBlack};
 
   ${textOverflow()};
 `;
@@ -50,7 +49,7 @@ export const Measures = styled.div`
   font-weight: 400;
   font-size: 12px;
 
-  color: ${colors.textGrey};
+  color: ${({ theme }) => theme.colors.textGrey};
   opacity: 0.5;
 
   ${textOverflow()};

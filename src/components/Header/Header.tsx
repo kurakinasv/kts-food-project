@@ -5,8 +5,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useDrawer } from '@components/Drawer';
 import { RouterPaths, routes } from '@config/routes';
+import { MoonIcon, SunIcon } from '@static/icons';
+import logoDark from '@static/images/logo-dark.png';
 import logo from '@static/images/logo.png';
-import { useMetaStore, useRecipes } from '@stores/RootStore';
+import { useMetaStore, useRecipes, useUIStore } from '@stores/RootStore';
+import { ThemesEnum } from '@styles/types';
 
 import DiceIcon from './DiceIcon';
 import {
@@ -31,6 +34,7 @@ const Header: FC = () => {
 
   const { getRandom } = useRecipes();
   const { loading } = useMetaStore();
+  const { theme, toggleTheme } = useUIStore();
 
   const { open, openDrawer, closeDrawer } = useDrawer();
 
@@ -71,7 +75,12 @@ const Header: FC = () => {
 
       <HeaderWrapper small={small}>
         <HeaderContent>
-          <Logo src={logo} alt="app logo" small={small} onClick={redirectToMain} />
+          <Logo
+            src={theme === ThemesEnum.light ? logo : logoDark}
+            alt="app logo"
+            small={small}
+            onClick={redirectToMain}
+          />
 
           <Burger onClick={handleBurger}>
             <BurgerContent active={burgerActive} />
@@ -93,6 +102,10 @@ const Header: FC = () => {
             <NavButton title="Get random recipe" onClick={redirectToRandomDish}>
               <DiceIcon loading={loading} />
               <span>Random recipe</span>
+            </NavButton>
+
+            <NavButton onClick={toggleTheme}>
+              {theme === ThemesEnum.light ? <SunIcon /> : <MoonIcon />}
             </NavButton>
           </Navbar>
         </HeaderContent>

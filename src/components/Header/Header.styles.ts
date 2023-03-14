@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 import { smallHeaderHeight } from '@config/ui';
-import { colors, fonts, rgbColors } from '@styles/variables';
+import { fonts } from '@styles/variables';
 
 const smallHeaderStyles = css`
   height: ${smallHeaderHeight};
@@ -17,7 +17,7 @@ const smallHeaderStyles = css`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(${rgbColors.pink}, 0.8);
+    background-color: rgba(${({ theme }) => theme.rgbColors.pink}, 0.8);
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
   }
@@ -35,7 +35,7 @@ export const HeaderWrapper = styled.header<{ small: boolean }>`
   display: flex;
   align-items: center;
 
-  background-color: rgba(${rgbColors.pink}, 0.4);
+  background-color: rgba(${({ theme }) => theme.rgbColors.pink}, 0.4);
 
   transition: height 0.5s ease-in-out;
 
@@ -96,7 +96,7 @@ export const BurgerContent = styled.div<{ active: boolean }>`
   &::after {
     width: 40px;
     height: 5px;
-    background-color: ${colors.red};
+    background-color: ${({ theme }) => theme.colors.red};
     border-radius: 50px;
   }
 
@@ -157,7 +157,7 @@ export const Navbar = styled.nav<{ open: boolean }>`
     justify-content: flex-start;
     gap: 0;
 
-    background-color: rgba(${rgbColors.lightPink}, 0.9);
+    background-color: rgba(${({ theme }) => theme.rgbColors.lightPink}, 0.9);
     box-shadow: 0px 12px 10px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(2px);
 
@@ -189,7 +189,7 @@ const navItemText = css`
   font-size: 17px;
 
   text-transform: uppercase;
-  color: ${colors.red};
+  color: ${({ theme }) => theme.colors.secondaryRed};
   transition: opacity 0.3s ease-in-out;
 `;
 
@@ -214,7 +214,7 @@ const navItem = css`
       width: 80%;
       height: 1px;
 
-      background-color: rgba(${rgbColors.red}, 0.1);
+      background-color: rgba(${({ theme }) => theme.rgbColors.red}, 0.1);
     }
   }
 `;
@@ -250,7 +250,7 @@ export const NavLink = styled(Link).withConfig({
         left: 50%;
         transform: translate3d(-50%, 0, 0);
 
-        background-color: ${colors.red};
+        background-color: ${({ theme }) => theme.colors.red};
       }
     `}
 `;
@@ -261,6 +261,10 @@ export const NavButton = styled.button`
   &,
   & > span {
     ${navItemText};
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   // dice navlink

@@ -39,14 +39,14 @@ export const textOverflow = (lines = 1) => {
 export const scrollbar = (width?: string) => css`
   &::-webkit-scrollbar {
     width: ${width};
-    background-color: ${colors.pink};
+    background-color: ${({ theme }) => theme.colors.pink};
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(${rgbColors.red}, 0.1);
+    background-color: rgba(${({ theme }) => theme.rgbColors.red}, 0.1);
 
     &:hover {
-      background-color: rgba(${rgbColors.red}, 0.2);
+      background-color: rgba(${({ theme }) => theme.rgbColors.red}, 0.2);
     }
   }
 `;

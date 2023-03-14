@@ -1,10 +1,12 @@
 import React, { FC, memo, MutableRefObject, PropsWithChildren, ReactNode } from 'react';
 
 import { config, useTransition } from '@react-spring/web';
+import { useTheme } from 'styled-components';
 
 import Button from '@components/Button';
 import useComponentVisible from '@hooks/useComponentVisible';
 import { XMarkIcon } from '@static/icons';
+import { ThemeType } from '@styles/globalStyle';
 import { colors } from '@styles/variables';
 
 import {
@@ -37,6 +39,8 @@ const Drawer: FC<PropsWithChildren<DrawerProps>> = ({
   empty,
   footer,
 }) => {
+  const theme = useTheme();
+
   const { ref } = useComponentVisible({
     visible: open,
     setNotVisible: onClose,
@@ -60,7 +64,7 @@ const Drawer: FC<PropsWithChildren<DrawerProps>> = ({
                 <Header>
                   <ButtonWrapper>
                     <Button
-                      icon={<XMarkIcon fillColor={colors.secondaryRed} />}
+                      icon={<XMarkIcon fillColor={theme.colors.secondaryRed} />}
                       onClick={onClose}
                       shape="circle"
                       padding="0"

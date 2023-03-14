@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { breakpoints, fonts, rgbColors } from '@styles/variables';
+import { breakpoints, fonts } from '@styles/variables';
 
 export const InstructionsWrapper = styled.div`
   font-size: 12px;
@@ -21,11 +21,12 @@ export const RecipeSteps = styled.ol`
   & li {
     list-style: decimal-leading-zero;
     margin-bottom: 8px;
+    color: ${({ theme }) => theme.colors.textBlack};
 
     &::marker {
       font-family: ${fonts.secondary};
       font-size: 1.5em;
-      color: rgba(${rgbColors.red}, 0.5);
+      color: rgba(${({ theme }) => theme.rgbColors.red}, 0.5);
     }
   }
 `;

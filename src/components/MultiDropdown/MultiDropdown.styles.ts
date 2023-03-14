@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import { textOverflow } from '@styles/mixins';
-import { breakpoints, colors, gradients, rgbColors, shadows } from '@styles/variables';
+import { breakpoints } from '@styles/variables';
 
 export const DropdownWrapper = styled.div`
   width: 100%;
@@ -32,17 +32,18 @@ export const DropdownButton = styled.input<{ isEmpty: boolean }>`
 
   display: block;
 
-  color: ${({ isEmpty }) => (isEmpty ? `rgba(${rgbColors.textGrey}, 0.5)` : colors.black)};
+  color: ${({ isEmpty, theme }) =>
+    isEmpty ? `rgba(${theme.rgbColors.textGrey}, 0.5)` : theme.colors.black};
 
   border: none;
-  background: ${gradients.lightRed};
+  background: ${({ theme }) => theme.gradients.lightRed};
   border-radius: 7px;
 
   ${textOverflow()};
 
   &:disabled {
-    color: rgba(${rgbColors.textGrey}, 0.5);
-    background: ${gradients.grey};
+    color: rgba(${({ theme }) => theme.rgbColors.textGrey}, 0.5);
+    background: ${({ theme }) => theme.gradients.grey};
 
     pointer-events: none;
     cursor: default;
@@ -62,16 +63,16 @@ export const DropdownMenu = styled.div<{ visible: boolean }>`
   position: absolute;
   width: 100%;
 
-  background-color: ${colors.lightPink};
+  background-color: ${({ theme }) => theme.colors.lightPink};
   border-radius: 7px;
-  box-shadow: ${shadows.black};
+  box-shadow: ${({ theme }) => theme.shadows.black};
   z-index: 100;
 `;
 
 export const DropdownOption = styled.div<{ selected: boolean }>`
   ${commonButtonOptionStyles}
 
-  color: ${colors.black};
+  color: ${({ theme }) => theme.colors.black};
 
   &:first-child {
     border-radius: 7px 7px 0 0;
@@ -80,5 +81,5 @@ export const DropdownOption = styled.div<{ selected: boolean }>`
     border-radius: 0 0 7px 7px;
   }
 
-  background-color: ${({ selected }) => (selected ? colors.pink : 'transparent')};
+  background-color: ${({ selected, theme }) => (selected ? theme.colors.pink : 'transparent')};
 `;

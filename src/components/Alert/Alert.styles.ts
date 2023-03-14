@@ -1,7 +1,7 @@
 import { animated } from '@react-spring/web';
 import styled from 'styled-components';
 
-import { breakpoints, colors, fonts, rgbColors } from '@styles/variables';
+import { breakpoints, fonts } from '@styles/variables';
 
 import { AlertStatus } from './Alert';
 
@@ -15,12 +15,14 @@ export const AlertWrapper = styled(animated.div)<{ status: AlertStatus }>`
   justify-content: center;
 
   border-radius: 7px;
-  background-color: ${({ status }) =>
-    status === 'error' ? `rgba(${rgbColors.red}, 0.1)` : `rgba(${rgbColors.green}, 0.3)`};
+  background-color: ${({ status, theme }) =>
+    status === 'error'
+      ? `rgba(${theme.rgbColors.red}, 0.1)`
+      : `rgba(${theme.rgbColors.green}, 0.3)`};
   backdrop-filter: blur(4px);
 
   text-align: center;
-  color: ${({ status }) => (status === 'error' ? colors.red : colors.darkGreen)};
+  color: ${({ status, theme }) => (status === 'error' ? theme.colors.red : theme.colors.darkGreen)};
 
   position: fixed;
   top: 3%;
@@ -41,7 +43,7 @@ export const StatusCode = styled.div<{ status: AlertStatus }>`
   font-family: ${fonts.secondary};
   font-weight: 700;
   font-size: 64px;
-  color: ${({ status }) => (status === 'error' ? colors.red : colors.green)};
+  color: ${({ status, theme }) => (status === 'error' ? theme.colors.red : theme.colors.green)};
 
   transform: translate3d(-50%, -50%, 0);
   user-select: none;

@@ -22,7 +22,7 @@ export const IngredientItem = styled.li`
   align-items: center;
   justify-content: space-between;
 
-  border-bottom: 1px solid rgba(${rgbColors.red}, 0.2);
+  border-bottom: 1px solid rgba(${({ theme }) => theme.rgbColors.red}, 0.2);
 
   @media (max-width: ${breakpoints.mobile}) {
     padding: 6px 8px;
@@ -33,12 +33,12 @@ export const IngredientInfo = styled.span`
   font-weight: 400;
   font-size: 16px;
 
-  color: ${colors.textBlack};
+  color: ${({ theme }) => theme.colors.textBlack};
 
   & > span {
     font-weight: 600;
     letter-spacing: 0.03em;
-    color: ${colors.secondaryRed};
+    color: ${({ theme }) => theme.colors.secondaryRed};
   }
 
   @media (max-width: ${breakpoints.mobile}) {

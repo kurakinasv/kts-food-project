@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { observer } from 'mobx-react-lite';
+import { useTheme } from 'styled-components';
 
 import Button from '@components/Button';
 import { XMarkIcon } from '@static/icons';
@@ -27,6 +28,8 @@ type IngredientCardProps = {
 };
 
 const IngredientCard: FC<IngredientCardProps> = ({ id, name, image, measures }) => {
+  const { colors } = useTheme();
+
   const { deleteFromList } = useIngredientsListStore();
 
   const deleteIngredient = (e: React.MouseEvent) => {
@@ -46,7 +49,7 @@ const IngredientCard: FC<IngredientCardProps> = ({ id, name, image, measures }) 
       </CardInfo>
 
       <Button
-        icon={<XMarkIcon fillColor="white" />}
+        icon={<XMarkIcon fillColor={colors.white} />}
         onClick={deleteIngredient}
         shape="circle"
         padding="0"

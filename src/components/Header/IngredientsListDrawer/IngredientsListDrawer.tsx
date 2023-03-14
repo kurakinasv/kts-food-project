@@ -4,9 +4,10 @@ import { observer } from 'mobx-react-lite';
 
 import Button from '@components/Button';
 import Drawer from '@components/Drawer';
-import IngredientCard from '@components/IngredientCard';
 import placeholder from '@static/images/cat-sit.png';
 import { useIngredientsListStore } from '@stores/RootStore';
+
+import IngredientCard from './IngredientCard';
 
 type IngredientsListDrawerProps = {
   isOpen: boolean;
