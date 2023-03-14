@@ -99,7 +99,7 @@ const Header: FC = () => {
               Shopping list
             </NavButton>
 
-            <NavButton title="Get random recipe" onClick={redirectToRandomDish}>
+            <NavButton title="Get random recipe" onClick={redirectToRandomDish} disabled={loading}>
               <DiceIcon loading={loading} />
               <span>Random recipe</span>
             </NavButton>

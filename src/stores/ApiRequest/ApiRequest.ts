@@ -51,8 +51,6 @@ class ApiRequest {
           throw new Error('Error while fetching data');
         }
 
-        // todo delete
-        console.log('request data:', response.data);
         this._controller = null;
       });
 

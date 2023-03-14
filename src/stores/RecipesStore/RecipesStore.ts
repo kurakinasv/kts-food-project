@@ -33,8 +33,7 @@ class RecipesStore implements IRecipesStore {
 
   private readonly _apiRequest = new ApiRequest();
 
-  // todo call first 30 items
-  private readonly requestItemsNumber = 20;
+  private readonly requestItemsNumber = 25;
 
   private _recipes: CollectionModel<UniqueId, DishWithNutritionModel> = getInitialCollection();
   private _additionalRecipes: CollectionModel<UniqueId, DishWithNutritionModel> =
@@ -110,18 +109,6 @@ class RecipesStore implements IRecipesStore {
     try {
       const data = await this._apiRequest.request<RecipesApi>(url);
 
-      // todo delete mock
-      // const mockData: RecipesApi = { results: [], totalResults: 0, number: 30, offset: 0 };
-      // const eightyItems = Array(40)
-      //   .fill([...mock])
-      //   .flat();
-      // mockData.results = [...eightyItems];
-      // mockData.totalResults = mockData.results.length;
-
-      // const data = await new Promise<RecipesApi>((res) => {
-      //   setTimeout(() => res(mockData), 500);
-      // });
-
       runInAction(() => {
         if (data) {
           this.setRecipes([...this.recipes, ...data.results.map(normalizeRecipe)]);
@@ -174,11 +161,6 @@ class RecipesStore implements IRecipesStore {
 
     try {
       const data = await this._apiRequest.request<DishWithNutritionApi[]>(url);
-
-      // todo delete mock
-      // const data = await new Promise<DishWithNutritionApi[]>((res) => {
-      //   setTimeout(() => res(mockSomeRecipes), 500);
-      // });
 
       runInAction(() => {
         if (data) {

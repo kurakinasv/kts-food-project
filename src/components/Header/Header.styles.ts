@@ -255,7 +255,7 @@ export const NavLink = styled(Link).withConfig({
     `}
 `;
 
-export const NavButton = styled.button`
+export const NavButton = styled.button<{ disabled?: boolean }>`
   ${navItem};
 
   &,
@@ -275,6 +275,14 @@ export const NavButton = styled.button`
   & > span:first-of-type {
     display: block;
   }
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      cursor: default;
+      user-select: none;
+      pointer-events: none;
+    `}
 
   @media (max-width: 600px) {
     & > span:last-of-type {

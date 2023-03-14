@@ -64,14 +64,8 @@ class DishStore implements IDishStore, ILocalStore {
     try {
       const data = await this._apiRequest.request<ExtendedDishApi>(url);
 
-      // todo delete mock
-      // const data = await new Promise<ExtendedDishModel | null>((res) => {
-      //   setTimeout(() => res(mock), 500);
-      // });
-
       runInAction(() => {
         if (data) {
-          // this.setDishInfo(data);
           this.setDishInfo(normalizeDish(data));
         }
       });
@@ -92,11 +86,6 @@ class DishStore implements IDishStore, ILocalStore {
 
     try {
       const data = await this._apiRequest.request<SimilarRecipeApi[]>(url);
-
-      // todo delete mock
-      // const data = await new Promise<SimilarRecipeApi[]>((res) => {
-      //   setTimeout(() => res(mockSimilar), 500);
-      // });
 
       runInAction(() => {
         if (data) {
