@@ -1,8 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import Button from '@components/Button';
-import { square, textOverflow } from '@styles/mixins';
-import { breakpoints } from '@styles/variables';
+import { mobileMedia, square, textOverflow } from '@styles/mixins';
 
 export const CardWrapper = styled.div`
   width: 100%;
@@ -23,9 +22,7 @@ export const CardWrapper = styled.div`
     cursor: pointer;
   }
 
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 12px 16px;
-  }
+  ${mobileMedia({ padding: '12px 16px' })};
 `;
 
 export const RecipeInfo = styled.div`
@@ -48,9 +45,7 @@ export const RecipeName = styled.h4`
 
   ${textOverflow(2)};
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 14px;
-  }
+  ${mobileMedia({ ['font-size']: '14px' })};
 `;
 
 export const Tags = styled.div`
@@ -70,12 +65,15 @@ export const Tag = styled.div<{ color: 'purple' | 'blue' | 'red' }>`
     background-color: rgba(${theme.rgbColors[color]}, 0.1);
   `}
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 11px;
-  }
+  ${mobileMedia({ ['font-size']: '11px' })};
 `;
 
-export const StyledButton = styled(Button)`
+export const StyledButton = styled(Button).attrs({
+  shape: 'circle',
+  padding: '6px',
+  minWidth: '36px',
+  width: '36px',
+})`
   & > svg {
     ${square('100%')}
   }

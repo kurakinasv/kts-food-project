@@ -3,7 +3,6 @@ import { FC, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useTheme } from 'styled-components';
 
-import Button from '@components/Button';
 import { SectionTitle } from '@pages/RecipePage/RecipePage.styles';
 import { XMarkIcon, PlusIcon } from '@static/icons';
 import { ExtendedIngredientModel } from '@stores/models/ingredients';
@@ -15,6 +14,7 @@ import {
   IngredientsList,
   IngredientItem,
   IngredientInfo,
+  StyledButton,
 } from './Ingredients.styles';
 
 type IngredientsProps = {
@@ -52,7 +52,7 @@ const Ingredients: FC<IngredientsProps> = ({ ingredients }) => {
                 {getIngredientMeasuresString(ingredient.measures)} <span>{ingredient.name}</span>
               </IngredientInfo>
 
-              <Button
+              <StyledButton
                 title={
                   isIngredientInList(ingredient.id)
                     ? 'Remove from shopping list'
@@ -65,10 +65,6 @@ const Ingredients: FC<IngredientsProps> = ({ ingredients }) => {
                     <PlusIcon />
                   )
                 }
-                shape="circle"
-                width="24px"
-                minWidth="24px"
-                padding="0"
                 onClick={() => addToIngredientsList(ingredient)}
               />
             </IngredientItem>

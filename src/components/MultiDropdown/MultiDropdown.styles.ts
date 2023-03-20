@@ -1,7 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import { textOverflow } from '@styles/mixins';
-import { breakpoints } from '@styles/variables';
+import { mobileMedia, textOverflow } from '@styles/mixins';
 
 export const DropdownWrapper = styled.div`
   width: 100%;
@@ -21,10 +20,10 @@ const commonButtonOptionStyles = css`
 
   cursor: pointer;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 12px;
-    padding: 10px 26px 10px 10px;
-  }
+  ${mobileMedia({
+    ['font-size']: '12px',
+    padding: '10px 26px 10px 10px',
+  })}
 `;
 
 export const DropdownButton = styled.input<{ isEmpty: boolean }>`

@@ -1,4 +1,7 @@
-import { css } from 'styled-components';
+// eslint-disable-next-line import/named
+import { css, FlattenSimpleInterpolation } from 'styled-components';
+
+import { breakpoints } from './variables';
 
 export const square = (size: string) => css`
   width: ${size};
@@ -34,5 +37,21 @@ export const scrollbar = (width?: string) => css`
     &:hover {
       background-color: rgba(${({ theme }) => theme.rgbColors.red}, 0.2);
     }
+  }
+`;
+
+export const mobileMedia = (
+  styles: Record<string, string> | string | FlattenSimpleInterpolation
+) => css`
+  @media (max-width: ${breakpoints.mobile}) {
+    ${styles}
+  }
+`;
+
+export const desktopMedia = (
+  styles: Record<string, string> | string | FlattenSimpleInterpolation
+) => css`
+  @media (max-width: ${breakpoints.desktop}) {
+    ${styles}
   }
 `;

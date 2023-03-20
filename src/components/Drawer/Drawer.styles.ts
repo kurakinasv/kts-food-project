@@ -2,8 +2,8 @@ import { animated } from '@react-spring/web';
 import styled from 'styled-components';
 
 import Button from '@components/Button';
-import { scrollbar } from '@styles/mixins';
-import { breakpoints, fonts } from '@styles/variables';
+import { mobileMedia, scrollbar, square } from '@styles/mixins';
+import { fonts } from '@styles/variables';
 
 export const DrawerWrapper = styled.div`
   width: 100%;
@@ -59,15 +59,8 @@ export const ButtonWrapper = styled.div`
   left: 0;
 
   & svg {
-    width: 30px;
-    height: 30px;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    & svg {
-      width: 25px;
-      height: 25px;
-    }
+    ${square('30px')};
+    ${mobileMedia(square('25px'))}
   }
 `;
 
@@ -82,9 +75,7 @@ export const Title = styled.h4`
   text-align: center;
   color: ${({ theme }) => theme.colors.secondaryRed};
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 20px;
-  }
+  ${mobileMedia({ ['font-size']: '20px' })}
 `;
 
 export const Content = styled.div`
@@ -120,12 +111,7 @@ export const Empty = styled.div`
 
   & > * {
     max-width: 350px;
-  }
-
-  @media (max-width: ${breakpoints.mobile}) {
-    & > * {
-      max-width: 250px;
-    }
+    ${mobileMedia({ ['max-width']: '250px' })}
   }
 `;
 

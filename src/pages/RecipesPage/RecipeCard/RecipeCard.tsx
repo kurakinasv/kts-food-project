@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { observer } from 'mobx-react-lite';
 import { useTheme } from 'styled-components';
 
 import Alert, { useAlert } from '@components/Alert';
-import Button from '@components/Button';
 import { PlusIcon, XMarkIcon } from '@static/icons';
 import { useCollectionStore } from '@stores/RootStore';
 import { UniqueId } from '@typings/common';
@@ -19,6 +18,7 @@ import {
   CardWrapper,
   Calories,
   ImageWrapper,
+  StyledButton,
 } from './RecipeCard.styles';
 
 export type CardProps = {
@@ -38,11 +38,11 @@ const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calori
 
   const { addToCollection, isRecipeExistInCollection } = useCollectionStore();
 
-  const addButtonHandler = (e: React.MouseEvent) => {
+  const addButtonHandler = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     addToCollection(id);
     openAlert();
-  };
+  }, []);
 
   return (
     <>
@@ -63,7 +63,7 @@ const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calori
 
           <CardFooter>
             <Calories>{calories} kcal</Calories>
-            <Button
+            <StyledButton
               onClick={addButtonHandler}
               icon={
                 isRecipeExistInCollection(id) ? (
@@ -72,10 +72,6 @@ const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calori
                   <PlusIcon />
                 )
               }
-              shape="circle"
-              width="24px"
-              padding="0"
-              minWidth="24px"
             />
           </CardFooter>
         </CardInfo>

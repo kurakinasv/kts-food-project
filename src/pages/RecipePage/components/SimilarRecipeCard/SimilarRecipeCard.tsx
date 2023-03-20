@@ -70,10 +70,6 @@ const SimilarRecipeCard: FC<SimilarRecipeCardProps> = ({
           icon={
             isRecipeExistInCollection(id) ? <XMarkIcon fillColor={colors.white} /> : <PlusIcon />
           }
-          shape="circle"
-          padding="6px"
-          minWidth="36px"
-          width="36px"
         />
       </CardWrapper>
     </>

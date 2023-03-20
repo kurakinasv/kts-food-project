@@ -48,14 +48,7 @@ const IngredientCard: FC<IngredientCardProps> = ({ id, name, image, measures }) 
         <Measures>{getIngredientMeasuresString(measures)}</Measures>
       </CardInfo>
 
-      <Button
-        icon={<XMarkIcon fillColor={colors.white} />}
-        onClick={deleteIngredient}
-        shape="circle"
-        padding="0"
-        width="30px"
-        minWidth="30px"
-      />
+      <Button icon={<XMarkIcon fillColor={colors.white} />} onClick={deleteIngredient} />
     </CardWrapper>
   );
 };

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import Button from '@components/Button';
 import MultiDropdown from '@components/MultiDropdown';
-import { breakpoints } from '@styles/variables';
+import { mobileMedia } from '@styles/mixins';
 
 export const SearchBarWrapper = styled.div`
   display: flex;
@@ -36,8 +36,11 @@ export const StyledDropdown = styled(MultiDropdown)`
   }
 `;
 
-export const StyledButton = styled(Button)`
-  @media (max-width: ${breakpoints.mobile}) {
-    min-width: 36px;
-  }
+export const StyledButton = styled(Button).attrs({
+  padding: '0px',
+  shape: 'square',
+  minWidth: '46px',
+  height: '46px',
+})`
+  ${mobileMedia({ ['min-width']: '36px' })};
 `;

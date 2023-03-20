@@ -78,15 +78,7 @@ const SearchBar: FC<SearchBarProps> = ({ value, options, setSearchValue, setSele
           keyDownHandler={searchRecipes}
           clearValue={clearSearch}
         />
-        <StyledButton
-          icon={<SearchIcon />}
-          loading={loading}
-          onClick={searchRecipes}
-          padding="0px"
-          shape="square"
-          minWidth="46px"
-          height="46px"
-        />
+        <StyledButton icon={<SearchIcon />} loading={loading} onClick={searchRecipes} />
       </SearchForm>
     </SearchBarWrapper>
   );

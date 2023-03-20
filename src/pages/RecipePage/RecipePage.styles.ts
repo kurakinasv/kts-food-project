@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 import Button from '@components/Button';
-import { breakpoints, colors, fonts, gradients, rgbColors, shadows } from '@styles/variables';
+import { desktopMedia, mobileMedia } from '@styles/mixins';
+import { breakpoints, fonts } from '@styles/variables';
 
 const desctopPaddingTop = '80px';
 
@@ -21,7 +22,11 @@ export const PageWrapper = styled.div`
   }
 `;
 
-export const FixedButton = styled(Button)`
+export const FixedButton = styled(Button).attrs({
+  width: '45px',
+  shape: 'square',
+  bgColor: 'transparent',
+})`
   position: fixed;
   top: 38px;
   left: 19px;
@@ -114,9 +119,7 @@ export const NutrientPercent = styled.span`
   font-weight: 600;
   font-size: 66px;
 
-  @media (max-width: ${breakpoints.desktop}) {
-    font-size: 58px;
-  }
+  ${desktopMedia({ ['font-size']: '58px' })}
 `;
 
 export const NutrientName = styled.span`
@@ -236,9 +239,7 @@ export const RecipeSections = styled.div`
   flex-direction: column;
   gap: 35px;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    gap: 25px;
-  }
+  ${mobileMedia({ gap: '25px' })};
 `;
 
 export const RecipeDescription = styled.div`

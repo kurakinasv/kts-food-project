@@ -42,7 +42,7 @@ const RecipeCardsList: FC<RecipeCardsProps> = ({ loading, recipes, loadItemsAmou
       {recipes.map((dish, index) => (
         <RecipeCard
           id={dish.id}
-          key={'' + dish.id + index}
+          key={`${dish.id}${index}`}
           image={dish.image}
           title={dish.title}
           ingredients={dish.ingredients.join(' + ')}

@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-import { breakpoints, colors, rgbColors } from '@styles/variables';
+import Button from '@components/Button';
+import { mobileMedia } from '@styles/mixins';
+import { breakpoints } from '@styles/variables';
 
 export const IngredientsWrapper = styled.div`
   font-size: 12px;
@@ -24,9 +26,7 @@ export const IngredientItem = styled.li`
 
   border-bottom: 1px solid rgba(${({ theme }) => theme.rgbColors.red}, 0.2);
 
-  @media (max-width: ${breakpoints.mobile}) {
-    padding: 6px 8px;
-  }
+  ${mobileMedia({ padding: '6px 8px' })};
 `;
 
 export const IngredientInfo = styled.span`
@@ -41,7 +41,12 @@ export const IngredientInfo = styled.span`
     color: ${({ theme }) => theme.colors.secondaryRed};
   }
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 14px;
-  }
+  ${mobileMedia({ ['font-size']: '14px' })};
 `;
+
+export const StyledButton = styled(Button).attrs({
+  shape: 'circle',
+  width: '24px',
+  minWidth: '24px',
+  padding: '0',
+})``;

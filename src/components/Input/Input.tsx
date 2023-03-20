@@ -2,10 +2,9 @@ import React, { memo, useCallback, useMemo } from 'react';
 
 import { useTheme } from 'styled-components';
 
-import Button from '@components/Button';
 import { XMarkIcon } from '@static/icons';
 
-import { ClearButtonWrapper, InputWrapper, StyledInput } from './Input.styles';
+import { InputWrapper, StyledButton, StyledInput } from './Input.styles';
 
 export type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & {
   value: string;
@@ -63,20 +62,7 @@ const Input: React.FC<InputProps> = ({
         disabled={disabled}
         {...attrs}
       />
-      {!!value && (
-        <ClearButtonWrapper>
-          <Button
-            icon={clearIcon}
-            onClick={clearValue}
-            disabled={disabled}
-            shape="circle"
-            bgColor="none"
-            minWidth="22px"
-            width="22px"
-            padding="6px"
-          />
-        </ClearButtonWrapper>
-      )}
+      {!!value && <StyledButton icon={clearIcon} onClick={clearValue} disabled={disabled} />}
     </InputWrapper>
   );
 };

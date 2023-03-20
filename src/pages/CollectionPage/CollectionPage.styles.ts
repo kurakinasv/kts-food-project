@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import cat from '@static/images/cat-sleep.png';
-import { breakpoints } from '@styles/variables';
+import { mobileMedia } from '@styles/mixins';
 
 export const InputWrapper = styled.div`
   max-width: 500px;
@@ -21,8 +21,8 @@ export const Placeholder = styled.div`
   opacity: 0.1;
   user-select: none;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    width: 80vw;
-    height: 45vh;
-  }
+  ${mobileMedia({
+    width: '80vw',
+    height: '45vh',
+  })}
 `;

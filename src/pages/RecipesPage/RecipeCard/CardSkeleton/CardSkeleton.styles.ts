@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
+import { mobileMedia } from '@styles/mixins';
 import { skeletonAnimation } from '@styles/skeleton';
-import { breakpoints } from '@styles/variables';
 
 export const CardWrapper = styled.div`
   min-width: 120px;
@@ -18,10 +18,10 @@ export const CardWrapper = styled.div`
   filter: opacity(1);
   box-shadow: ${({ theme }) => theme.shadows.black};
 
-  @media (max-width: ${breakpoints.mobile}) {
-    min-width: 90px;
-    padding: 8px 12px;
-  }
+  ${mobileMedia({
+    ['min-width']: '90px',
+    padding: '8px 12px',
+  })};
 `;
 
 export const CardImage = styled.div`
@@ -32,10 +32,10 @@ export const CardImage = styled.div`
   border-radius: 7px;
   ${skeletonAnimation()};
 
-  @media (max-width: ${breakpoints.mobile}) {
-    max-height: 70px;
-    margin-bottom: 5px;
-  }
+  ${mobileMedia({
+    ['max-height']: '70px',
+    ['margin-bottom']: '5px',
+  })};
 `;
 
 export const CardInfo = styled.div`
@@ -44,9 +44,7 @@ export const CardInfo = styled.div`
   flex-direction: column;
   gap: 7px;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    gap: 4px;
-  }
+  ${mobileMedia({ gap: '4px' })};
 `;
 
 export const RecipeName = styled.div`
@@ -65,7 +63,5 @@ export const Ingredients = styled.div`
   opacity: 0.5;
   ${skeletonAnimation()};
 
-  @media (max-width: ${breakpoints.mobile}) {
-    height: 38px;
-  }
+  ${mobileMedia({ height: '38px' })};
 `;

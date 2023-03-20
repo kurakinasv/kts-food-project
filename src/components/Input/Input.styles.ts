@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-import { breakpoints, colors, gradients, rgbColors } from '@styles/variables';
+import Button from '@components/Button';
+import { mobileMedia } from '@styles/mixins';
 
 export const InputWrapper = styled.div`
   width: 100%;
@@ -45,13 +46,19 @@ export const StyledInput = styled.input`
     cursor: default;
   }
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 12px;
-    padding: 10px;
-  }
+  ${mobileMedia({
+    ['font-size']: '12px',
+    padding: '10px',
+  })}
 `;
 
-export const ClearButtonWrapper = styled.div`
+export const StyledButton = styled(Button).attrs({
+  shape: 'circle',
+  bgColor: 'none',
+  minWidth: '22px',
+  width: '22px',
+  padding: '6px',
+})`
   position: absolute;
   top: 50%;
   right: 5px;

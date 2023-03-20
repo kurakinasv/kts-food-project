@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import Button from '@components/Button';
 import { textOverflow } from '@styles/mixins';
 
 export const CardWrapper = styled.div`
@@ -54,3 +55,10 @@ export const Measures = styled.div`
 
   ${textOverflow()};
 `;
+
+export const StyledButton = styled(Button).attrs({
+  shape: 'circle',
+  padding: '0',
+  width: '30px',
+  minWidth: '30px',
+})``;

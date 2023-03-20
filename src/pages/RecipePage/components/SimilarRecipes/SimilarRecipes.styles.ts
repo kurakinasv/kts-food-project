@@ -1,13 +1,10 @@
 import styled from 'styled-components';
 
-import { breakpoints } from '@styles/variables';
+import { mobileMedia } from '@styles/mixins';
 
 export const Wrapper = styled.div`
   font-size: 16px;
-
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 12px;
-  }
+  ${mobileMedia({ ['font-size']: '12px' })};
 `;
 
 export const SimilarList = styled.div`
@@ -21,9 +18,7 @@ export const SimilarList = styled.div`
     grid-template-columns: repeat(1, 1fr);
   }
 
-  @media (max-width: ${breakpoints.mobile}) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  ${mobileMedia({ ['grid-template-columns']: 'repeat(2, 1fr)' })};
 
   @media (max-width: 545px) {
     grid-template-columns: repeat(1, 1fr);

@@ -65,13 +65,7 @@ const RecipePage: FC = () => {
 
   return (
     <PageWrapper>
-      <FixedButton
-        icon={<ArrowIcon />}
-        onClick={goBack}
-        width="45px"
-        shape="square"
-        bgColor="transparent"
-      />
+      <FixedButton icon={<ArrowIcon />} onClick={goBack} />
 
       <RecipePageSkeleton loading={loading} />
 

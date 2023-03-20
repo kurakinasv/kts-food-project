@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-import { textOverflow } from '@styles/mixins';
-import { breakpoints, fonts } from '@styles/variables';
+import Button from '@components/Button';
+import { mobileMedia, textOverflow } from '@styles/mixins';
+import { fonts } from '@styles/variables';
 
 export const CardWrapper = styled.div`
   min-width: 120px;
@@ -24,10 +25,10 @@ export const CardWrapper = styled.div`
     cursor: pointer;
   }
 
-  @media (max-width: ${breakpoints.mobile}) {
-    min-width: 90px;
-    padding: 8px 12px;
-  }
+  ${mobileMedia({
+    ['min-width']: '90px',
+    padding: '8px 12px',
+  })};
 `;
 
 export const ImageWrapper = styled.div`
@@ -38,10 +39,10 @@ export const CardImage = styled.img`
   width: 100%;
   max-height: 110px;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    max-height: 70px;
-    margin-bottom: 5px;
-  }
+  ${mobileMedia({
+    ['max-height']: '70px',
+    ['margin-bottom']: '5px',
+  })};
 `;
 
 export const CardInfo = styled.div`
@@ -51,9 +52,7 @@ export const CardInfo = styled.div`
   flex-direction: column;
   gap: 7px;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    gap: 4px;
-  }
+  ${mobileMedia({ gap: '4px' })};
 `;
 
 export const RecipeName = styled.div`
@@ -78,9 +77,7 @@ export const Ingredients = styled.div`
 
   ${textOverflow(2)};
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 10px;
-  }
+  ${mobileMedia({ ['font-size']: '10px' })};
 `;
 
 export const CardFooter = styled.div`
@@ -96,7 +93,12 @@ export const Calories = styled.span`
 
   color: ${({ theme }) => theme.colors.red};
 
-  @media (max-width: ${breakpoints.mobile}) {
-    font-size: 14px;
-  }
+  ${mobileMedia({ ['font-size']: '14px' })};
 `;
+
+export const StyledButton = styled(Button).attrs({
+  shape: 'circle',
+  width: '24px',
+  padding: '0',
+  minWidth: '24px',
+})``;

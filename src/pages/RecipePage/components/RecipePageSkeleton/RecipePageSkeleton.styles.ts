@@ -1,9 +1,9 @@
-import { colors } from '@react-spring/shared';
 import { animated } from '@react-spring/web';
 import styled from 'styled-components';
 
+import { desktopMedia } from '@styles/mixins';
 import { skeletonAnimation } from '@styles/skeleton';
-import { breakpoints, fonts, shadows } from '@styles/variables';
+import { breakpoints, fonts } from '@styles/variables';
 
 export const DishPhotoSkeleton = styled.div`
   width: 100%;
@@ -48,9 +48,7 @@ export const StyledNumber = styled(animated.div)`
     color: ${({ theme }) => theme.colors.red};
     opacity: 0.3;
 
-    @media (max-width: ${breakpoints.desktop}) {
-      font-size: 58px;
-    }
+    ${desktopMedia({ ['font-size']: '58px' })}
   }
 `;
 

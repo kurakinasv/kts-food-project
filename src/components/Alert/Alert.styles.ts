@@ -1,7 +1,8 @@
 import { animated } from '@react-spring/web';
 import styled from 'styled-components';
 
-import { breakpoints, fonts } from '@styles/variables';
+import { mobileMedia } from '@styles/mixins';
+import { fonts } from '@styles/variables';
 
 import { AlertStatus } from './types';
 
@@ -29,9 +30,9 @@ export const AlertWrapper = styled(animated.div)<{ status: AlertStatus }>`
   left: 50%;
   z-index: 300;
 
-  @media (max-width: ${breakpoints.mobile}) {
-    width: clamp(230px, 100%, 80vw);
-  }
+  ${mobileMedia({
+    width: 'clamp(230px, 100%, 80vw)',
+  })}
 `;
 
 export const StatusCode = styled.div<{ status: AlertStatus }>`
