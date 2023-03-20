@@ -3,11 +3,8 @@ import React, { FC, memo, MutableRefObject, PropsWithChildren, ReactNode } from 
 import { config, useTransition } from '@react-spring/web';
 import { useTheme } from 'styled-components';
 
-import Button from '@components/Button';
 import useComponentVisible from '@hooks/useComponentVisible';
 import { XMarkIcon } from '@static/icons';
-import { ThemeType } from '@styles/globalStyle';
-import { colors } from '@styles/variables';
 
 import {
   DrawerOverlay,
@@ -19,6 +16,7 @@ import {
   Header,
   Title,
   Empty,
+  StyledButton,
 } from './Drawer.styles';
 
 type DrawerProps = {
@@ -48,9 +46,9 @@ const Drawer: FC<PropsWithChildren<DrawerProps>> = ({
   });
 
   const transitions = useTransition(open, {
-    from: { x: -510, opacity: 0 },
-    enter: { x: 0, opacity: 0.5 },
-    leave: { x: -510, opacity: 0 },
+    from: { x: '-100%', opacity: 0 },
+    enter: { x: '0%', opacity: 0.5 },
+    leave: { x: '-100%', opacity: 0 },
     config: config.default,
   });
 
@@ -63,14 +61,9 @@ const Drawer: FC<PropsWithChildren<DrawerProps>> = ({
               <DrawerBody style={{ x }} ref={ref}>
                 <Header>
                   <ButtonWrapper>
-                    <Button
+                    <StyledButton
                       icon={<XMarkIcon fillColor={theme.colors.secondaryRed} />}
                       onClick={onClose}
-                      shape="circle"
-                      padding="0"
-                      minWidth="0"
-                      width="30px"
-                      bgColor="none"
                     />
                   </ButtonWrapper>
                   <Title>{title}</Title>

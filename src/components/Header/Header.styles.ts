@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
-import { smallHeaderHeight } from '@config/ui';
+import { headerHeight, smallHeaderHeight } from '@config/ui';
 import { fonts } from '@styles/variables';
 
 const smallHeaderStyles = css`
@@ -25,9 +25,9 @@ const smallHeaderStyles = css`
 
 export const HeaderWrapper = styled.header<{ small: boolean }>`
   width: 100%;
-  height: 90px;
+  height: ${headerHeight};
 
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 200;

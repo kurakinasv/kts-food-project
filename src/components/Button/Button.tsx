@@ -1,30 +1,21 @@
 import { LoaderSize } from '@components/Loader';
-import { ButtonShape } from '@styles/types';
 
 import { ButtonWrapper, StyledLoader } from './Button.styles';
-
-export type StyledProps = {
-  width?: string;
-  height?: string;
-  minWidth?: string;
-  padding?: string;
-  bgColor?: 'solid' | 'transparent' | 'none';
-  shape?: ButtonShape;
-};
+import { StyledButtonProps } from './types';
 
 export type ButtonProps = React.PropsWithChildren<{
   loading?: boolean;
-  icon?: JSX.Element;
+  icon?: React.ReactNode;
 }> &
   React.ButtonHTMLAttributes<HTMLButtonElement> &
-  StyledProps;
+  StyledButtonProps;
 
 const Button: React.FC<ButtonProps> = ({
   children,
+  icon,
   loading = false,
   disabled = false,
   className = '',
-  icon = undefined,
   bgColor = 'solid',
   shape = 'none',
   ...attrs

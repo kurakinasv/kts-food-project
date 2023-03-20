@@ -14,7 +14,7 @@ const DiceIcon: FC<{ loading: boolean } & IconProps> = ({ loading, fillColor }) 
     return (
       <>
         <Loader size={LoaderSize.s} />
-        <span></span>
+        <span />
       </>
     );
   }

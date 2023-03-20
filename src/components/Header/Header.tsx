@@ -39,12 +39,17 @@ const Header: FC = () => {
   const { open, openDrawer, closeDrawer } = useDrawer();
 
   const scrollHandler = useCallback(() => {
-    if (window.scrollY > 80) {
-      setSmall(true);
-    } else {
-      setSmall(false);
+    const isLongScroll = window.scrollY > 80;
+
+    if (isLongScroll && !small) {
+      setSmall(isLongScroll);
+      return;
     }
-  }, []);
+    if (!isLongScroll && small) {
+      setSmall(isLongScroll);
+      return;
+    }
+  }, [small]);
 
   useEffect(() => {
     window.addEventListener('scroll', scrollHandler);

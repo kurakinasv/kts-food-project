@@ -6,8 +6,7 @@ import { HttpStatusCode } from 'axios';
 import { alertShowTime } from '@config/ui';
 
 import { AlertWrapper, Message, StatusCode } from './Alert.styles';
-
-export type AlertStatus = 'error' | 'success';
+import { AlertStatus } from './types';
 
 type AlertProps = {
   open: boolean;
@@ -38,7 +37,7 @@ const Alert: FC<AlertProps> = ({ message, status, open, statusCode }) => {
           open && (
             <AlertWrapper style={styles} status={status}>
               <Message>{message}</Message>
-              <StatusCode status={status}>{statusCode}</StatusCode>
+              {statusCode && <StatusCode status={status}>{statusCode}</StatusCode>}
             </AlertWrapper>
           )
       )}

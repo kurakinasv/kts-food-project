@@ -1,14 +1,13 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import Loader from '@components/Loader';
-import { getButtonSizes } from '@styles/mixins';
-import { colors, rgbColors } from '@styles/variables';
 
-import { StyledProps } from './Button';
+import { StyledButtonProps } from './types';
+import { bgColorStyles, getButtonSizes } from './utils';
 
-export const ButtonWrapper = styled.button<StyledProps>`
-  min-width: ${({ minWidth }) => (minWidth ? minWidth : '36px')};
-  padding: ${({ padding }) => (padding ? padding : '8px 14px')};
+export const ButtonWrapper = styled.button<StyledButtonProps>`
+  min-width: ${({ minWidth }) => minWidth || '36px'};
+  padding: ${({ padding }) => padding || '8px 14px'};
 
   ${({ width, height, shape }) => getButtonSizes(width, height, shape)}
 
@@ -22,21 +21,7 @@ export const ButtonWrapper = styled.button<StyledProps>`
   line-height: 25px;
   text-align: center;
 
-  ${({ bgColor, theme }) =>
-    bgColor === 'transparent'
-      ? css`
-          background-color: rgba(${({ theme }) => theme.rgbColors.red}, 0.1);
-          color: ${theme.colors.red};
-        `
-      : bgColor === 'solid'
-      ? css`
-          background-color: ${theme.colors.red};
-          color: ${theme.colors.white};
-        `
-      : css`
-          background-color: 'transparent';
-          color: ${theme.colors.red};
-        `}
+  ${({ bgColor, theme }) => !!bgColor && bgColorStyles(theme)[bgColor]};
 
   border: none;
   border-radius: ${({ shape }) => (shape === 'circle' ? '50%' : '7px')};

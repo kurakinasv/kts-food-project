@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle, css } from 'styled-components';
 
 import AvenirFont from './fonts/Avenir/fonts';
 import DMSansFont from './fonts/DMSans/fonts';
@@ -37,8 +37,16 @@ const GlobalStyle = createGlobalStyle<{ disableScroll: boolean }>`
   }
 
   body{
+    width: 100%;
     background-color: ${({ theme }) => theme.backgroundColor};
-    overflow: ${({ disableScroll }) => (disableScroll ? 'hidden' : 'auto')};
+    transition: background-color 0.2s ease-in-out;
+
+    ${({ disableScroll }) =>
+      !!disableScroll &&
+      css`
+        position: fixed;
+        overflow-y: scroll;
+      `}
   }
 
   button, a {

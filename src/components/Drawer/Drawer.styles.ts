@@ -1,6 +1,7 @@
 import { animated } from '@react-spring/web';
 import styled from 'styled-components';
 
+import Button from '@components/Button';
 import { scrollbar } from '@styles/mixins';
 import { breakpoints, fonts } from '@styles/variables';
 
@@ -100,6 +101,14 @@ export const Content = styled.div`
   overflow-y: auto;
   ${scrollbar('0.5em')};
 `;
+
+export const StyledButton = styled(Button).attrs({
+  shape: 'circle',
+  padding: '0',
+  minWidth: '0',
+  width: '30px',
+  bgColor: 'none',
+})``;
 
 export const Empty = styled.div`
   height: 100%;

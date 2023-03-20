@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { breakpoints, fonts } from '@styles/variables';
 
-import { AlertStatus } from './Alert';
+import { AlertStatus } from './types';
 
 export const AlertWrapper = styled(animated.div)<{ status: AlertStatus }>`
   width: clamp(400px, 100%, 30vw);
