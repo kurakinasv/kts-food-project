@@ -32,7 +32,7 @@ const SimilarRecipeCard: FC<SimilarRecipeCardProps> = ({
   const { colors } = useTheme();
   const { isOpen, openAlert } = useAlert();
 
-  const { addToCollection, isDishExistInCollection } = useCollectionStore();
+  const { addToCollection, isRecipeExistInCollection } = useCollectionStore();
 
   const addButtonHandler = useCallback(
     (e: React.MouseEvent) => {
@@ -46,7 +46,7 @@ const SimilarRecipeCard: FC<SimilarRecipeCardProps> = ({
   return (
     <>
       <Alert
-        message={isDishExistInCollection(id) ? 'Added to collection' : 'Removed from collection'}
+        message={isRecipeExistInCollection(id) ? 'Added to collection' : 'Removed from collection'}
         status="success"
         open={isOpen}
       />
@@ -65,9 +65,11 @@ const SimilarRecipeCard: FC<SimilarRecipeCardProps> = ({
         </RecipeInfo>
 
         <StyledButton
-          title={isDishExistInCollection(id) ? 'Remove from collection' : 'Add to collection'}
+          title={isRecipeExistInCollection(id) ? 'Remove from collection' : 'Add to collection'}
           onClick={addButtonHandler}
-          icon={isDishExistInCollection(id) ? <XMarkIcon fillColor={colors.white} /> : <PlusIcon />}
+          icon={
+            isRecipeExistInCollection(id) ? <XMarkIcon fillColor={colors.white} /> : <PlusIcon />
+          }
           shape="circle"
           padding="6px"
           minWidth="36px"

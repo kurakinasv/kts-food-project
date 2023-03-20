@@ -1,6 +1,6 @@
 import { action, computed, makeAutoObservable, observable, runInAction } from 'mobx';
 
-import { mockSomeRecipes } from '@pages/DishPage/mock';
+import { mockSomeRecipes } from '@pages/RecipePage/mock';
 import { mock } from '@pages/RecipesPage/mock';
 import ApiRequest from '@stores/ApiRequest';
 import { DishFullInfoApi, DishWithNutritionApi, DishWithNutritionModel } from '@stores/DishStore';

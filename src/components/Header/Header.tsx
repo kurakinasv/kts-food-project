@@ -55,7 +55,7 @@ const Header: FC = () => {
     setBurgerActive((v) => !v);
   }, []);
 
-  const redirectToRandomDish = useCallback(async () => {
+  const redirectToRandomRecipe = useCallback(async () => {
     const res = await getRandom();
 
     if (!!res) {
@@ -99,7 +99,11 @@ const Header: FC = () => {
               Shopping list
             </NavButton>
 
-            <NavButton title="Get random recipe" onClick={redirectToRandomDish} disabled={loading}>
+            <NavButton
+              title="Get random recipe"
+              onClick={redirectToRandomRecipe}
+              disabled={loading}
+            >
               <DiceIcon loading={loading} />
               <span>Random recipe</span>
             </NavButton>

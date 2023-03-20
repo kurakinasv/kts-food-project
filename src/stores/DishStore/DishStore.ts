@@ -1,7 +1,7 @@
 import { makeAutoObservable, observable, reaction, runInAction } from 'mobx';
 
 import { ILocalStore } from '@hooks/useLocalStore';
-import { mock, mockSimilar } from '@pages/DishPage/mock';
+import { mock, mockSimilar } from '@pages/RecipePage/mock';
 import ApiRequest from '@stores/ApiRequest';
 import {
   CollectionModel,

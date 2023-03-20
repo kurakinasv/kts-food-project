@@ -12,10 +12,11 @@ import { useCollectionStore, useIngredientsListStore, useMetaStore } from '@stor
 import { formPlural } from '@utils/formPlural';
 import { replaceImage } from '@utils/replaceImage';
 
-import DishPageSkeleton from './components/DishPageSkeleton';
 import Ingredients from './components/Ingredients';
 import RecipeInstructions from './components/RecipeInstructions';
+import RecipePageSkeleton from './components/RecipePageSkeleton';
 import SimilarRecipes from './components/SimilarRecipes';
+import ErrorPage from './ErrorPage';
 import {
   DishPhoto,
   PageWrapper,
@@ -32,10 +33,9 @@ import {
   NutrientName,
   NutrientPercent,
   RecipeSections,
-} from './DishPage.styles';
-import ErrorPage from './ErrorPage';
+} from './RecipePage.styles';
 
-const DishPage: FC = () => {
+const RecipePage: FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -73,7 +73,7 @@ const DishPage: FC = () => {
         bgColor="transparent"
       />
 
-      <DishPageSkeleton loading={loading} />
+      <RecipePageSkeleton loading={loading} />
 
       {!loading && dishInfo && (
         <>
@@ -123,4 +123,4 @@ const DishPage: FC = () => {
   );
 };
 
-export default observer(DishPage);
+export default observer(RecipePage);

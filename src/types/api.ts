@@ -20,8 +20,11 @@ export type RecipesQueryParams =
   | 'ids'
   | 'includeNutrition';
 
-export type DishQueryParams = 'includeNutrition' | 'apiKey' | 'number';
+export type SingleRecipeQueryParams = 'includeNutrition' | 'apiKey' | 'number';
 
 export type SearchParamsNames = Extract<RecipesQueryParams, 'query' | 'type' | 'results'>;
 
-export type SearchParams<T extends RecipesQueryParams | DishQueryParams> = Record<T, string>;
+export type SearchParams<T extends RecipesQueryParams | SingleRecipeQueryParams> = Record<
+  T,
+  string
+>;

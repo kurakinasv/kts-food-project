@@ -11,10 +11,10 @@ import {
   NameSkeleton,
   StatsSkeleton,
   DescriptionSkeleton,
-} from './DishPageSkeleton.styles';
-import { PhotoWrapper, Nutrition, Nutrient, RecipeInfo } from '../../DishPage.styles';
+} from './RecipePageSkeleton.styles';
+import { PhotoWrapper, Nutrition, Nutrient, RecipeInfo } from '../../RecipePage.styles';
 
-type DishPageSkeletonProps = {
+type RecipePageSkeletonProps = {
   loading: boolean;
 };
 
@@ -33,7 +33,7 @@ export const AnimatedNumber: FC = () => {
   return <StyledNumber>{number.to((n) => Math.abs(Math.floor(n)))}</StyledNumber>;
 };
 
-const DishPageSkeleton: FC<DishPageSkeletonProps> = ({ loading }) => {
+const RecipePageSkeleton: FC<RecipePageSkeletonProps> = ({ loading }) => {
   if (!loading) {
     return null;
   }
@@ -69,4 +69,4 @@ const DishPageSkeleton: FC<DishPageSkeletonProps> = ({ loading }) => {
   );
 };
 
-export default memo(DishPageSkeleton);
+export default memo(RecipePageSkeleton);

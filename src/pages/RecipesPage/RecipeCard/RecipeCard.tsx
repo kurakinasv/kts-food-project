@@ -36,7 +36,7 @@ const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calori
 
   const { isOpen, openAlert } = useAlert();
 
-  const { addToCollection, isDishExistInCollection } = useCollectionStore();
+  const { addToCollection, isRecipeExistInCollection } = useCollectionStore();
 
   const addButtonHandler = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -47,7 +47,7 @@ const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calori
   return (
     <>
       <Alert
-        message={isDishExistInCollection(id) ? 'Added to collection' : 'Removed from collection'}
+        message={isRecipeExistInCollection(id) ? 'Added to collection' : 'Removed from collection'}
         status="success"
         open={isOpen}
       />
@@ -66,7 +66,11 @@ const RecipeCard: React.FC<CardProps> = ({ id, image, title, ingredients, calori
             <Button
               onClick={addButtonHandler}
               icon={
-                isDishExistInCollection(id) ? <XMarkIcon fillColor={colors.white} /> : <PlusIcon />
+                isRecipeExistInCollection(id) ? (
+                  <XMarkIcon fillColor={colors.white} />
+                ) : (
+                  <PlusIcon />
+                )
               }
               shape="circle"
               width="24px"

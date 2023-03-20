@@ -1,16 +1,16 @@
 import { API_KEY, BASE_URL } from '@config/api';
 import {
   AllRecipesPaths,
-  DishQueryParams,
+  SingleRecipeQueryParams,
   RecipesQueryParams,
   SearchParams,
   SingleRecipePaths,
 } from '@typings/api';
 
-const getApiParam = <T extends RecipesQueryParams | DishQueryParams>() =>
+const getApiParam = <T extends RecipesQueryParams | SingleRecipeQueryParams>() =>
   ({ apiKey: API_KEY } as SearchParams<T>);
 
-export const getQueryString = <T extends RecipesQueryParams | DishQueryParams>(
+export const getQueryString = <T extends RecipesQueryParams | SingleRecipeQueryParams>(
   params: Partial<SearchParams<T>>
 ): string => {
   const paramsToParse = Object.entries(params).reduce(
@@ -42,17 +42,17 @@ export const getAllRecipesUrl = (
 export const getSingleRecipeUrl = (
   id: number,
   hanledPath?: SingleRecipePaths,
-  params?: Partial<SearchParams<DishQueryParams>>
+  params?: Partial<SearchParams<SingleRecipeQueryParams>>
 ) => {
   const path = hanledPath ?? SingleRecipePaths.info;
 
-  const paramsToParse: SearchParams<DishQueryParams> = {
+  const paramsToParse: SearchParams<SingleRecipeQueryParams> = {
     ...(params ?? []),
     ...getApiParam(),
     includeNutrition: 'true',
   };
 
-  const query = getQueryString<DishQueryParams>(paramsToParse);
+  const query = getQueryString<SingleRecipeQueryParams>(paramsToParse);
 
   return BASE_URL + '/' + id + path + query;
 };

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { useTheme } from 'styled-components';
 
 import Button from '@components/Button';
-import { SectionTitle } from '@pages/DishPage/DishPage.styles';
+import { SectionTitle } from '@pages/RecipePage/RecipePage.styles';
 import { XMarkIcon, PlusIcon } from '@static/icons';
 import { ExtendedIngredientModel } from '@stores/models/ingredients';
 import { useIngredientsListStore } from '@stores/RootStore';

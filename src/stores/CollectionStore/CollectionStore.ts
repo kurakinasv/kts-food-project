@@ -56,7 +56,7 @@ class CollectionStore {
   };
 
   addToCollection = (id: number) => {
-    if (this.isDishExistInCollection(id)) {
+    if (this.isRecipeExistInCollection(id)) {
       this.deleteFromCollection(id);
       return;
     }
@@ -75,7 +75,7 @@ class CollectionStore {
   };
 
   deleteFromCollection = (id: number) => {
-    if (!this.isDishExistInCollection(id)) {
+    if (!this.isRecipeExistInCollection(id)) {
       return;
     }
 
@@ -93,7 +93,7 @@ class CollectionStore {
     localStorage.setItem(collectionStorage, JSON.stringify(updatedCollection));
   };
 
-  isDishExistInCollection = (id: number) => {
+  isRecipeExistInCollection = (id: number) => {
     return this._collectionRecipes.order.includes(id);
   };
 

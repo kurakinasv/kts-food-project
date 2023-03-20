@@ -3,7 +3,7 @@ import { FC, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { routes } from '@config/routes';
-import { SectionTitle } from '@pages/DishPage/DishPage.styles';
+import { SectionTitle } from '@pages/RecipePage/RecipePage.styles';
 import { SimilarRecipeModel } from '@stores/models/similarRecipe';
 
 import { SimilarList, Wrapper } from './SimilarRecipes.styles';
