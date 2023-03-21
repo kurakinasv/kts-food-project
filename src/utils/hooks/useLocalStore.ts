@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { autorun } from 'mobx';
+import { action } from 'mobx';
 
 export interface ILocalStore {
   destroy: () => void;
@@ -15,7 +15,7 @@ export const useLocalStore = <T extends ILocalStore>(creator: () => T): T => {
 
   useEffect(() => {
     return () => {
-      autorun(() => {
+      action(() => {
         storeContainer.current?.destroy();
       });
     };

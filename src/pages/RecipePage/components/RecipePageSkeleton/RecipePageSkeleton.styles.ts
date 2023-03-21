@@ -8,7 +8,7 @@ import { breakpoints, fonts } from '@styles/variables';
 export const DishPhotoSkeleton = styled.div`
   width: 100%;
   aspect-ratio: 9/16;
-  ${skeletonAnimation('red')};
+  ${({ theme }) => skeletonAnimation(theme, 'red')};
 
   @media (min-width: ${breakpoints.mobile}) {
     width: 90%;
@@ -16,7 +16,7 @@ export const DishPhotoSkeleton = styled.div`
     border-radius: 16px;
     margin-bottom: 40px;
     aspect-ratio: 3/2;
-    ${skeletonAnimation('white')};
+    ${({ theme }) => skeletonAnimation(theme, 'white')};
 
     box-shadow: ${({ theme }) => theme.shadows.black};
   }
@@ -55,7 +55,7 @@ export const StyledNumber = styled(animated.div)`
 export const NutrientNameSkeleton = styled.div`
   width: 85px;
   height: 18px;
-  ${skeletonAnimation('red')}
+  ${({ theme }) => skeletonAnimation(theme, 'red')}
 `;
 
 export const NameSkeleton = styled.div`
@@ -64,7 +64,7 @@ export const NameSkeleton = styled.div`
   margin-bottom: 26px;
 
   border-radius: 7px;
-  ${skeletonAnimation('red')}
+  ${({ theme }) => skeletonAnimation(theme, 'red')}
 
   @media (min-width: ${breakpoints.mobile}) {
     height: 46px;
@@ -80,7 +80,7 @@ export const StatsSkeleton = styled.div`
 
   border-radius: 4px;
   opacity: 0.3;
-  ${skeletonAnimation('red')};
+  ${({ theme }) => skeletonAnimation(theme, 'red')};
 
   @media (min-width: ${breakpoints.mobile}) {
     margin-bottom: 35px;
@@ -92,7 +92,7 @@ export const DescriptionSkeleton = styled.div`
   height: 170px;
   border-radius: 7px;
   opacity: 0.3;
-  ${skeletonAnimation('red')};
+  ${({ theme }) => skeletonAnimation(theme, 'red')};
 
   @media (min-width: ${breakpoints.mobile}) {
     height: 300px;

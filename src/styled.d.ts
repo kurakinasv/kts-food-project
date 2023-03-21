@@ -1,3 +1,4 @@
+import { SkeletonBg } from '@styles/skeleton';
 import { ImageURL } from '@typings/common';
 import 'styled-components';
 
@@ -9,5 +10,6 @@ declare module 'styled-components' {
     gradients: Record<string, string>;
     shadows: Record<string, string>;
     pattern: ImageURL;
+    skeletonBg: SkeletonBg;
   }
 }

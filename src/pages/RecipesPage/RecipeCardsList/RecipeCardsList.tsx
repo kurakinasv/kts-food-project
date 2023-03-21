@@ -27,7 +27,7 @@ const RecipeCardsList: FC<RecipeCardsProps> = ({ loading, recipes, loadItemsAmou
 
   if (loading || !recipes) {
     return (
-      <CardsWrapper>
+      <CardsWrapper loading={loading}>
         {Array(loadItemsAmount)
           .fill(<CardSkeleton />)
           .map((item, i) => (

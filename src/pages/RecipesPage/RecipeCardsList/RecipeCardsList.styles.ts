@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-export const CardsWrapper = styled.div`
+export const CardsWrapper = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['loading'].includes(prop),
+})<{ loading?: boolean }>`
   --columns-count: 5;
 
   padding: 10px;
@@ -22,4 +24,6 @@ export const CardsWrapper = styled.div`
   @media (max-width: 500px) {
     --columns-count: 2;
   }
+
+  margin: ${({ loading }) => loading && '-10px'};
 `;

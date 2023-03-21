@@ -30,7 +30,7 @@ export const CardImage = styled.div`
   margin-bottom: 8px;
 
   border-radius: 7px;
-  ${skeletonAnimation()};
+  ${({ theme }) => skeletonAnimation(theme)};
 
   ${mobileMedia({
     ['max-height']: '70px',
@@ -52,16 +52,16 @@ export const RecipeName = styled.div`
   height: 25px;
 
   border-radius: 4px;
-  ${skeletonAnimation()};
+  ${({ theme }) => skeletonAnimation(theme)};
 `;
 
 export const Ingredients = styled.div`
   width: 100%;
-  height: 54px;
+  height: 65px;
 
   border-radius: 4px;
   opacity: 0.5;
-  ${skeletonAnimation()};
+  ${({ theme }) => skeletonAnimation(theme)};
 
   ${mobileMedia({ height: '38px' })};
 `;

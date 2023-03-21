@@ -18,6 +18,7 @@ import {
   Measures,
   ImageWrapper,
   CardImage,
+  StyledButton,
 } from './IngredientCard.styles';
 
 type IngredientCardProps = {
@@ -48,7 +49,7 @@ const IngredientCard: FC<IngredientCardProps> = ({ id, name, image, measures }) 
         <Measures>{getIngredientMeasuresString(measures)}</Measures>
       </CardInfo>
 
-      <Button icon={<XMarkIcon fillColor={colors.white} />} onClick={deleteIngredient} />
+      <StyledButton icon={<XMarkIcon fillColor={colors.white} />} onClick={deleteIngredient} />
     </CardWrapper>
   );
 };

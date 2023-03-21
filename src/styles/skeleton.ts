@@ -1,10 +1,11 @@
-import { css, keyframes } from 'styled-components';
+// eslint-disable-next-line import/named
+import { css, DefaultTheme, keyframes } from 'styled-components';
 
 type SkeletonColors = 'grey' | 'red' | 'white';
 
-type SceletonBg = Record<SkeletonColors, { from: string; to: string }>;
+export type SkeletonBg = Record<SkeletonColors, { from: string; to: string }>;
 
-const sceletonBg: SceletonBg = {
+export const skeletonBg: SkeletonBg = {
   grey: {
     from: 'hsl(0, 3%, 85%)',
     to: 'hsl(0, 7%, 96%)',
@@ -19,15 +20,30 @@ const sceletonBg: SceletonBg = {
   },
 };
 
-const getSkeletonKeyframes = (color: SkeletonColors = 'grey') => keyframes`
+export const skeletonBgDark: SkeletonBg = {
+  grey: {
+    from: 'hsl(0, 2%, 43%)',
+    to: 'hsl(0, 5%, 57%)',
+  },
+  red: {
+    from: 'hsl(0, 18%, 53%)',
+    to: 'hsl(0, 16%, 48%)',
+  },
+  white: {
+    from: 'hsl(0, 2%, 28%)',
+    to: 'hsl(0, 2%, 22%)',
+  },
+};
+
+const getSkeletonKeyframes = (color: SkeletonColors = 'grey', theme: DefaultTheme) => keyframes`
   0% {
-    background-color: ${sceletonBg[color].from};
+    background-color: ${theme.skeletonBg[color].from};
   }
   100% {
-    background-color: ${sceletonBg[color].to};
+    background-color: ${theme.skeletonBg[color].to};
   }
 `;
 
-export const skeletonAnimation = (bgColor?: SkeletonColors) => css`
-  animation: 1s linear infinite alternate ${getSkeletonKeyframes(bgColor)};
+export const skeletonAnimation = (theme: DefaultTheme, bgColor?: SkeletonColors) => css`
+  animation: 1s linear infinite alternate ${getSkeletonKeyframes(bgColor, theme)};
 `;

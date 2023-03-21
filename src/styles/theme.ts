@@ -1,6 +1,7 @@
 import patternDark from '@static/images/bg-pattern-dark.png';
 import pattern from '@static/images/bg-pattern.png';
 
+import { skeletonBg, skeletonBgDark } from './skeleton';
 import {
   colors,
   colorsDark,
@@ -19,6 +20,7 @@ export const light = {
   gradients: gradients,
   shadows: shadows,
   pattern: pattern,
+  skeletonBg: skeletonBg,
 };
 
 export const dark = {
@@ -28,4 +30,5 @@ export const dark = {
   gradients: gradientsDark,
   shadows: shadowsDark,
   pattern: patternDark,
+  skeletonBg: skeletonBgDark,
 };
