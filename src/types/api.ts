@@ -16,13 +16,13 @@ export type RecipesQueryParams =
   | 'offset'
   | 'apiKey'
   | 'type'
-  | 'results'
+  | 'page'
   | 'ids'
   | 'includeNutrition';
 
 export type SingleRecipeQueryParams = 'includeNutrition' | 'apiKey' | 'number';
 
-export type SearchParamsNames = Extract<RecipesQueryParams, 'query' | 'type' | 'results'>;
+export type SearchParamsNames = Extract<RecipesQueryParams, 'query' | 'type' | 'page'>;
 
 export type SearchParams<T extends RecipesQueryParams | SingleRecipeQueryParams> = Record<
   T,

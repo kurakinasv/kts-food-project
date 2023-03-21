@@ -100,9 +100,9 @@ class RecipesStore implements IRecipesStore {
     this._additionalRecipes = normalizeCollection(recipes, (recipe) => recipe.id);
   };
 
-  getAllRecipes = async (query?: string, typesOptions?: Option[], results?: string) => {
+  getAllRecipes = async (query?: string, typesOptions?: Option[], page?: string) => {
     this._meta.setLoading();
-    this._onParamsUpdate({ query, typesOptions, results });
+    this._onParamsUpdate({ query, typesOptions, page });
 
     const url = getAllRecipesUrl(AllRecipesPaths.complex, this._paramsToSearch);
 
@@ -179,11 +179,11 @@ class RecipesStore implements IRecipesStore {
   private _onParamsUpdate = ({
     query,
     typesOptions,
-    results,
+    page,
   }: {
     query?: string;
     typesOptions?: Option[];
-    results?: string;
+    page?: string;
   }) => {
     const q = query?.trim().toLocaleLowerCase();
     const types = typesOptions?.map((type) => type.key);
@@ -208,31 +208,42 @@ class RecipesStore implements IRecipesStore {
     if (didSearchUpdate) {
       this.setRecipes([]);
       this._currentOffset = 0;
+    } else {
+      this._currentOffset = Number(this.recipes.length);
     }
 
-    this._updateResultsCount(didSearchUpdate, results);
+    this._updatePageCount(didSearchUpdate, page);
   };
 
-  private _updateResultsCount = (didSearchUpdate: boolean, results?: string) => {
+  private _updatePageCount = (didSearchUpdate: boolean, page?: string) => {
+    // on non valid page value
+    if (isNaN(Number(page)) || Number(page) < 0) {
+      this._loadNext = this.requestItemsNumber;
+      this._queryStore.setParams({ page: '' });
+      return;
+    }
+
     // on page reload
-    if (didSearchUpdate && !!results) {
-      this._loadNext = Number(results);
-      this._queryStore.setParams({ results });
+    if (didSearchUpdate && !!page) {
+      this._loadNext = Number(page) * this.requestItemsNumber;
+      this._queryStore.setParams({ page });
+      return;
     }
 
     // on filtration and search
-    if (didSearchUpdate && !results) {
+    if (didSearchUpdate && !page) {
       this._loadNext = this.requestItemsNumber;
-      this._queryStore.setParams({ results: String(this.requestItemsNumber) });
+      this._queryStore.setParams({ page: '' });
+      return;
     }
 
     // on page scroll
-    if (!didSearchUpdate && !!results) {
-      this._currentOffset = Number(results);
+    if (!didSearchUpdate && page !== undefined) {
       this._loadNext = this.requestItemsNumber;
-      this._queryStore.setParams({
-        results: String(Number(results) + this.requestItemsNumber),
-      });
+
+      const pageValue = page === '' ? 1 : Number(page);
+      this._queryStore.setParams({ page: String(pageValue + 1) });
+      return;
     }
   };
 }

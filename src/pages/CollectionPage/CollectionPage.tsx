@@ -27,7 +27,7 @@ const CollectionPage: FC = () => {
     initCollection();
 
     if (state?.prevPath) {
-      setParams({ query: '', results: '', type: '' });
+      setParams({ query: '', page: '', type: '' });
     }
   }, []);
 

@@ -32,8 +32,8 @@ const RecipesPage: FC = () => {
   useEffect(() => {
     initCollection();
 
-    if (!recipes.length || !getParam('results')) {
-      getAllRecipes(searchValue, selectedOptions, getParam('results'));
+    if (!recipes.length) {
+      getAllRecipes(searchValue, selectedOptions, getParam('page'));
     }
   }, []);
 
@@ -65,7 +65,7 @@ const RecipesPage: FC = () => {
   }, []);
 
   const next = async () => {
-    await getAllRecipes(undefined, undefined, getParam('results'));
+    await getAllRecipes(undefined, undefined, getParam('page'));
   };
 
   const hasMore = useMemo(
