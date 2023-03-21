@@ -34,7 +34,8 @@ const Alert: FC<AlertProps> = ({ message, status, open, statusCode }) => {
     <>
       {transitions(
         (styles, open) =>
-          open && (
+          open &&
+          (message || statusCode) && (
             <AlertWrapper style={styles} status={status}>
               <Message>{message}</Message>
               {statusCode && <StatusCode status={status}>{statusCode}</StatusCode>}

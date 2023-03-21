@@ -1,7 +1,6 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { colors, fonts, rgbColors } from '@styles/variables';
+import { fonts } from '@styles/variables';
 
 export const ErrorWrapper = styled.div`
   width: 100vw;
@@ -52,34 +51,4 @@ export const ErrorMessage = styled.div`
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.textBlack};
   opacity: 0.4;
-`;
-
-export const StyledLink = styled(Link)`
-  position: relative;
-
-  font-size: 20px;
-  color: rgba(${({ theme }) => theme.rgbColors.red}, 0.6);
-
-  transition: color 0.2s ease-in-out;
-
-  &::after {
-    content: '';
-    display: block;
-    position: absolute;
-
-    width: 100%;
-    height: 5px;
-
-    border-bottom: 1px solid rgba(${({ theme }) => theme.rgbColors.red}, 0.6);
-    transform: scaleX(0);
-    transition: transform 0.2s ease-in-out;
-  }
-
-  &:hover {
-    color: rgba(${({ theme }) => theme.rgbColors.red}, 1);
-
-    &::after {
-      transform: scaleX(1);
-    }
-  }
 `;

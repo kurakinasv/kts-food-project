@@ -67,7 +67,7 @@ class ApiRequest {
           this._throwError('Not relevant API key', 401);
         }
 
-        this._throwError(res.data.message, res.data.code);
+        this._throwError(res.data.message || error.message, res.data.code);
       }
 
       if (error instanceof Error) {

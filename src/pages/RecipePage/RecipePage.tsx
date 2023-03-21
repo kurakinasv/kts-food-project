@@ -16,7 +16,6 @@ import Ingredients from './components/Ingredients';
 import RecipeInstructions from './components/RecipeInstructions';
 import RecipePageSkeleton from './components/RecipePageSkeleton';
 import SimilarRecipes from './components/SimilarRecipes';
-import ErrorPage from './ErrorPage';
 import {
   DishPhoto,
   PageWrapper,
@@ -59,8 +58,8 @@ const RecipePage: FC = () => {
 
   const goBack = () => navigate(-1);
 
-  if (!loading && (isError || !dishInfo)) {
-    return <ErrorPage message={error?.message || ''} />;
+  if (!loading && isError) {
+    throw new Error(`Information about this recipe was not found. ${error?.message || ''}`);
   }
 
   return (
