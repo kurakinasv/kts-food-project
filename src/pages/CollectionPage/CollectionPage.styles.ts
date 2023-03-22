@@ -6,6 +6,7 @@ import { mobileMedia } from '@styles/mixins';
 export const InputWrapper = styled.div`
   max-width: 500px;
   margin-bottom: 30px;
+  margin-left: -10px;
 `;
 
 export const ListWrapper = styled.div`

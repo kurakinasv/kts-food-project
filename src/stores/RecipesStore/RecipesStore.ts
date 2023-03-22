@@ -1,7 +1,5 @@
 import { action, computed, makeAutoObservable, observable, runInAction } from 'mobx';
 
-import { mockSomeRecipes } from '@pages/RecipePage/mock';
-import { mock } from '@pages/RecipesPage/mock';
 import ApiRequest from '@stores/ApiRequest';
 import { DishFullInfoApi, DishWithNutritionApi, DishWithNutritionModel } from '@stores/DishStore';
 import {
@@ -129,6 +127,7 @@ class RecipesStore implements IRecipesStore {
 
   getRandom = async (): Promise<string> => {
     this._meta.setLoading();
+    this._meta.setCurrentRequest('random');
     const url = getAllRecipesUrl(AllRecipesPaths.random, { number: '1' });
 
     try {

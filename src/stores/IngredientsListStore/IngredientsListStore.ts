@@ -62,7 +62,7 @@ class IngredientsListStore {
       return;
     }
 
-    const updatedCollection = Object.values(this._list.entities).filter((ingr) => ingr.id !== id);
+    const updatedCollection = this.list.filter((ingr) => ingr.id !== id);
 
     if (!updatedCollection.length) {
       this.clearIngredientsList();

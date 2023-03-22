@@ -1,7 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
 import { square } from '@styles/mixins';
-import { colors } from '@styles/variables';
 
 import { LoaderSize } from './Loader';
 

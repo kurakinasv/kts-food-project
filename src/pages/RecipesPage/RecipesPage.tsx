@@ -101,7 +101,7 @@ const RecipesPage: FC = () => {
             </>
           }
           scrollThreshold={0.9}
-          style={{ margin: '-10px' }}
+          style={{ margin: '-10px', padding: '10px' }}
         >
           <RecipeCardsList loading={false} recipes={recipes} />
         </InfiniteScroll>

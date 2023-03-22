@@ -33,11 +33,14 @@ export const CardWrapper = styled.div`
 
 export const ImageWrapper = styled.div`
   margin-bottom: 8px;
+  height: 100%;
 `;
 
 export const CardImage = styled.img`
   width: 100%;
+  height: 100%;
   max-height: 110px;
+  object-fit: cover;
 
   ${mobileMedia({
     ['max-height']: '70px',
@@ -51,6 +54,7 @@ export const CardInfo = styled.div`
   display: flex;
   flex-direction: column;
   gap: 7px;
+  flex-shrink: 2;
 
   ${mobileMedia({ gap: '4px' })};
 `;

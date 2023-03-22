@@ -79,9 +79,7 @@ class CollectionStore {
       return;
     }
 
-    const updatedCollection = Object.values(this._collectionRecipes.entities).filter(
-      (dish) => dish.id !== id
-    );
+    const updatedCollection = this.collectionRecipes.filter((dish) => dish.id !== id);
 
     this.setCollectionRecipes(updatedCollection);
     this._updateFiltered();

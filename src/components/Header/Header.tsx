@@ -21,6 +21,7 @@ import {
   NavLink,
   BurgerContent,
   NavButton,
+  DiceButton,
 } from './Header.styles';
 import IngredientsListDrawer from './IngredientsListDrawer';
 
@@ -33,7 +34,7 @@ const Header: FC = () => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   const { getRandom } = useRecipes();
-  const { loading } = useMetaStore();
+  const { loading, currentRequest } = useMetaStore();
   const { theme, toggleTheme } = useUIStore();
 
   const { open, openDrawer, closeDrawer } = useDrawer();
@@ -104,14 +105,14 @@ const Header: FC = () => {
               Shopping list
             </NavButton>
 
-            <NavButton
+            <DiceButton
               title="Get random recipe"
               onClick={redirectToRandomRecipe}
-              disabled={loading}
+              disabled={loading && currentRequest === 'random'}
             >
-              <DiceIcon loading={loading} />
+              <DiceIcon loading={loading && currentRequest === 'random'} />
               <span>Random recipe</span>
-            </NavButton>
+            </DiceButton>
 
             <NavButton onClick={toggleTheme}>
               {theme === ThemesEnum.light ? <SunIcon /> : <MoonIcon />}

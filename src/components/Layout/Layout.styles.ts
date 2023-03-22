@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { headerHeight } from '@config/ui';
 
 export const PageWrapper = styled.main`
-  margin: calc(40px + ${headerHeight}) auto;
+  margin: calc(40px + ${headerHeight}) auto 50px auto;
   width: 75vw;
   max-width: 1280px;
 

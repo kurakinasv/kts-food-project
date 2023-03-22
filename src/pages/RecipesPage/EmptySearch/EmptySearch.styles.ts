@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { colors, fonts, rgbColors } from '@styles/variables';
+import { fonts } from '@styles/variables';
 
 export const Wrapper = styled.div`
   height: 64vh;

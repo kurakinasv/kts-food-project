@@ -197,6 +197,10 @@ const navItem = css`
   position: relative;
   cursor: pointer;
 
+  &:hover {
+    opacity: 0.5;
+  }
+
   @media (max-width: 600px) {
     width: 100%;
     padding: 20px;
@@ -225,10 +229,6 @@ export const NavLink = styled(Link).withConfig({
   ${navItem};
   ${navItemText};
 
-  &:hover {
-    opacity: 0.5;
-  }
-
   ${({ active }) =>
     active &&
     css`
@@ -239,6 +239,7 @@ export const NavLink = styled(Link).withConfig({
         opacity: 1;
       }
 
+      // line under active link
       &::after {
         content: '';
         display: block;
@@ -267,6 +268,20 @@ export const NavButton = styled.button<{ disabled?: boolean }>`
     justify-content: center;
   }
 
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      cursor: default;
+      user-select: none;
+      pointer-events: none;
+    `}
+`;
+
+export const DiceButton = styled(NavButton)`
+  &:hover {
+    opacity: 1;
+  }
+
   // dice navlink
   & > span:last-of-type {
     display: none;
@@ -275,14 +290,6 @@ export const NavButton = styled.button<{ disabled?: boolean }>`
   & > span:first-of-type {
     display: block;
   }
-
-  ${({ disabled }) =>
-    disabled &&
-    css`
-      cursor: default;
-      user-select: none;
-      pointer-events: none;
-    `}
 
   @media (max-width: 600px) {
     & > span:last-of-type {

@@ -43,6 +43,7 @@ const GlobalStyle = createGlobalStyle<{ disableScroll: boolean }>`
 
     ${({ disableScroll }) =>
       !!disableScroll &&
+      window.scrollY > 0 &&
       css`
         position: fixed;
         overflow-y: scroll;

@@ -30,3 +30,9 @@ export const BackDice = styled.svg`
   transform: translate3d(${diceHeight}, 0, 0) rotate(-90deg);
   transition: all 0.2s ease-in;
 `;
+
+export const LoaderWrapper = styled.span`
+  display: flex;
+  align-items: center;
+  ${square(diceHeight)};
+`;

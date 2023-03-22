@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-export const CardsWrapper = styled.div.withConfig({
-  shouldForwardProp: (prop) => !['loading'].includes(prop),
-})<{ loading?: boolean }>`
+export const CardsWrapper = styled.div`
   --columns-count: 5;
 
-  padding: 10px;
+  // to not hide cards' side shadows in scroll container (including skeletons)
+  margin: -10px -10px 0 -10px;
+  padding: 10px 10px 24px 10px;
 
   display: grid;
   grid-template-columns: repeat(var(--columns-count), 1fr);
@@ -24,6 +24,4 @@ export const CardsWrapper = styled.div.withConfig({
   @media (max-width: 500px) {
     --columns-count: 2;
   }
-
-  margin: ${({ loading }) => loading && '-10px'};
 `;

@@ -10,3 +10,5 @@ export type ErrorResponse = {
   message: string;
   code: HttpStatusCode;
 };
+
+export type RequestNames = 'random';

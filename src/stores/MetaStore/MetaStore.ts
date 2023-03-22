@@ -1,19 +1,21 @@
 import { makeAutoObservable, observable } from 'mobx';
 
 import RootStore from '@stores/RootStore';
-import { ErrorResponse, Meta } from '@typings/meta';
+import { ErrorResponse, Meta, RequestNames } from '@typings/meta';
 
-type PrivateFields = '_currentState' | '_error';
+type PrivateFields = '_currentState' | '_error' | '_currentRequest';
 
 class MetaStore {
   private readonly _rootStore: RootStore;
   private _currentState = Meta.initial;
   private _error: ErrorResponse | null = null;
+  private _currentRequest: RequestNames | null = null;
 
   constructor(rootStore: RootStore) {
     makeAutoObservable<MetaStore, PrivateFields>(this, {
       _currentState: observable,
       _error: observable.ref,
+      _currentRequest: observable,
     });
     this._rootStore = rootStore;
   }
@@ -28,6 +30,10 @@ class MetaStore {
 
   get error() {
     return this._error;
+  }
+
+  get currentRequest() {
+    return this._currentRequest;
   }
 
   setLoading = () => {
@@ -46,6 +52,11 @@ class MetaStore {
   setInitial = () => {
     this._currentState = Meta.initial;
     this._error = null;
+    this.setCurrentRequest(null);
+  };
+
+  setCurrentRequest = (req: RequestNames | null) => {
+    this._currentRequest = req;
   };
 }
 

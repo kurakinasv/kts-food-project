@@ -5,17 +5,17 @@ import { useTheme } from 'styled-components';
 import Loader, { LoaderSize } from '@components/Loader';
 import { IconProps } from '@typings/common';
 
-import { BackDice, Wrapper } from './DiceIcon.styles';
+import { BackDice, LoaderWrapper, Wrapper } from './DiceIcon.styles';
 
 const DiceIcon: FC<{ loading: boolean } & IconProps> = ({ loading, fillColor }) => {
   const { colors } = useTheme();
 
   if (loading) {
     return (
-      <>
+      <LoaderWrapper style={{ display: 'flex' }}>
         <Loader size={LoaderSize.s} />
         <span />
-      </>
+      </LoaderWrapper>
     );
   }
 
