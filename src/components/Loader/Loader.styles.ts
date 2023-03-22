@@ -1,7 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
 import { square } from '@styles/mixins';
-import { colors } from '@styles/variables';
 
 import { LoaderSize } from './Loader';
 
@@ -29,7 +28,7 @@ const getLoaderSize = (size: LoaderSize) => {
 export const LoaderWrapper = styled.div<{ size: LoaderSize }>`
   display: inline-block;
 
-  border: 3px solid ${colors.red};
+  border: 3px solid ${({ theme }) => theme.colors.red};
   border-right: 3px solid transparent;
   border-radius: 50%;
 

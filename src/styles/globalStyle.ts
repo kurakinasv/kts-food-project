@@ -1,9 +1,10 @@
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle, css } from 'styled-components';
 
 import AvenirFont from './fonts/Avenir/fonts';
 import DMSansFont from './fonts/DMSans/fonts';
+import { scrollbar } from './mixins';
 
-const GlobalStyle = createGlobalStyle`
+const GlobalStyle = createGlobalStyle<{ disableScroll: boolean }>`
   ${AvenirFont}
   ${DMSansFont}
 
@@ -11,6 +12,8 @@ const GlobalStyle = createGlobalStyle`
     text-rendering: optimizeSpeed;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  
+    ${scrollbar()};
   }
 
   *,
@@ -33,6 +36,20 @@ const GlobalStyle = createGlobalStyle`
     scroll-behavior: smooth;
   }
 
+  body{
+    width: 100%;
+    background-color: ${({ theme }) => theme.backgroundColor};
+    transition: background-color 0.2s ease-in-out;
+
+    ${({ disableScroll }) =>
+      !!disableScroll &&
+      window.scrollY > 0 &&
+      css`
+        position: fixed;
+        overflow-y: scroll;
+      `}
+  }
+
   button, a {
     font-family: inherit;
     cursor: pointer;
@@ -40,6 +57,24 @@ const GlobalStyle = createGlobalStyle`
 
   ul, li, ol {
     list-style: none;
+  }
+
+`;
+
+export const BackgroundImage = styled.div`
+  width: 610px;
+  min-height: 400px;
+
+  position: fixed;
+  top: 0;
+  right: 0;
+
+  background-image: url(${({ theme }) => theme.pattern});
+  transform: translate3d(38%, -98%, 0) rotate(290deg);
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    transform: translate3d(44%, -108%, 0) rotate(290deg);
   }
 `;
 

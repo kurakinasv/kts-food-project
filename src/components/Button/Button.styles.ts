@@ -1,22 +1,32 @@
 import styled from 'styled-components';
 
 import Loader from '@components/Loader';
-import { colors } from '@styles/variables';
 
-export const ButtonWrapper = styled.button`
-  padding: 8px 14px;
+import { StyledButtonProps } from './types';
+import { bgColorStyles, getButtonSizes } from './utils';
+
+export const ButtonWrapper = styled.button<StyledButtonProps>`
+  min-width: ${({ minWidth }) => minWidth || '36px'};
+  padding: ${({ padding }) => padding || '8px 14px'};
+
+  ${({ width, height, shape }) => getButtonSizes(width, height, shape)}
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   font-weight: 500;
   font-size: 18px;
   line-height: 25px;
   text-align: center;
-  color: white;
 
-  background-color: ${colors.red};
+  ${({ bgColor, theme }) => !!bgColor && bgColorStyles(theme)[bgColor]};
+
   border: none;
-  border-radius: 7px;
+  border-radius: ${({ shape }) => (shape === 'circle' ? '50%' : '7px')};
 
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease-in-out;
 
   &:hover {
     opacity: ${({ disabled }) => (disabled ? 1 : 0.5)};
@@ -24,7 +34,9 @@ export const ButtonWrapper = styled.button`
   }
 
   &:disabled {
-    background-color: ${colors.grey};
+    background-color: ${({ bgColor, theme }) =>
+      bgColor === 'solid' || bgColor === 'transparent' ? theme.colors.grey : 'transparent'};
+
     pointer-events: none;
     user-select: none;
     cursor: default;
@@ -32,9 +44,6 @@ export const ButtonWrapper = styled.button`
 `;
 
 export const StyledLoader = styled(Loader)`
-  margin-right: 10px;
-  vertical-align: sub;
-
-  border: 3px solid white;
+  border: 3px solid ${({ theme }) => theme.colors.white};
   border-right: 3px solid transparent;
 `;

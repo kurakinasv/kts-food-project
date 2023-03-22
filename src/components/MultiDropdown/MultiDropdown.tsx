@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+
+import { useTheme } from 'styled-components';
+
+import Button from '@components/Button';
+import useComponentVisible from '@hooks/useComponentVisible';
+import { XMarkIcon } from '@static/icons';
+import { Option } from '@typings/common';
 
 import {
+  ButtonWrapper,
   DropdownButton,
   DropdownMenu,
   DropdownOption,
   DropdownWrapper,
 } from './MultiDropdown.styles';
-
-export type Option = {
-  key: string;
-  value: string;
-};
 
 export type MultiDropdownProps = {
   options: Option[];
@@ -18,75 +21,136 @@ export type MultiDropdownProps = {
   value: Option[];
   onChange: (value: Option[]) => void;
   disabled?: boolean;
+  loading?: boolean;
   /** Преобразовывает выбранные значения в строку. Отображается в дропдауне в качестве выбранного значения */
   pluralizeOptions: (value: Option[]) => string;
+  className?: string;
+  placeholder?: string;
+  clearOptions: VoidFunction;
 };
 
 const MultiDropdown: React.FC<MultiDropdownProps> = ({
   options,
   value,
   onChange,
-  disabled,
+  disabled = false,
+  loading = false,
   pluralizeOptions,
+  clearOptions,
+  className = '',
+  placeholder = '',
 }) => {
+  const { rgbColors } = useTheme();
+
   const [open, setOpen] = useState(false);
 
-  const openMenu = () => {
+  const { ref } = useComponentVisible({
+    visible: open,
+    setNotVisible: () => setOpen(false),
+  });
+
+  const handleMenu = () => {
     setOpen((v) => !v);
   };
 
-  const isOptionSelected = (option: Option) => {
-    const foundOption = value.findIndex((outerValue) => outerValue.key === option.key);
-    return foundOption !== -1;
-  };
-
-  const toggleOptions = (optionToCheck: Option) => {
-    if (!isOptionSelected(optionToCheck)) {
-      return [...value, optionToCheck];
+  useEffect(() => {
+    if (loading || disabled) {
+      setOpen(false);
     }
+  }, [loading, disabled]);
 
-    const filtered = value.filter(
-      (option) => option.key !== optionToCheck.key && option.value !== optionToCheck.value
-    );
+  const isOptionSelected = useCallback(
+    (option: Option) => {
+      const foundOption = value.findIndex((outerValue) => outerValue.key === option.key);
+      return foundOption !== -1;
+    },
+    [value]
+  );
 
-    return filtered;
-  };
+  const toggleOptions = useCallback(
+    (optionToCheck: Option) => {
+      if (!isOptionSelected(optionToCheck)) {
+        return [...value, optionToCheck];
+      }
 
-  const chooseOption = (e: React.MouseEvent<HTMLDivElement>) => {
-    const currentKey = e.currentTarget.dataset.key;
-    const currentValue = e.currentTarget.textContent;
+      const filtered = value.filter(
+        (option) => option.key !== optionToCheck.key && option.value !== optionToCheck.value
+      );
 
-    if (!currentKey || !currentValue) {
-      return;
-    }
+      return filtered;
+    },
+    [value, isOptionSelected]
+  );
 
-    const currentSelected: Option = { key: currentKey, value: currentValue };
+  const chooseOption = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const currentKey = e.currentTarget.dataset.key;
+      const currentValue = e.currentTarget.textContent;
 
-    onChange(toggleOptions(currentSelected));
-  };
+      if (!currentKey || !currentValue) {
+        return;
+      }
 
-  const optionNodes = options.map(({ key, value }) => (
-    <DropdownOption
-      selected={isOptionSelected({ key, value })}
-      key={key}
-      data-key={key}
-      onClick={chooseOption}
-    >
-      {value}
-    </DropdownOption>
-  ));
+      const currentSelected: Option = { key: currentKey, value: currentValue };
+
+      onChange(toggleOptions(currentSelected));
+    },
+    [onChange, toggleOptions]
+  );
+
+  const optionNodes = useMemo(
+    () =>
+      options.map(({ key, value }) => (
+        <DropdownOption
+          selected={isOptionSelected({ key, value })}
+          key={key}
+          data-key={key}
+          onClick={chooseOption}
+        >
+          {value}
+        </DropdownOption>
+      )),
+    [options, isOptionSelected, chooseOption]
+  );
+
+  const clearIcon = useMemo(
+    () => (
+      <XMarkIcon
+        fillColor={
+          loading || disabled ? `rgba(${rgbColors.textGrey}, 0.7)` : `rgba(${rgbColors.red}, 0.7)`
+        }
+      />
+    ),
+    [loading, disabled]
+  );
 
   return (
-    <DropdownWrapper>
+    <DropdownWrapper className={className} ref={ref}>
       <DropdownButton
         type="button"
         disabled={disabled}
-        value={pluralizeOptions(value)}
-        onClick={openMenu}
+        value={pluralizeOptions(value) || placeholder}
+        onClick={handleMenu}
+        isEmpty={!pluralizeOptions(value)}
       />
+      {(!!value.length || disabled || loading) && (
+        <ButtonWrapper>
+          <Button
+            icon={clearIcon}
+            shape="circle"
+            bgColor="none"
+            minWidth={loading ? '36px' : '22px'}
+            width={loading ? '36px' : '22px'}
+            padding="6px"
+            onClick={clearOptions}
+            loading={loading}
+            disabled={disabled}
+          />
+        </ButtonWrapper>
+      )}
       {open && !disabled && <DropdownMenu visible={open && !disabled}>{optionNodes}</DropdownMenu>}
     </DropdownWrapper>
   );
 };
 
-export default MultiDropdown;
+export default memo(MultiDropdown);

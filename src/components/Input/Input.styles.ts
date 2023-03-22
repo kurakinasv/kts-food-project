@@ -1,40 +1,66 @@
 import styled from 'styled-components';
 
-import { colors, gradients, rgbColors } from '@styles/variables';
+import Button from '@components/Button';
+import { mobileMedia } from '@styles/mixins';
 
-export const InputWrapper = styled.input`
+export const InputWrapper = styled.div`
   width: 100%;
-  padding: 10px;
+  position: relative;
+`;
+
+export const StyledInput = styled.input`
+  width: 100%;
+  padding: 15px;
 
   font-weight: 400;
-  font-size: 12px;
+  font-size: 15px;
 
   line-height: 16px;
   letter-spacing: 0.01em;
 
-  color: ${colors.black};
+  color: ${({ theme }) => theme.colors.black};
 
-  background: ${gradients.lightRed};
+  background: ${({ theme }) => theme.gradients.lightRed};
   border-radius: 7px;
   border: none;
+  // to remove background transparency
+  backdrop-filter: opacity(1);
 
   &::placeholder {
     font-family: inherit;
-    color: rgba(${rgbColors.textGrey}, 0.5);
+    color: rgba(${({ theme }) => theme.rgbColors.textGrey}, 0.5);
 
     user-select: none;
   }
 
   &:focus {
-    background: ${gradients.red};
+    background: ${({ theme }) => theme.gradients.red};
     outline: none;
   }
 
   &:disabled {
-    color: rgba(${rgbColors.textGrey}, 0.5);
-    background: ${gradients.grey};
+    color: rgba(${({ theme }) => theme.rgbColors.textGrey}, 0.5);
+    background: ${({ theme }) => theme.gradients.grey};
 
     pointer-events: none;
     cursor: default;
   }
+
+  ${mobileMedia({
+    ['font-size']: '12px',
+    padding: '10px',
+  })}
+`;
+
+export const StyledButton = styled(Button).attrs({
+  shape: 'circle',
+  bgColor: 'none',
+  minWidth: '22px',
+  width: '22px',
+  padding: '6px',
+})`
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translate3d(0, -50%, 0);
 `;
